@@ -9,10 +9,54 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <input data-bind="value: mapOne().lat" />
+<!--             <input data-bind="value: mapOne().lat" />
             <input data-bind="value: mapOne().lng" />
+ -->
         </div>
-        <div id="map-canvas" data-bind="map:mapOne"></div>
+        <table class="placesEditor">
+            <tr>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Addr1</th>
+                <th>Addr2</th>
+                <th>Zip</th>
+            </tr>
+            <tbody data-bind="foreach: places">
+                <tr>
+                    <td>
+                        <input type="text" data-bind='value:name' />
+                    </td>
+                    <td>
+                        <input type="url" data-bind='value:url' />
+                    </td>
+                    <td>
+                        <input type="text" data-bind='value:addr1' />
+                    </td>
+                    <td>
+                        <input type="text" data-bind='value:addr2' />
+                    </td>
+                    <td>
+                        <input type="text" data-bind='value:zip' />
+                    </td>
+                </tr>
+                    <td>
+                       <div><a href="#" data-bind="click: $root.removePlace">Delete</a></div>
+
+                    </td>
+            </tbody>
+        </table>
+        <div>
+            <button data-bind="click: lookupPlace">Lookup Coordinates</button>
+        </div>
+        <div>
+            <button data-bind="click: addPlace">Add place</button>
+        </div>
+        <div>
+            <textarea data-bind="value: lastSavedJson" rows="12" cols="50" disabled="disabled">data</textarea>
+            <button data-bind="click: save, enable: places().length > 0">Save to JSON</button>
+        </div>
+        </div>
+        <div id="map-canvas" data-bind=""></div>
         <div id="footer"></div>
     </div>
     <script src="js/lib/jquery-2.1.4.js"></script>
