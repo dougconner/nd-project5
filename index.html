@@ -41,19 +41,35 @@
                 </tr>
                     <td>
                        <div><a href="#" data-bind="click: $root.removePlace">Delete</a></div>
+                    </td>
+                    <td>
+                        Lat
+                    </td>
+                    <td>
+                        <input type="number" data-bind='value: lat' />
+                    </td>
+                    <td>
+                        Lng
+                    </td>
+                    <td>
+                        <input type="number" data-bind='value: lng' />
+                    </td>
 
                     </td>
             </tbody>
         </table>
         <div>
-            <button data-bind="click: lookupPlace">Lookup Coordinates</button>
+            <button data-bind="click: addPlace">Add place</button>
         </div>
         <div>
-            <button data-bind="click: addPlace">Add place</button>
+            <button data-bind="click: lookupPlace">Lookup Coordinates</button>
         </div>
         <div>
             <textarea data-bind="value: lastSavedJson" rows="12" cols="50" disabled="disabled">data</textarea>
             <button data-bind="click: save, enable: places().length > 0">Save to JSON</button>
+        </div>
+        <div>
+            <button data-bind="click: logData">log data</button>
         </div>
         </div>
         <div id="map-canvas" data-bind=""></div>
