@@ -1,0 +1,24 @@
+body, textarea, input { font-family: arial; font-size: 14px;
+}
+
+html, body, #wrapper{
+    height: 100%;
+    width: 100%;
+}
+
+#header{
+    height: 10px;
+    width: 100%;
+}
+
+#footer{
+    height: 50px;
+    width:  100%;
+}
+
+#map-canvas {
+    width: 100%;
+    height: 100%;
+}
+tr{vertical-align: top;
+}
