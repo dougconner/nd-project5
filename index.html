@@ -2,81 +2,35 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Project 5</title>
+	<title>P 5</title>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="https://maps.googleapis.com/maps/api/js"></script>
 </head>
 <body>
     <div id="wrapper">
-        <div id="header">
-<!--             <input data-bind="value: mapOne().lat" />
-            <input data-bind="value: mapOne().lng" />
- -->
+        <div id="text-div">
+            <div id="search-div">
+                <input data-bind="" />
+                <button data-bind="click: ">Search</button>
+            </div>
+            <div id="list-div">
+                <ul id="list1" data-bind="foreach: workingArray">
+                    <li id="list-item1" data-bind="text: name"></li>
+                </ul>
+                <button data-bind="click: sortNames">Sort by Name</button>
+                <button data-bind="click: listByType">Sort by Group</button>
+            </div>
+            <div id="footer">
+                <a href="place-data.html">Add Places (development only)</a>
+            </div>
         </div>
-        <table class="placesEditor">
-            <tr>
-                <th>Name</th>
-                <th>URL</th>
-                <th>Addr1</th>
-                <th>Addr2</th>
-                <th>Zip</th>
-            </tr>
-            <tbody data-bind="foreach: places">
-                <tr>
-                    <td>
-                        <input type="text" data-bind='value:name' />
-                    </td>
-                    <td>
-                        <input type="url" data-bind='value:url' />
-                    </td>
-                    <td>
-                        <input type="text" data-bind='value:addr1' />
-                    </td>
-                    <td>
-                        <input type="text" data-bind='value:addr2' />
-                    </td>
-                    <td>
-                        <input type="text" data-bind='value:zip' />
-                    </td>
-                </tr>
-                    <td>
-                       <div><a href="#" data-bind="click: $root.removePlace">Delete</a></div>
-                    </td>
-                    <td>
-                        Lat
-                    </td>
-                    <td>
-                        <input type="number" data-bind='value: lat' />
-                    </td>
-                    <td>
-                        Lng
-                    </td>
-                    <td>
-                        <input type="number" data-bind='value: lng' />
-                    </td>
-
-                    </td>
-            </tbody>
-        </table>
-        <div>
-            <button data-bind="click: addPlace">Add place</button>
-        </div>
-        <div>
-            <button data-bind="click: lookupPlace">Lookup Coordinates</button>
-        </div>
-        <div>
-            <textarea data-bind="value: lastSavedJson" rows="12" cols="50" disabled="disabled">data</textarea>
-            <button data-bind="click: save, enable: places().length > 0">Save to JSON</button>
-        </div>
-        <div>
-            <button data-bind="click: logData">log data</button>
-        </div>
-        </div>
-        <div id="map-canvas" data-bind=""></div>
-        <div id="footer"></div>
+        <div id="map-canvas" ></div>
     </div>
+
+
     <script src="js/lib/jquery-2.1.4.js"></script>
     <script src="js/lib/knockout-3.3.0.js"></script>
+    <script src="js/data.js"></script>
 	<script src="js/app.js"></script>
 <!--    <script src="js/lib/jquery-2.1.4.min.js"></script>
 -->

@@ -1,4 +1,4 @@
-body, textarea, input { font-family: arial; font-size: 14px;
+body, textarea, input, li { font-family: arial; font-size: 14px;
 }
 
 html, body, #wrapper{
@@ -6,19 +6,74 @@ html, body, #wrapper{
     width: 100%;
 }
 
-#header{
-    height: 10px;
+/*for portrait aspect
+*/
+#text-div{
+    height: 30%;
+    width: 100%;
+    float: top;
+}
+
+#map-canvas {
+    height: 69.9%;
+    width: 100%;
+    float: bottom;
+}
+
+#search-div{
+    height: 10%;
+    width: 90%;
+    float: top;
+}
+
+#list-div{
+    height: 79%;
+    width: 100%;
+    float: top;
+    overflow: auto;
+}
+
+#list-item1{
     width: 100%;
 }
 
 #footer{
-    height: 50px;
+    height: 10%;
     width:  100%;
 }
 
-#map-canvas {
-    width: 100%;
-    height: 100%;
+@media (orientation: landscape) {
+    #text-div{
+        height: 100%;
+        width: 30%;
+        float: right;
+    }
+
+    #map-canvas {
+        height: 100%;
+        width: 69.9%;
+        float: left;
+    }
+
+    #search-div{
+        height: 3%;
+        width: 92%;
+        float: top;
+    }
+
+    #list-div{
+        height: 90%;
+        width: 100%;
+        float: top;
+        overflow: auto;
+    }
+
+    #footer{
+        height: 4.9%;
+        width: 100%;
+        float: bottom;
+    }
+
 }
-tr{vertical-align: top;
-}
+
+

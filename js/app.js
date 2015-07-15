@@ -1,182 +1,88 @@
-var wineries = [
-    {"name": "Epoch Estate Wines",
-    "lat": 35.5437,
-    "lng": -120.8274
-    },
-    {"name": "Sculpterra Winery",
-    "lat": 35.6064,
-    "lng": -120.6073
-    },
-    {"name": "Ventuex Vineyards",
-    "lat": 35.5557948,
-    "lng": -120.73473939999997
-    },
-    {"name": "Paso Robles",
-    "lat": 35.64222479297878,
-    "lng": -120.68633100585936
-    }
-];
-
-var initialData = [
-    { name: "me",
-    url: "www.solarheatengines.com",
-    addr1: "12170 Cenegal Rd",
-    addr2: "Atascadero, CA",
-    zip: 93422,
-    lat: "1",
-    lng: "2"
-    },
-  {
-    name: "Ventuex Vineyards",
-    url: "www.ventuexvineyards.com",
-    addr1: "1795 Las Tablas Road",
-    addr2: "Templeton, CA ",
-    zip: '93465',
-    lat: "",
-    lng: ""
-  }
-];
-
-locations = [];
-
+var locations = initialData_js;
 var map;
+
+var MyViewModel = function(places) {
+    'use strict';
+    var self = this;
+    var workingArray = ko.observableArray(); // for use in sorting and filtering
+    // self.placeFinderView = true;
+    self.places = ko.observableArray(ko.utils.arrayMap(places, function(place) {
+        return { name: place.name,
+            url: place.url,
+            addr1: place.addr1,
+            addr2: place.addr2,
+            lat: place.lat,
+            lng: place.lng,
+            infoAry: ko.observableArray(place.infoAry)
+        };
+    }));
+    self.workingArray = self.places;
+
+    self.sortNames = function() {
+        self.workingArray = self.places;
+        console.log("workingArray:", self.workingArray());
+        // self.places.sort(function(a,b) {
+        self.workingArray.sort(function(a,b) {
+            if (a.name > b.name) {
+                return 1;
+            } else if (a.name < b.name) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    self.listByType = function(infoAry, type) {
+        self.workingArray = self.places;
+        // get all the types first
+        var types = [];
+        var testType;
+        console.log("got here");
+        for (var i = 0; i < self.workingArray().length; i++) {
+            console.log("self.workingArray()[i].infoAry.length", self.workingArray()[i].infoAry());
+            for (var j = 0; j < self.workingArray()[i].infoAry().length; j++) {
+                console.log("self.workingArray()[i].infoAry", self.workingArray()[i].infoAry[j]);
+                testType = self.workingArray()[i].infoAry()[j].type;
+                console.log("self.workingArray()[i].infoAry:", self.workingArray()[i].infoAry);
+                if (types.indexOf(testType) === -1) {
+                    types.push(testType);
+                }
+            }
+        }
+        console.log("types:", types);
+    }
+};
+
+
+// function getGeocode(address, k) {
+//     // k is index for locations
+//     geocoder = new google.maps.Geocoder();
+//     geocoder.geocode({ 'address': address }, function(results, status) {
+//       if (status === google.maps.GeocoderStatus.OK) {
+//         console.log("status OK", results[0].geometry.location);
+
+//         // map.setCenter(results[0].geometry.location);
+//         // var marker = new google.maps.Marker({
+//         // map: map,
+//         // position: results[0].geometry.location
+//         locations[k]["lat"] = results[0].geometry.location.A;
+//         locations[k].lng = results[0].geometry.location.F;
+
+//       } else {
+//         console.log("status not okay on item:", status);
+//         return results[0].geometry.location;
+//       }
+//     });
+// }
 
 // Reference for Places table: http://jsfiddle.net/rniemeyer/gZC5k/
 
 function MyViewModel(places) {
     // 'use strict';
     var self = this;
-    self.placeFinderView = true;
-    self.places = ko.observableArray(ko.utils.arrayMap(places, function(place) {
-        return { name: place.name,
-            url: place.url,
-            addr1: place.addr1,
-            addr2: place.addr2,
-            zip: place.zip,
-            lat: place.lat,
-            lng: place.lng
-        };
-    }));
 
-    self.addPlace = function() {
-        self.places.push({
-            name: "",
-            url: "",
-            addr1: "",
-            addr2: "",
-            zip: "",
-            lat: "",
-            lng: ""
-        });
-    };
-
-    self.removePlace = function(place) {
-        self.places.remove(place);
-    };
-
-    self.save = function() {
-        self.lastSavedJson(JSON.stringify(ko.toJS(self.places), null, 2));
-    };
-
-    self.lastSavedJson = ko.observable("");
-
-    self.logData = function() {
-        console.log("locations.length: ", locations.length);
-        for (var i = 0; i < locations.length; i++) {
-            console.log("{");
-            for (var item in locations[i]) {
-                console.log("  " + item + ": " + '"' + locations[i][item] + '"');
-            }
-            if (i < locations.length - 1) {
-                console.log("},");
-            } else {
-                console.log("}");
-            }
-        }
-    };
-
-    self.lookupPlace = function(places) {
-        var locationData = [];
-        console.log("here2");
-
-        function locationFinder() {
-            var locationData = [];
-            for (var i = 0; i < self.places().length; i++) {
-                // try city, state first, then full address
-                locationData.push(self.places()[i].addr1 + ' ' + self.places()[i].addr2);
-            }
-            console.log("locationData: ", locationData);
-            return locationData;
-        }
-
-        function getCoordinates(locationData) {
-            var locations = [];
-            var lat;
-            var lng;
-            // go through places array and look for places with lat <= 0
-            for (var i = 0; i < self.places().length; i++) {
-                var name = self.places()[i].name;
-                var url = self.places()[i].url;
-                var addr1 = self.places()[i].addr1;
-                var addr2 = self.places()[i].addr2;
-                var zip = self.places()[i].zip;
-
-                if (self.places()[i].lat === "") {
-                    // get geocode lat and lng
-                    console.log("here3");
-                    geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ 'address': locationData[i] }, function(results, status) {
-                      if (status == google.maps.GeocoderStatus.OK) {
-                        console.log(results[0].geometry.location);
-                        lat = results[0].geometry.location.A;
-                        lng = results[0].geometry.location.F;
-                        locations.push({
-                            name: name,
-                            url: url,
-                            addr1: addr1,
-                            addr2: addr2,
-                            zip: zip,
-                            lat: lat,
-                            lng: lng
-                        });
-
-                        // locations[i].lng = results[0].geometry.location;
-                        // self.places()[i].lng = results[0].geometry.location.F;
-                        // map.setCenter(results[0].geometry.location);
-                        // var marker = new google.maps.Marker({
-                        // map: map,
-                        // position: results[0].geometry.location
-                      // });
-                        console.log("lat-if: ", lat);
-                      }
-                    });
-                } else {
-                    // Use the existing lat and lng values
-                    locations.push({
-                        name: name,
-                        url: url,
-                        addr1: addr1,
-                        addr2: addr2,
-                        zip: zip,
-                        lat: self.places()[i].lat,
-                        lng: self.places()[i].lng
-                    });
-                    console.log("lat-else: ", lat);
-                }
-            }
-
-            // for (var i = 0; i < locationData.length; i++) {
-            //     // placeholder for location if status is not OK
-            //     locations[i] = 0;
-            // }
-            return locations;
-        }
-        console.log("here4");
-        locations = getCoordinates(locationFinder());
-    };
 }
-
-
 
 function setMarkers(map, locations) {
     // add markers to map
@@ -206,10 +112,9 @@ function initialize() {
 $(document).ready(function () {
    map = initialize();
    // var map = initialize();
-   setMarkers(map, wineries);
+   // (map, wineries);
 });
 
-// this.placefind;
 
-ko.applyBindings(new MyViewModel(initialData));
+ko.applyBindings(new MyViewModel(initialData_js));
 // var viewModel = new MyViewModel(initialData);

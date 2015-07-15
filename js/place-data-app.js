@@ -1,3 +1,6 @@
+// TODO: Need to escape and single or double quotes in entered text.
+// This will probably require a computed observable.
+
 var initialData;
 var initialData_js;
 var storedData = JSON.parse(localStorage.getItem('workingData'));
