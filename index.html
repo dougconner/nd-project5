@@ -14,11 +14,12 @@
                 <button data-bind="click: ">Search</button>
             </div>
             <div id="list-div">
-                <ul id="list1" data-bind="foreach: workingArray">
-                    <li id="list-item1" data-bind="text: name"></li>
+                <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType" id=""></select></p>
+                <ul id="list1" data-bind="foreach: places">
+                    <li id="list-item1" data-bind="text: name, visible: $root.includesSelectedType($root.selectedPlaceType, show()) "></li>
                 </ul>
-                <button data-bind="click: sortNames">Sort by Name</button>
-                <button data-bind="click: listByType">Sort by Group</button>
+                <button data-bind="click: debug">debug</button>
+                <p data-bind="text: selectedPlaceType"></p>
             </div>
             <div id="footer">
                 <a href="place-data.html">Add Places (development only)</a>
