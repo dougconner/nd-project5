@@ -16,7 +16,7 @@
             <div id="list-div">
                 <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType" id=""></select></p>
                 <ul id="list1" data-bind="foreach: places">
-                    <li id="list-item1" data-bind="text: name, visible: $root.includesSelectedType($root.selectedPlaceType, index, show()), click: $root.showInfoWindow(index)"></li>
+                    <li id="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
                 </ul>
                 <button data-bind="click: ">showMarker</button>
                 <button id="toggle" data-bind="click: ">hideMarker</button>

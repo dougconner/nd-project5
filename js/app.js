@@ -69,6 +69,19 @@ var closeInfoWindows = function() {
     }
 };
 
+var toggleBounce = function(index) {
+    var marker = markerArray[index];
+    if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        window.setTimeout(function() {
+            toggleBounce(index);
+        }, 2100);
+    }
+};
+
+
 
 var MyViewModel = function(places) {
     'use strict';
@@ -96,21 +109,21 @@ var MyViewModel = function(places) {
         };
     }));
 
-    // Find out if the current item includes the selected type
+    // Find out if the current item includes the selected type & search filter
     // Enables/disables visible
     self.includesSelectedType = function (selected, index, show) {
-
         if (show.indexOf(selected()[0]) >= 0) {
+            // Includes selected type
             self.showMarker(index);
-            // return true;
 
-            // search code
             if(self.places()[index].name.indexOf(self.searchText()) !== -1) {
+                // Also satisfies search text
                 return true;
             }
         }
-            self.hideMarker(index);
-            return false;
+        self.hideMarker(index);
+        // Fails at least one of the two conditions
+        return false;
     };
 
     // search action
@@ -119,8 +132,6 @@ var MyViewModel = function(places) {
         // search through all names for match
         // look for string and selected type match
         for (var i = 0; i < self.places().length; i++) {
-            // console.log(self.places()[i].name);
-            // console.log("index:", i);
             if (self.places()[i].show.indexOf(self.selectedPlaceType()[0]) !== -1) {
                 if (self.places()[i].name.indexOf(self.searchText()) !== -1) {
                     console.log("match: ", self.searchText());
@@ -129,6 +140,7 @@ var MyViewModel = function(places) {
         }
     };
 
+/****** showMarke and hideMarker are not being used *********/
     // show markers
     self.showMarker = function(i) {
         // console.log("showMarker");
@@ -168,47 +180,12 @@ var MyViewModel = function(places) {
         // First clear any existing info windows
         self.closeInfoWindows();
         infowindowArray[index].open(markerArray[index].get('map'), markerArray[index]);
+        toggleBounce(index);
     };
+
 };
 
-
-
-// function getGeocode(address, k) {
-//     // k is index for locations
-//     geocoder = new google.maps.Geocoder();
-//     geocoder.geocode({ 'address': address }, function(results, status) {
-//       if (status === google.maps.GeocoderStatus.OK) {
-//         console.log("status OK", results[0].geometry.location);
-
-//         // map.setCenter(results[0].geometry.location);
-//         // var marker = new google.maps.Marker({
-//         // map: map,
-//         // position: results[0].geometry.location
-//         locations[k]["lat"] = results[0].geometry.location.A;
-//         locations[k].lng = results[0].geometry.location.F;
-
-//       } else {
-//         console.log("status not okay on item:", status);
-//         return results[0].geometry.location;
-//       }
-//     });
-// }
-
-// Reference for Places table: http://jsfiddle.net/rniemeyer/gZC5k/
-// var markers = {
-//     place1: {lat: "35.6549549", lng: "-120.90086100000002", visible: true},
-//     place2: {lat: "35.5557948", lng: "-120.73473939999997", visible: true}
-//     };
-
-// var posMarkers = [];
-
-// for (var marker in markers) {
-//       posMarkers[marker] = new google.maps.Marker({
-//         position: new google.maps.LatLng(markers[marker].lat, markers[marker].lng),
-//         map: map,
-//         visible: markers[marker].visible
-//       });
-// }
+/************ Google map code, outside KO ************/
 
 function setMarkers(map, locations) {
     // add markers to map
@@ -235,10 +212,13 @@ function attachInfotext(marker, i) {
 
     // Store for list recall
     infowindowArray[i] = infowindow;
+    console.log("infowindow:", infowindow);
 
     google.maps.event.addListener(marker, 'click', function() {
         closeInfoWindows();
-        infowindow.open(marker.get('map'), marker);
+        infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+        // infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
+        // infowindow.open(marker.get('map'), marker);
     });
 }
 
@@ -263,6 +243,11 @@ $(document).ready(function () {
     map = initialize();
     setMarkers(map, locations);
     ko.applyBindings(new MyViewModel(locations));
+    // consider and overlay page or dropping markers
+    window.setTimeout(function() {
+        closeInfoWindows();
+    }, 600);
 });
+
 
 
