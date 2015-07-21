@@ -10,15 +10,16 @@
     <div id="wrapper">
         <div id="text-div">
             <div id="search-div">
-                <input data-bind="" />
-                <button data-bind="click: ">Search</button>
+                <input data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
+                <button data-bind="">Search within Place Type</button>
             </div>
             <div id="list-div">
                 <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType" id=""></select></p>
                 <ul id="list1" data-bind="foreach: places">
-                    <li id="list-item1" data-bind="text: name, visible: $root.includesSelectedType($root.selectedPlaceType, show()) "></li>
+                    <li id="list-item1" data-bind="text: name, visible: $root.includesSelectedType($root.selectedPlaceType, index, show()), click: $root.showInfoWindow(index)"></li>
                 </ul>
-                <button data-bind="click: debug">debug</button>
+                <button data-bind="click: ">showMarker</button>
+                <button id="toggle" data-bind="click: ">hideMarker</button>
                 <p data-bind="text: selectedPlaceType"></p>
             </div>
             <div id="footer">
