@@ -207,12 +207,12 @@ function setMarkers(map, locations) {
 
 function attachInfotext(marker, i) {
     var infowindow = new google.maps.InfoWindow({
-        content: locations[i].infoWindowContent
+        content: locations[i].infoWindowContent,
+        maxWidth: 200
     });
 
     // Store for list recall
     infowindowArray[i] = infowindow;
-    console.log("infowindow:", infowindow);
 
     google.maps.event.addListener(marker, 'click', function() {
         closeInfoWindows();
@@ -246,7 +246,7 @@ $(document).ready(function () {
     // consider and overlay page or dropping markers
     window.setTimeout(function() {
         closeInfoWindows();
-    }, 600);
+    }, 1000);
 });
 
 
