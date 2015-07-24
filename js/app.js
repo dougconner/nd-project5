@@ -1,3 +1,11 @@
+var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
+var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
+var testLat = "-120.70558699999998";
+var testLng = "-120.70558699999998";
+
+
+https://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+
 var locations = initialData_js;
 var map;
 var placeTypes = ["All"];
@@ -159,6 +167,72 @@ var MyViewModel = function(places) {
             infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
         }
     };
+
+    // Test ajax with foursquare
+    self.foursquareTest = function(handleData) {
+        // console.log("CS:", CLIENT_SECRET);
+        // console.log("CI:", CLIENT_ID);
+        // http://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+    // $.get({
+    //         url: 'https://api.foursquare.com/v2/venues/explore',
+    //         dataType: 'json',
+    //         data: 'limit=1&ll='+ testLat +','+ testLng + '&query=' + "Mcphees" +'&client_id='+ CLIENT_ID + '&client_secret='+ CLIENT_SECRET + '&v=20140806&m=foursquare',
+    //         // data: 'limit=1&ll='+self.hotSpotList()[i].lat()+','+self.hotSpotList()[i].lng()+ '&query=' +self.hotSpotList()[i].name() +'&client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&v=20140806&m=foursquare',
+    //         async: true,
+    //         success: function(data) {
+    //             var testData = data.response.groups[0].items[0].venue.rating;
+    //             console.log("testData: " + testData);
+    //         }
+    // });
+
+        var jqxhr = $.get("https://api.foursquare.com/v2/venues/explore" +
+            "?near=Paso Robles,CA" +
+            // "?ll=35.5557948,-120.73473939999997" +
+            "&client_id=" + CLIENT_ID +
+            "&client_secret=" + CLIENT_SECRET +
+            "&limit=10" +
+            "&v=20150115" +
+            "&m=foursquare" +
+            "callback=XXX",
+            function(data) {
+                console.log("testData: " + data.toString());
+                console.log("success");
+
+            },
+            "jsonp"
+        )
+
+              .done(function() {
+               console.log("jqxhr: " + jqxhr);
+               console.log( "second success" );
+
+            })
+                .fail(function() {
+                console.log( "error" );
+            });
+
+                jqxhr.always(function() {
+                console.log( "finished" );
+            });
+        };
+
+// testGet(function(output){
+//   console.log("output: " + output);
+//   console.log("output.response.status: " + output.status
+//     );
+// });
+
+
+
+// https:api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
+        // https://api.foursquare.com/v2/venues/search
+        //     ?client_id=CLIENT_ID
+        //     &client_secret=CLIENT_SECRET
+        //     &v=20130815
+        //     &ll=40.7,-74
+        //     &query=sushi
+
+
 
     // close info windows before opening another to follow best practice of
     // a single info window open at a time
