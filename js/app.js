@@ -1,10 +1,12 @@
+var enableMarkerLoad = false;
 var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
 var testLat = "-120.70558699999998";
 var testLng = "-120.70558699999998";
+// var photoStr;
 
 
-https://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+// https://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
 
 var locations = initialData_js;
 var map;
@@ -64,6 +66,7 @@ var computeContentString = function() {
             contentString += locations[i].infoAry[j].type + ": ";
             contentString += locations[i].infoAry[j].infoText + "</p>";
         }
+        contentString += "'<img id='info-img" + i + "' title='' src='' />";
         locations[i].infoWindowContent = contentString;
         // console.log("conent stored:", contentString);
         locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
@@ -87,6 +90,71 @@ var toggleBounce = function(index) {
             toggleBounce(index);
         }, 2100);
     }
+};
+
+var get4sqphoto = function(index) {
+    var lat = locations[index].lat;
+    var lng = locations[index].lng;
+    console.log("lat, lng: ", lat, lng);
+
+    var jqxhr = $.get("https://api.foursquare.com/v2/venues/explore" +
+        // "?near=Paso Robles,CA" +
+        "?ll=" + lat +"," + lng +
+        // "?ll=35.5557948,-120.73473939999997" +
+        "&client_id=" + CLIENT_ID +
+        "&client_secret=" + CLIENT_SECRET +
+        "&limit=1" +
+        "&v=20140115" +
+        "&venuePhotos=1" +
+        "&m=foursquare",
+        function(data) {
+            // console.log("testData: " + JSON.stringify(data));
+            var items = data.response.groups[0].items;
+            // var photoStr;
+            // console.log("groups", JSON.stringify(groups[0]));
+            console.log("length=" + items.length);
+            for (var item =0; item < items.length; item++) {
+                console.log("items." + item + ".name = " + JSON.stringify(items[item].venue.name));
+                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue.photos.groups[0].items[0].prefix));
+                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue));
+
+                // Here we want to get the photo url and place the photo
+                // in the info window.
+                // First assemble the url string with the photo size limit set
+                var photoStr = '' +
+                    items[item].venue.photos.groups[0].items[0].prefix +
+                    'cap300' +
+                    items[item].venue.photos.groups[0].items[0].suffix;
+                console.log("photoStr = " + photoStr);
+
+                // Now load or reload the info window with the photo
+
+                $('#info-img' + index).attr('src', photoStr);
+                $('#info-img' + index).attr('title', JSON.stringify(items[item].venue.name));
+
+                // document.getElementById('info-img').src = photoStr;
+                // document.getElementById('info-img').src = 'https://irs2.4sqi.net/img/general/cap300/tJEoX0HCLwfR_Ddx5GSzF1a-Fxmq-db5TcrHx5EXev8.jpg';
+                // console.log("items." + item + " = " + JSON.stringify(items[item].venue.featuredPhotos[0]));
+
+            }
+            // console.log("data.response:" + data.response.groups[0]);
+
+            console.log("success");
+        }
+    )
+
+      .done(function() {
+       console.log("jqxhr: " + jqxhr);
+       console.log( "second success" );
+    })
+        .fail(function() {
+        console.log( "error" );
+
+    });
+
+        jqxhr.always(function() {
+        console.log( "finished" );
+    });
 };
 
 
@@ -130,7 +198,7 @@ var MyViewModel = function(places) {
             }
         }
         self.hideMarker(index);
-        // Fails at least one of the two conditions
+        // Fails at least one of the two above conditions
         return false;
     };
 
@@ -148,20 +216,14 @@ var MyViewModel = function(places) {
         }
     };
 
-/****** showMarke and hideMarker are not being used *********/
     // show markers
     self.showMarker = function(i) {
-        // console.log("showMarker");
-        // console.log("markerArray", markerArray);
-        // for (var i = 0; i < locations.length; i++) {
                 markerArray[i].setMap(map);
         // }
     };
 
     // hide markers
     self.hideMarker = function(i) {
-        // console.log("hideMarker");
-        // console.log("markerArray", markerArray);
         markerArray[i].setMap(null);
         for (var i = 0; i < markerArray.length; i++) {
             infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
@@ -169,69 +231,11 @@ var MyViewModel = function(places) {
     };
 
     // Test ajax with foursquare
-    self.foursquareTest = function(handleData) {
+    self.foursquareTest = function(index) {
         // console.log("CS:", CLIENT_SECRET);
         // console.log("CI:", CLIENT_ID);
-        // http://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
-    // $.get({
-    //         url: 'https://api.foursquare.com/v2/venues/explore',
-    //         dataType: 'json',
-    //         data: 'limit=1&ll='+ testLat +','+ testLng + '&query=' + "Mcphees" +'&client_id='+ CLIENT_ID + '&client_secret='+ CLIENT_SECRET + '&v=20140806&m=foursquare',
-    //         // data: 'limit=1&ll='+self.hotSpotList()[i].lat()+','+self.hotSpotList()[i].lng()+ '&query=' +self.hotSpotList()[i].name() +'&client_id='+CLIENT_ID+'&client_secret='+CLIENT_SECRET+'&v=20140806&m=foursquare',
-    //         async: true,
-    //         success: function(data) {
-    //             var testData = data.response.groups[0].items[0].venue.rating;
-    //             console.log("testData: " + testData);
-    //         }
-    // });
-
-        var jqxhr = $.get("https://api.foursquare.com/v2/venues/explore" +
-            "?near=Paso Robles,CA" +
-            // "?ll=35.5557948,-120.73473939999997" +
-            "&client_id=" + CLIENT_ID +
-            "&client_secret=" + CLIENT_SECRET +
-            "&limit=10" +
-            "&v=20150115" +
-            "&m=foursquare" +
-            "callback=XXX",
-            function(data) {
-                console.log("testData: " + data.toString());
-                console.log("success");
-
-            },
-            "jsonp"
-        )
-
-              .done(function() {
-               console.log("jqxhr: " + jqxhr);
-               console.log( "second success" );
-
-            })
-                .fail(function() {
-                console.log( "error" );
-            });
-
-                jqxhr.always(function() {
-                console.log( "finished" );
-            });
-        };
-
-// testGet(function(output){
-//   console.log("output: " + output);
-//   console.log("output.response.status: " + output.status
-//     );
-// });
-
-
-
-// https:api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET"
-        // https://api.foursquare.com/v2/venues/search
-        //     ?client_id=CLIENT_ID
-        //     &client_secret=CLIENT_SECRET
-        //     &v=20130815
-        //     &ll=40.7,-74
-        //     &query=sushi
-
+        get4sqphoto(index);
+    };
 
 
     // close info windows before opening another to follow best practice of
@@ -239,22 +243,20 @@ var MyViewModel = function(places) {
     self.closeInfoWindows = function() {
         for (var i = 0; i < markerArray.length; i++) {
             infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
+            $('#info-img').attr('src', '');
         }
     };
 
-    self.showMarkers = function() {
-        // for (var i = 0; i < locations.length; i++) {
-        //     markerArray[i].visible = true;
-        // }
-
-    };
-
     self.showInfoWindow = function(index) {
-        console.log("ran showIfoWindos");
+        console.log("ran showInfoWindows");
         // First clear any existing info windows
         self.closeInfoWindows();
-        infowindowArray[index].open(markerArray[index].get('map'), markerArray[index]);
-        toggleBounce(index);
+        if(enableMarkerLoad) {
+            infowindowArray[index].open(markerArray[index].get('map'), markerArray[index]);
+            toggleBounce(index);
+            self.foursquareTest(index);
+        }
+        // self.foursquareTest(index);
     };
 
 };
@@ -282,7 +284,7 @@ function setMarkers(map, locations) {
 function attachInfotext(marker, i) {
     var infowindow = new google.maps.InfoWindow({
         content: locations[i].infoWindowContent,
-        maxWidth: 200
+        maxWidth: 300
     });
 
     // Store for list recall
@@ -290,7 +292,9 @@ function attachInfotext(marker, i) {
 
     google.maps.event.addListener(marker, 'click', function() {
         closeInfoWindows();
-        infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+        $('#info-img').attr('src', '');
+            infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+        get4sqphoto(i);
         // infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
         // infowindow.open(marker.get('map'), marker);
     });
@@ -317,10 +321,11 @@ $(document).ready(function () {
     map = initialize();
     setMarkers(map, locations);
     ko.applyBindings(new MyViewModel(locations));
-    // consider and overlay page or dropping markers
+    console.log("maps loaded");
+    // consider an overlay page or dropping markers
     window.setTimeout(function() {
-        closeInfoWindows();
-    }, 1000);
+        enableMarkerLoad = true;
+    }, 2000);
 });
 
 
