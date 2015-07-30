@@ -1,12 +1,7 @@
 var enableMarkerLoad = false;
 var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
-// var testLat = "-120.70558699999998";
-// var testLng = "-120.70558699999998";
-// var photoStr;
 
-
-// https://api.foursquare.com/v2/venues/explore?ll=35.5557948,-120.73473939999997&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
 
 var locations = initialData_js;
 var map;
@@ -104,72 +99,7 @@ var toggleBounce = function(index) {
     }
 };
 
-/*
-var get4sqExplore = function(index) {
-    var lat = locations[index].lat;
-    var lng = locations[index].lng;
-    console.log("lat, lng: ", lat, lng);
 
-    var jqxhr = $.get("https://api.foursquare.com/v2/venues/explore" +
-        "?ll=" + lat +"," + lng +
-        // "?ll=35.5557948,-120.73473939999997" +
-        "&client_id=" + CLIENT_ID +
-        "&client_secret=" + CLIENT_SECRET +
-        "&limit=1" +
-        "&v=20140115" +
-        "&venuePhotos=1" +
-        "&m=foursquare",
-        function(data) {
-            // console.log("testData: " + JSON.stringify(data));
-            var items = data.response.groups[0].items;
-            // var photoStr;
-            // console.log("groups", JSON.stringify(groups[0]));
-            console.log("length=" + items.length);
-            for (var item =0; item < items.length; item++) {
-                console.log("items." + item + ".name = " + JSON.stringify(items[item].venue.name));
-                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue.photos.groups[0].items[0].prefix));
-                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue));
-
-                // Here we want to get the photo url and place the photo
-                // in the info window.
-                // First assemble the url string with the photo size limit set
-                var photoStr = '' +
-                    items[item].venue.photos.groups[0].items[0].prefix +
-                    'cap300' +
-                    items[item].venue.photos.groups[0].items[0].suffix;
-                console.log("photoStr = " + photoStr);
-
-                // Now load or reload the info window with the photo
-                $('#info-img' + index).attr('src', photoStr);
-
-                // The following puts the name in the tool-tip of image
-                $('#info-img' + index).attr('title', JSON.stringify(items[item].venue.name));
-
-                // document.getElementById('info-img').src = photoStr;
-                // document.getElementById('info-img').src = 'https://irs2.4sqi.net/img/general/cap300/tJEoX0HCLwfR_Ddx5GSzF1a-Fxmq-db5TcrHx5EXev8.jpg';
-                // console.log("items." + item + " = " + JSON.stringify(items[item].venue.featuredPhotos[0]));
-
-            }
-            // console.log("data.response:" + data.response.groups[0]);
-
-            console.log("success");
-        }
-    )
-
-      .done(function() {
-       console.log("jqxhr: " + jqxhr);
-       console.log( "second success" );
-    })
-        .fail(function() {
-        console.log( "error" );
-
-    });
-
-        jqxhr.always(function() {
-        console.log( "finished" );
-    });
-};
-*/
 
 var get4sqSearch = function(index) {
     var lat = locations[index].lat;
@@ -242,47 +172,24 @@ var get4sqVenueDetail = function(index, name, id) {
             var bestPhoto = JSON.stringify(data.response.venue.bestPhoto);
             var bestPhotoPrefix = JSON.stringify(data.response.venue.bestPhoto.prefix);
             var url = data.response.venue.canonicalUrl;
-           // var name2 = data.response.venue.name;
-            // console.log("id", JSON.stringify(id));
-            // console.log("name:", name);
-            // console.log("bestPhoto:", bestPhoto);
-            // console.log("bestPhoto.prefix", bestPhotoPrefix);
-            // console.log("url:", url);
 
-            // console.log("length=" + items.length);
-            // for (var item =0; item < items.length; item++) {
-            //     console.log("items." + item + ".name = " + JSON.stringify(items[item].venue.name));
-                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue.photos.groups[0].items[0].prefix));
-                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue));
+            var photoStr = '' +
+                data.response.venue.bestPhoto.prefix +
+                'cap300' +
+                data.response.venue.bestPhoto.suffix;
+            // console.log("photoStr = " + photoStr);
 
-                // Here we want to get the photo url and place the photo
-                // in the info window.
-                // First assemble the url string with the photo size limit set
+            var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
+            var textStr2 = "<br>Photo provided by: <br><a href='https://foursquare.com'>Foursquare</a>";
+            // console.log("textStr and 2:", textStr, textStr2);
+            // Now load or reload the info window with the photo
+            $('#info-text' + index).append(textStr);
+            $('#info-text' + index).append(textStr2);
+            $('#info-img' + index).attr('src', photoStr);
 
-                var photoStr = '' +
-                    data.response.venue.bestPhoto.prefix +
-                    'cap300' +
-                    data.response.venue.bestPhoto.suffix;
-                // console.log("photoStr = " + photoStr);
+            // The following puts the name in the tool-tip of image and marker
+            $('#info-img' + index).attr('title', name);
 
-                var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
-                var textStr2 = "<br>Photo provided by: <br><a href='https://foursquare.com'>Foursquare</a>";
-                // console.log("textStr and 2:", textStr, textStr2);
-                // Now load or reload the info window with the photo
-                $('#info-text' + index).append(textStr);
-                $('#info-text' + index).append(textStr2);
-                $('#info-img' + index).attr('src', photoStr);
-
-                // The following puts the name in the tool-tip of image and marker
-                $('#info-img' + index).attr('title', name);
-
-                // document.getElementById('info-img').src = photoStr;
-                // document.getElementById('info-img').src = 'https://irs2.4sqi.net/img/general/cap300/tJEoX0HCLwfR_Ddx5GSzF1a-Fxmq-db5TcrHx5EXev8.jpg';
-                // console.log("items." + item + " = " + JSON.stringify(items[item].venue.featuredPhotos[0]));
-
-            // }
-
-            // console.log("data.response:" + data.response.groups[0]);
 
             console.log("success");
         }
