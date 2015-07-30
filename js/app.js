@@ -1,8 +1,8 @@
 var enableMarkerLoad = false;
 var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
-var testLat = "-120.70558699999998";
-var testLng = "-120.70558699999998";
+// var testLat = "-120.70558699999998";
+// var testLng = "-120.70558699999998";
 // var photoStr;
 
 
@@ -61,12 +61,24 @@ computeShowArray();
 var computeContentString = function() {
     for (var i = 0; i < locations.length; i++) {
         var contentString = "";
-        for (var j = 0; j < locations[i].infoAry.length; j++) {
-            contentString += "<p>";
-            contentString += locations[i].infoAry[j].type + ": ";
-            contentString += locations[i].infoAry[j].infoText + "</p>";
-        }
-        contentString += "'<img id='info-img" + i + "' title='' src='' />";
+        // for (var j = 0; j < locations[i].infoAry.length; j++) {
+        //     contentString += "<p>";
+        //     contentString += locations[i].infoAry[j].type + ": ";
+        //     contentString += locations[i].infoAry[j].infoText + "</p>";
+        // }
+
+        // Text from my database
+        contentString += "<p>";
+        contentString += locations[i].name + "<br>";
+        contentString += locations[i].url;
+        contentString += "</p>";
+
+        // image and test from FourSquare
+        contentString += "<img id='info-img" + i + "' alt='Venue photo' title='' src='' />";
+        contentString += "<p id='info-text" + i + "'></p>";
+        // Move the following to be added if a photo is available, just an id placeholder here
+        // contentString += "<p>Photo provided by <a href='https://foursquare.com'>Foursquare</a>";
+        contentString += "</p>";
         locations[i].infoWindowContent = contentString;
         // console.log("conent stored:", contentString);
         locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
@@ -92,6 +104,7 @@ var toggleBounce = function(index) {
     }
 };
 
+/*
 var get4sqExplore = function(index) {
     var lat = locations[index].lat;
     var lng = locations[index].lng;
@@ -156,6 +169,7 @@ var get4sqExplore = function(index) {
         console.log( "finished" );
     });
 };
+*/
 
 var get4sqSearch = function(index) {
     var lat = locations[index].lat;
@@ -177,13 +191,17 @@ var get4sqSearch = function(index) {
 
             // if the id is undefined, then the venue is not listed.
             if (!data.response.venues[0]) {
-                console.log("This venue was not found in https://foursquare.com/");
+                var textStr = "This venue was not found at <a href='https://foursquare.com'>Foursquare</a>";
+                // "This venue was not found in https://foursquare.com/";
+                // console.log("textStr=" + textStr);
+                $('#info-text' + index).append(textStr);
+                $('#info-img' + index).attr('alt', "Venue photo not available");
             } else {
                 var id = data.response.venues[0].id;
                 var name = data.response.venues[0].name;
                 // console.log("id", JSON.stringify(id));
-                console.log("id:", id);
-                console.log("name:", name);
+                // console.log("id:", id);
+                // console.log("name:", name);
                 var result = {id: id, name: name};
                 // return result;
                 // var result = get4sqSearch(index);
@@ -226,10 +244,10 @@ var get4sqVenueDetail = function(index, name, id) {
             var url = data.response.venue.canonicalUrl;
            // var name2 = data.response.venue.name;
             // console.log("id", JSON.stringify(id));
-            console.log("name:", name);
-            console.log("bestPhoto:", bestPhoto);
-            console.log("bestPhoto.prefix", bestPhotoPrefix);
-            console.log("url:", url);
+            // console.log("name:", name);
+            // console.log("bestPhoto:", bestPhoto);
+            // console.log("bestPhoto.prefix", bestPhotoPrefix);
+            // console.log("url:", url);
 
             // console.log("length=" + items.length);
             // for (var item =0; item < items.length; item++) {
@@ -245,12 +263,17 @@ var get4sqVenueDetail = function(index, name, id) {
                     data.response.venue.bestPhoto.prefix +
                     'cap300' +
                     data.response.venue.bestPhoto.suffix;
-                console.log("photoStr = " + photoStr);
+                // console.log("photoStr = " + photoStr);
 
+                var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
+                var textStr2 = "<br>Photo provided by: <br><a href='https://foursquare.com'>Foursquare</a>";
+                // console.log("textStr and 2:", textStr, textStr2);
                 // Now load or reload the info window with the photo
+                $('#info-text' + index).append(textStr);
+                $('#info-text' + index).append(textStr2);
                 $('#info-img' + index).attr('src', photoStr);
 
-                // The following puts the name in the tool-tip of image
+                // The following puts the name in the tool-tip of image and marker
                 $('#info-img' + index).attr('title', name);
 
                 // document.getElementById('info-img').src = photoStr;
