@@ -92,13 +92,12 @@ var toggleBounce = function(index) {
     }
 };
 
-var get4sqphoto = function(index) {
+var get4sqExplore = function(index) {
     var lat = locations[index].lat;
     var lng = locations[index].lng;
     console.log("lat, lng: ", lat, lng);
 
     var jqxhr = $.get("https://api.foursquare.com/v2/venues/explore" +
-        // "?near=Paso Robles,CA" +
         "?ll=" + lat +"," + lng +
         // "?ll=35.5557948,-120.73473939999997" +
         "&client_id=" + CLIENT_ID +
@@ -128,8 +127,9 @@ var get4sqphoto = function(index) {
                 console.log("photoStr = " + photoStr);
 
                 // Now load or reload the info window with the photo
-
                 $('#info-img' + index).attr('src', photoStr);
+
+                // The following puts the name in the tool-tip of image
                 $('#info-img' + index).attr('title', JSON.stringify(items[item].venue.name));
 
                 // document.getElementById('info-img').src = photoStr;
@@ -156,6 +156,129 @@ var get4sqphoto = function(index) {
         console.log( "finished" );
     });
 };
+
+var get4sqSearch = function(index) {
+    var lat = locations[index].lat;
+    var lng = locations[index].lng;
+    var name = locations[index].name;
+    console.log("lat, lng: ", lat, lng);
+
+    var jqxhr = $.get("https://api.foursquare.com/v2/venues/search" +
+        "?ll=" + lat +"," + lng +
+        "&client_id=" + CLIENT_ID +
+        "&client_secret=" + CLIENT_SECRET +
+        "&limit=1" +
+        "&v=20140115" +
+        "&query=" + name +
+        "&intent=match" +
+        "&m=foursquare",
+        function(data) {
+            // console.log("testData: " + JSON.stringify(data));
+
+            // if the id is undefined, then the venue is not listed.
+            if (!data.response.venues[0]) {
+                console.log("This venue was not found in https://foursquare.com/");
+            } else {
+                var id = data.response.venues[0].id;
+                var name = data.response.venues[0].name;
+                // console.log("id", JSON.stringify(id));
+                console.log("id:", id);
+                console.log("name:", name);
+                var result = {id: id, name: name};
+                // return result;
+                // var result = get4sqSearch(index);
+                console.log("name, id:", result.name, result.id);
+                get4sqVenueDetail(index, name, id);
+            }
+
+            console.log("success");
+        }
+    )
+
+      .done(function() {
+       console.log("jqxhr: " + jqxhr);
+       console.log( "second success" );
+    })
+        .fail(function() {
+        console.log( "error" );
+
+    });
+
+        jqxhr.always(function() {
+        console.log( "finished" );
+    });
+};
+
+var get4sqVenueDetail = function(index, name, id) {
+    var venueID = id;
+
+    var jqxhr = $.get("https://api.foursquare.com/v2/venues/" + venueID +
+        "?client_id=" + CLIENT_ID +
+        "&client_secret=" + CLIENT_SECRET +
+        "&v=20140115" +
+        "&m=foursquare",
+        function(data) {
+            // console.log("testData: " + JSON.stringify(data));
+            // console.log("testData: " + JSON.stringify(data.response));
+
+            var bestPhoto = JSON.stringify(data.response.venue.bestPhoto);
+            var bestPhotoPrefix = JSON.stringify(data.response.venue.bestPhoto.prefix);
+            var url = data.response.venue.canonicalUrl;
+           // var name2 = data.response.venue.name;
+            // console.log("id", JSON.stringify(id));
+            console.log("name:", name);
+            console.log("bestPhoto:", bestPhoto);
+            console.log("bestPhoto.prefix", bestPhotoPrefix);
+            console.log("url:", url);
+
+            // console.log("length=" + items.length);
+            // for (var item =0; item < items.length; item++) {
+            //     console.log("items." + item + ".name = " + JSON.stringify(items[item].venue.name));
+                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue.photos.groups[0].items[0].prefix));
+                // console.log("items." + item + ".photos = " + JSON.stringify(items[item].venue));
+
+                // Here we want to get the photo url and place the photo
+                // in the info window.
+                // First assemble the url string with the photo size limit set
+
+                var photoStr = '' +
+                    data.response.venue.bestPhoto.prefix +
+                    'cap300' +
+                    data.response.venue.bestPhoto.suffix;
+                console.log("photoStr = " + photoStr);
+
+                // Now load or reload the info window with the photo
+                $('#info-img' + index).attr('src', photoStr);
+
+                // The following puts the name in the tool-tip of image
+                $('#info-img' + index).attr('title', name);
+
+                // document.getElementById('info-img').src = photoStr;
+                // document.getElementById('info-img').src = 'https://irs2.4sqi.net/img/general/cap300/tJEoX0HCLwfR_Ddx5GSzF1a-Fxmq-db5TcrHx5EXev8.jpg';
+                // console.log("items." + item + " = " + JSON.stringify(items[item].venue.featuredPhotos[0]));
+
+            // }
+
+            // console.log("data.response:" + data.response.groups[0]);
+
+            console.log("success");
+        }
+    )
+
+      .done(function() {
+       console.log("jqxhr: " + jqxhr);
+       console.log( "second success" );
+    })
+        .fail(function() {
+        console.log( "error" );
+
+    });
+
+        jqxhr.always(function() {
+        console.log( "finished" );
+    });
+};
+
 
 
 
@@ -186,7 +309,7 @@ var MyViewModel = function(places) {
     }));
 
     // Find out if the current item includes the selected type & search filter
-    // Enables/disables visible
+    // Enables/disables list visibility
     self.includesSelectedType = function (selected, index, show) {
         if (show.indexOf(selected()[0]) >= 0) {
             // Includes selected type
@@ -218,8 +341,7 @@ var MyViewModel = function(places) {
 
     // show markers
     self.showMarker = function(i) {
-                markerArray[i].setMap(map);
-        // }
+        markerArray[i].setMap(map);
     };
 
     // hide markers
@@ -234,7 +356,10 @@ var MyViewModel = function(places) {
     self.foursquareTest = function(index) {
         // console.log("CS:", CLIENT_SECRET);
         // console.log("CI:", CLIENT_ID);
-        get4sqphoto(index);
+        // get4sqSearch(index);
+        get4sqSearch(index);
+        // console.log("name, id:", result.name, result.id);
+        // get4sqVenueDetail(index);
     };
 
 
@@ -293,17 +418,10 @@ function attachInfotext(marker, i) {
     google.maps.event.addListener(marker, 'click', function() {
         closeInfoWindows();
         $('#info-img').attr('src', '');
-            infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
-        get4sqphoto(i);
-        // infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
-        // infowindow.open(marker.get('map'), marker);
+        infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+        get4sqSearch(i);
     });
 }
-
-        // console.log("infowindow:", infowindow);
-        // console.log("listener:", listener);
-        // console.log("markerArray[i]:", markerArray[i]);
-
 
 function initialize() {
     var mapCanvas = document.getElementById('map-canvas');
@@ -322,7 +440,6 @@ $(document).ready(function () {
     setMarkers(map, locations);
     ko.applyBindings(new MyViewModel(locations));
     console.log("maps loaded");
-    // consider an overlay page or dropping markers
     window.setTimeout(function() {
         enableMarkerLoad = true;
     }, 2000);
