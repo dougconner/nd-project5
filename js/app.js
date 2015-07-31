@@ -1,4 +1,14 @@
 var enableMarkerLoad = false;
+var errorMsg = {};
+
+// Foursquare Ajax request fails
+errorMsg.fail = "The data request to Foursquare failed for some reason.<br>";
+errorMsg.fail += "Please check your internet connection and restart app.";
+
+// Google.maps request fails
+errorMsg.maps = "The data requrest to google.maps failed<br>.";
+errorMsg.maps += " <br>Please check your internet connection and restart app.";
+
 var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
 
@@ -54,29 +64,36 @@ var computeShowArray = function() {
 computeShowArray();
 
 var computeContentString = function() {
-    for (var i = 0; i < locations.length; i++) {
-        var contentString = "";
-        // for (var j = 0; j < locations[i].infoAry.length; j++) {
-        //     contentString += "<p>";
-        //     contentString += locations[i].infoAry[j].type + ": ";
-        //     contentString += locations[i].infoAry[j].infoText + "</p>";
-        // }
+    // first google map internet use, detect a failure
+    try {
+        for (var i = 0; i < locations.length; i++) {
+            var contentString = "";
+            // for (var j = 0; j < locations[i].infoAry.length; j++) {
+            //     contentString += "<p>";
+            //     contentString += locations[i].infoAry[j].type + ": ";
+            //     contentString += locations[i].infoAry[j].infoText + "</p>";
+            // }
 
-        // Text from my database
-        contentString += "<p>";
-        contentString += locations[i].name + "<br>";
-        contentString += locations[i].url;
-        contentString += "</p>";
+            // Text from my database
+            contentString += "<p>";
+            contentString += locations[i].name + "<br>";
+            contentString += locations[i].url;
+            contentString += "</p>";
 
-        // image and test from FourSquare
-        contentString += "<img id='info-img" + i + "' alt='Venue photo' title='' src='' />";
-        contentString += "<p id='info-text" + i + "'></p>";
-        // Move the following to be added if a photo is available, just an id placeholder here
-        // contentString += "<p>Photo provided by <a href='https://foursquare.com'>Foursquare</a>";
-        contentString += "</p>";
-        locations[i].infoWindowContent = contentString;
-        // console.log("conent stored:", contentString);
-        locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
+            // image and test from FourSquare
+            contentString += "<img id='info-img" + i + "' alt='Venue photo' title='' src='' />";
+            contentString += "<p id='info-text" + i + "'></p>";
+            // Move the following to be added if a photo is available, just an id placeholder here
+            // contentString += "<p>Photo provided by <a href='https://foursquare.com'>Foursquare</a>";
+            contentString += "</p>";
+            locations[i].infoWindowContent = contentString;
+            // console.log("conent stored:", contentString);
+            locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
+        }
+    }
+    catch(err) {
+        $('#error-msg').replaceWith(errorMsg.maps);
+        console.log("google.maps error caught:", err.errorMsg);
     }
 };
 computeContentString();
@@ -139,16 +156,19 @@ var get4sqSearch = function(index) {
                 get4sqVenueDetail(index, name, id);
             }
 
+            // $('#error-msg').replaceWith("");
             console.log("success");
         }
-    )
+    );
 
-      .done(function() {
-       console.log("jqxhr: " + jqxhr);
-       console.log( "second success" );
-    })
-        .fail(function() {
-        console.log( "error" );
+        jqxhr.done(function() {
+        console.log( "second success" );
+    });
+        jqxhr.fail(function() {
+        // console.log( "error" );
+        $('#error-msg').replaceWith(errorMsg.fail);
+        // $('#info-text' + index).replaceWith(errorMsg.fail);
+        // $('#info-img' + index).attr('alt', "");
 
     });
 
@@ -169,8 +189,8 @@ var get4sqVenueDetail = function(index, name, id) {
             // console.log("testData: " + JSON.stringify(data));
             // console.log("testData: " + JSON.stringify(data.response));
 
-            var bestPhoto = JSON.stringify(data.response.venue.bestPhoto);
-            var bestPhotoPrefix = JSON.stringify(data.response.venue.bestPhoto.prefix);
+            // var bestPhoto = JSON.stringify(data.response.venue.bestPhoto);
+            // var bestPhotoPrefix = JSON.stringify(data.response.venue.bestPhoto.prefix);
             var url = data.response.venue.canonicalUrl;
 
             var photoStr = '' +
@@ -192,15 +212,19 @@ var get4sqVenueDetail = function(index, name, id) {
 
 
             console.log("success");
+            // $('#error-msg').replaceWith("");
         }
-    )
+    );
 
-      .done(function() {
-       console.log("jqxhr: " + jqxhr);
-       console.log( "second success" );
-    })
-        .fail(function() {
+        jqxhr.done(function() {
+        console.log( "second success" );
+    });
+        jqxhr.fail(function() {
         console.log( "error" );
+        console.log(errorMsg.fail);
+        $('#error-msg').replaceWith(errorMsg.fail);
+        // $('#info-text' + index).replaceWith(errorMsg.fail);
+        // $('#info-img' + index).attr('alt', "");
 
     });
 
@@ -244,9 +268,11 @@ var MyViewModel = function(places) {
         if (show.indexOf(selected()[0]) >= 0) {
             // Includes selected type
             self.showMarker(index);
+            console.log("type is true");
 
             if(self.places()[index].name.indexOf(self.searchText()) !== -1) {
                 // Also satisfies search text
+                console.log("text search is true too");
                 return true;
             }
         }
@@ -284,12 +310,7 @@ var MyViewModel = function(places) {
 
     // Test ajax with foursquare
     self.foursquareTest = function(index) {
-        // console.log("CS:", CLIENT_SECRET);
-        // console.log("CI:", CLIENT_ID);
-        // get4sqSearch(index);
         get4sqSearch(index);
-        // console.log("name, id:", result.name, result.id);
-        // get4sqVenueDetail(index);
     };
 
 
@@ -311,12 +332,12 @@ var MyViewModel = function(places) {
             toggleBounce(index);
             self.foursquareTest(index);
         }
-        // self.foursquareTest(index);
     };
 
 };
 
 /************ End of KO code *************************/
+
 /************ Google map code, outside KO ************/
 
 function setMarkers(map, locations) {
@@ -335,12 +356,6 @@ function setMarkers(map, locations) {
         // Attach info text
         attachInfotext(marker, i);
     }
-    // var markers = markerArray;
-    // var bounds = new google.maps.LatLngBounds();
-    // for (var i = 0; i < markers.length; i++) {
-    //     bounds.extend(markers[i].getPosition());
-    // }
-    // map.fitBounds(bounds);
 }
 
 function attachInfotext(marker, i) {
@@ -365,26 +380,32 @@ function attachInfotext(marker, i) {
 function initialize() {
     var mapCanvas = document.getElementById('map-canvas');
     var mapOptions = {
-        // center: new google.maps.LatLng(35.64222479297878, -120.68633100585936),
-        // zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
+    console.log("here 0");
     var map = new google.maps.Map(mapCanvas, mapOptions);
+    console.log("here 1");
     return map;
 }
 
 $(document).ready(function () {
     // disable map while working on other stuff
+    console.log("here 2");
     map = initialize();
     setMarkers(map, locations);
+
+    // Set map size and position to include all markers
     var markers = markerArray;
     var bounds = new google.maps.LatLngBounds();
     for (var i = 0; i < markers.length; i++) {
         bounds.extend(markers[i].getPosition());
     }
     map.fitBounds(bounds);
+
     ko.applyBindings(new MyViewModel(locations));
-    console.log("maps loaded");
+    // console.log("maps loaded");
+
+    // The timeout keeps infowindows off the screen during initialization
     window.setTimeout(function() {
         enableMarkerLoad = true;
     }, 2000);

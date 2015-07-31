@@ -77,4 +77,8 @@ html, body, #wrapper{
 
 }
 
+#error-div{
+    color: red;
+}
+
 
