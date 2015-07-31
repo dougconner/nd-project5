@@ -210,7 +210,7 @@ var get4sqVenueDetail = function(index, name, id) {
 };
 
 
-
+/************ KO code ******************/
 
 var MyViewModel = function(places) {
     'use strict';
@@ -316,6 +316,7 @@ var MyViewModel = function(places) {
 
 };
 
+/************ End of KO code *************************/
 /************ Google map code, outside KO ************/
 
 function setMarkers(map, locations) {
@@ -334,6 +335,12 @@ function setMarkers(map, locations) {
         // Attach info text
         attachInfotext(marker, i);
     }
+    var markers = markerArray;
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }
+    map.fitBounds(bounds);
 }
 
 function attachInfotext(marker, i) {
@@ -353,11 +360,13 @@ function attachInfotext(marker, i) {
     });
 }
 
+
+
 function initialize() {
     var mapCanvas = document.getElementById('map-canvas');
     var mapOptions = {
-        center: new google.maps.LatLng(35.64222479297878, -120.68633100585936),
-        zoom: 11,
+        // center: new google.maps.LatLng(35.64222479297878, -120.68633100585936),
+        // zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(mapCanvas, mapOptions);
