@@ -121,10 +121,10 @@ var get4sqSearch = function(index) {
 
             // if the id is undefined, then the venue is not listed.
             if (!data.response.venues[0]) {
-                var textStr = "This venue was not found at <a href='https://foursquare.com'>Foursquare</a>";
+                var textStr = "<br>This venue was not found at <a href='https://foursquare.com'>Foursquare</a>";
                 // "This venue was not found in https://foursquare.com/";
                 // console.log("textStr=" + textStr);
-                $('#info-text' + index).append(textStr);
+                $('#info-text' + index).replaceWith(textStr);
                 $('#info-img' + index).attr('alt', "Venue photo not available");
             } else {
                 var id = data.response.venues[0].id;
@@ -183,8 +183,8 @@ var get4sqVenueDetail = function(index, name, id) {
             var textStr2 = "<br>Photo provided by: <br><a href='https://foursquare.com'>Foursquare</a>";
             // console.log("textStr and 2:", textStr, textStr2);
             // Now load or reload the info window with the photo
-            $('#info-text' + index).append(textStr);
-            $('#info-text' + index).append(textStr2);
+            $('#info-text' + index).replaceWith(textStr + textStr2);
+            // $('#info-text' + index).append(textStr2);
             $('#info-img' + index).attr('src', photoStr);
 
             // The following puts the name in the tool-tip of image and marker
@@ -335,12 +335,12 @@ function setMarkers(map, locations) {
         // Attach info text
         attachInfotext(marker, i);
     }
-    var markers = markerArray;
-    var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].getPosition());
-    }
-    map.fitBounds(bounds);
+    // var markers = markerArray;
+    // var bounds = new google.maps.LatLngBounds();
+    // for (var i = 0; i < markers.length; i++) {
+    //     bounds.extend(markers[i].getPosition());
+    // }
+    // map.fitBounds(bounds);
 }
 
 function attachInfotext(marker, i) {
@@ -377,6 +377,12 @@ $(document).ready(function () {
     // disable map while working on other stuff
     map = initialize();
     setMarkers(map, locations);
+    var markers = markerArray;
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < markers.length; i++) {
+        bounds.extend(markers[i].getPosition());
+    }
+    map.fitBounds(bounds);
     ko.applyBindings(new MyViewModel(locations));
     console.log("maps loaded");
     window.setTimeout(function() {
