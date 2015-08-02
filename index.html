@@ -18,8 +18,6 @@
                 <ul id="list1" data-bind="foreach: places">
                     <li id="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
                 </ul>
-                <button data-bind="click: foursquareTest('0')">4sq test</button>
-                <button id="toggle" data-bind="click: ">hideMarker</button>
             </div>
             <div id="error-div">
                 <p id="error-msg"></p>
