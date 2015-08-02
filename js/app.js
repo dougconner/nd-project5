@@ -2,12 +2,14 @@ var enableMarkerLoad = false;
 var errorMsg = {};
 
 // Foursquare Ajax request fails
-errorMsg.fail = "The data request to Foursquare failed for some reason.<br>";
-errorMsg.fail += "Please check your internet connection and restart app.";
+errorMsg.fail = "The data request to Foursquare failed. ";
+errorMsg.fail += "<br>Please check your internet connection.";
 
 // Google.maps request fails
-errorMsg.maps = "The data requrest to google.maps failed<br>.";
-errorMsg.maps += " <br>Please check your internet connection and restart app.";
+errorMsg.maps = "The data requrest to google.maps failed.";
+errorMsg.maps += "<br>Please check your internet connection.";
+
+var errorString = "";
 
 var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
@@ -15,10 +17,13 @@ var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
 
 var locations = initialData_js;
 var map;
+
+// placeTypes is an array of all the place types in the database
+// The array is initialized with "All" which will show all types.
 var placeTypes = ["All"];
+
 var markerArray = [];
 var infowindowArray = [];
-// var infowindow;
 
 // Temp to remove jshint issues
 var ko, console, google, show;
@@ -40,9 +45,8 @@ sortNames();
 
 
 // Sets 'show' array values for visibility control
-// Also creates "types" list and sorts it by name
-// Could move this to place-data app for pre-processing
-
+// Locations are shown only when an included type is selected.
+// Also generates the  "types" list for the placeTypes array and sorts it by name
 var computeShowArray = function() {
     var testType;
     for (var i = 0; i < locations.length; i++) {
@@ -76,26 +80,25 @@ var computeContentString = function() {
 
             // Text from my database
             contentString += "<p>";
-            contentString += locations[i].name + "<br>";
-            contentString += locations[i].url;
+            contentString += "<a href='" + locations[i].url + "'> " + locations[i].name  + "</a>";
             contentString += "</p>";
 
-            // image and test from FourSquare
+            // image and text placeholder for FourSquare data from ajax request
             contentString += "<img id='info-img" + i + "' alt='Venue photo' title='' src='' />";
             contentString += "<p id='info-text" + i + "'></p>";
-            // Move the following to be added if a photo is available, just an id placeholder here
-            // contentString += "<p>Photo provided by <a href='https://foursquare.com'>Foursquare</a>";
-            contentString += "</p>";
+
             locations[i].infoWindowContent = contentString;
-            // console.log("conent stored:", contentString);
+
+            // TODO need to rename this function or move the following to a new function
+            // The following line is also the reason for the try-catch code
             locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
         }
     }
     catch(err) {
-        $('#error-msg').replaceWith(errorMsg.maps);
-        console.log("google.maps error caught:", err.errorMsg);
+        $('#error-msg').html(errorMsg.maps);
     }
 };
+
 computeContentString();
 
 var closeInfoWindows = function() {
@@ -117,7 +120,7 @@ var toggleBounce = function(index) {
 };
 
 
-
+// search for the selected venue in the 4sq database
 var get4sqSearch = function(index) {
     var lat = locations[index].lat;
     var lng = locations[index].lng;
@@ -141,7 +144,7 @@ var get4sqSearch = function(index) {
                 var textStr = "<br>This venue was not found at <a href='https://foursquare.com'>Foursquare</a>";
                 // "This venue was not found in https://foursquare.com/";
                 // console.log("textStr=" + textStr);
-                $('#info-text' + index).replaceWith(textStr);
+                $('#info-text' + index).html(textStr);
                 $('#info-img' + index).attr('alt', "Venue photo not available");
             } else {
                 var id = data.response.venues[0].id;
@@ -156,7 +159,9 @@ var get4sqSearch = function(index) {
                 get4sqVenueDetail(index, name, id);
             }
 
-            // $('#error-msg').replaceWith("");
+    errorString = "";
+    // console.log("errorString:", errorString);
+    // $('#error-msg').html(errorString);
             console.log("success");
         }
     );
@@ -165,18 +170,19 @@ var get4sqSearch = function(index) {
         console.log( "second success" );
     });
         jqxhr.fail(function() {
-        // console.log( "error" );
-        $('#error-msg').replaceWith(errorMsg.fail);
-        // $('#info-text' + index).replaceWith(errorMsg.fail);
-        // $('#info-img' + index).attr('alt', "");
+        console.log( "search error" );
+        errorString = errorMsg.fail;
+        // $('#error-msg').html(errorString);
 
     });
 
         jqxhr.always(function() {
+        $('#error-msg').html(errorString);
         console.log( "finished" );
     });
 };
 
+// If the search found the venue, see if a "bestPhoto" is available
 var get4sqVenueDetail = function(index, name, id) {
     var venueID = id;
 
@@ -203,16 +209,18 @@ var get4sqVenueDetail = function(index, name, id) {
             var textStr2 = "<br>Photo provided by: <br><a href='https://foursquare.com'>Foursquare</a>";
             // console.log("textStr and 2:", textStr, textStr2);
             // Now load or reload the info window with the photo
-            $('#info-text' + index).replaceWith(textStr + textStr2);
+            $('#info-text' + index).html(textStr + textStr2);
             // $('#info-text' + index).append(textStr2);
             $('#info-img' + index).attr('src', photoStr);
 
             // The following puts the name in the tool-tip of image and marker
             $('#info-img' + index).attr('title', name);
 
+    errorString = "";
+    // console.log("errorString:", errorString);
+    // $('#error-msg').html(errorString);
 
             console.log("success");
-            // $('#error-msg').replaceWith("");
         }
     );
 
@@ -220,15 +228,17 @@ var get4sqVenueDetail = function(index, name, id) {
         console.log( "second success" );
     });
         jqxhr.fail(function() {
-        console.log( "error" );
-        console.log(errorMsg.fail);
-        $('#error-msg').replaceWith(errorMsg.fail);
-        // $('#info-text' + index).replaceWith(errorMsg.fail);
+        console.log( "Venue detail error" );
+        errorString = errorMsg.fail;
+        // $('#error-msg').html(errorString);
+        //  console.log("errorString:", errorString);
+       // $('#info-text' + index).html(errorMsg.fail);
         // $('#info-img' + index).attr('alt', "");
 
     });
 
         jqxhr.always(function() {
+        $('#error-msg').html(errorString);
         console.log( "finished" );
     });
 };
