@@ -10,16 +10,17 @@
     <div id="wrapper">
         <div id="text-div">
             <div id="col-1-div">
-                <div id="search-div">
-                    <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                    <p>Search within Place Type</p>
-                    <input data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
-                </div>
                 <div id="error-div">
                     <p id="error-msg"></p>
                 </div>
+                <div id="search-div">
+                    <p>Place Type: <br>
+                    <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                    <p>Search within Place Type:<br>
+                    <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
+                </div>
                 <div id="dev-div">
-                    <a href="place-data.html">Add Places (development only)</a>
+                    <p><a href="place-data.html">Add Places (development only)</a></p>
                 </div>
             </div>
             <div id="col-2-div">

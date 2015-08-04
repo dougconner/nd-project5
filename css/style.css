@@ -1,46 +1,82 @@
-body, textarea, input, li { font-family: arial; font-size: 14px;
+body, textarea, select {
+    font-family: arial;
+    font-size: 110%;
 }
 
 html, body, #wrapper{
     height: 100%;
     width: 100%;
+    background-color: #cdf;
 }
 
-/*for portrait aspect
-*/
-#text-div{
-    height: 30%;
-    width: 100%;
-    float: top;
+label {
+    padding-left: 5%;
 }
 
-#map-canvas {
-    height: 69.9%;
-    width: 100%;
-    float: bottom;
+li {
+    margin: 2%;
+    padding: 2%;
 }
 
-#search-div{
-    height: 10%;
-    width: 90%;
-    float: top;
-}
-
-#list-div{
-    height: 79%;
-    width: 100%;
-    float: top;
-    overflow: auto;
+#list-div, select {
     cursor: pointer;
 }
 
-#list-item1{
-    width: 100%;
-}
+@media (orientation: portrait) {
 
-#footer{
-    height: 10%;
-    width:  100%;
+    #text-div {
+        height: 28%;
+        width: 100%;
+        float: top;
+    }
+
+    #map-canvas {
+        height: 68%;
+        margin: 1%;
+        width: 98%;
+        float: bottom;
+    }
+
+    #col-1-div{
+        background-color: #F0E8E0;
+        margin: 1%;
+        height: 99%;
+        width: 48%;
+        float: left;
+        overflow: auto;
+   }
+
+    #error-div{
+        color: red;
+    }
+    #search-div{
+        padding-left: 5%;
+    }
+
+    #dev-div{
+        padding-left: 5%;
+    }
+
+    #col-2-div{
+        background-color: #F0E8E0;
+        margin: 1%;
+        height: 99%;
+        width: 48%;
+        float: right;
+        overflow: auto;
+    }
+
+    #list-div{
+        height: 100%;
+        width: 100%;
+        float: right;
+        overflow: auto;
+        cursor: pointer;
+    }
+
+    #list-item1{
+        width: 100%;
+    }
 }
 
 @media (orientation: landscape) {
@@ -52,34 +88,51 @@ html, body, #wrapper{
 
     #map-canvas {
         height: 100%;
-        width: 69.9%;
+        width: 70%;
         float: left;
     }
 
-    #search-div{
-        height: 3%;
-        width: 92%;
-        float: top;
-    }
-
-    #list-div{
-        height: 90%;
-        width: 100%;
-        float: top;
+    #col-1-div{
+        background-color: #F0E8E0;
+        margin: 1%;
+        height: 29%;
+        width: 99%;
         overflow: auto;
     }
 
-    #footer{
-        height: 4.9%;
-        width: 100%;
-        float: bottom;
+    #error-div{
+        padding-left: 5%;
+        padding-right: 2%;
+        color: red;
     }
 
+    #search-div{
+        padding-left: 5%;
+        padding-right: 2%;
+    }
+
+    #dev-div{
+        padding-left: 5%;
+        padding-right: 2%;
+    }
+
+    #col-2-div{
+        background-color: #F0E8E0;
+        margin: 1%;
+        height: 69%;
+        width: 98%;
+    }
+
+    #list-div{
+        width: 100%;
+        overflow: auto;
+        cursor: pointer;
+    }
+
+    #list-item1{
+        width: 100%;
+    }
 }
 
-#error-div{
-    color: red;
-    background-color: yellow;
-}
 
 
