@@ -1,5 +1,27 @@
-// TODO: Need to escape and single or double quotes in entered text.
+// TODO: Need to automatically escape and single or double quotes in entered text.
+// See info text for Thomas Hill Organics for an example
 // This will probably require a computed observable.
+
+/*********** HOW to USE **************
+
+1. Add places and enter any desired data.
+2. As long as Address and city/state is filled in it will attempt to get lat/lng
+3. Leave lat/lng empty (you can manually add values and it will not overwrite them).
+4. Click the "Generate data array" and it will:
+   A. Attempt to lookup lat/lng if blank
+   B. Write all the data to local storage
+5. Click on the "Reload data array" and it will:
+   A. Relaod the table from the data in local memory which should include lat/lng
+   B. Also write the data array in the text box.
+   C. At this point the data only resides in the local memory, not in the data.js file
+6. Now copy everything (cmd A then Cmd C on mac) in the Data Array text box
+   and completely overwrite the data.js text. Save the file and everything will be
+   available to the main program.
+7. Save the file using CodeKit or note: The program looks for a minified file
+   created by CodeKit. Although data.js does not need to be minified, it must be found.
+   Make sure the paths to the new file are correct.
+
+***************************************/
 
 var initialData;
 var initialData_js;
@@ -30,8 +52,12 @@ function getGeocode(address, k) {
         // var marker = new google.maps.Marker({
         // map: map,
         // position: results[0].geometry.location
-        workingData[k].lat = results[0].geometry.location.A;
-        workingData[k].lng = results[0].geometry.location.F;
+        workingData[k].lat = results[0].geometry.location.G;
+        workingData[k].lng = results[0].geometry.location.K;
+        // workingData[k].lat = results[0].geometry.location.A;
+        // workingData[k].lng = results[0].geometry.location.F;
+        console.log("lat.G", results[0].geometry.location.G);
+        console.log("lng.K", results[0].geometry.location.K);
 
       } else {
         console.log("status not okay on item:", status);
@@ -190,39 +216,5 @@ var MyViewModel = function(places) {
 };
 
 
-
-function setMarkers(map, locations) {
-    // add markers to map
-    for (var i = 0; i < locations.length; i++) {
-        var location = locations[i];
-        var latLng = new google.maps.LatLng(location.lat, location.lng);
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: map,
-            title: location.name
-        });
-    }
-}
-
-
-function initialize() {
-    var mapCanvas = document.getElementById('map-canvas');
-    var mapOptions = {
-        center: new google.maps.LatLng(35.64222479297878, -120.68633100585936),
-        zoom: 11,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(mapCanvas, mapOptions);
-    return map;
-}
-
-/*
-$(document).ready(function () {
-   map = initialize();
-   // var map = initialize();
-   setMarkers(map, wineries);
-});
-
-*/
 ko.applyBindings(new MyViewModel(initialData));
 // var viewModel = new MyViewModel(initialData);

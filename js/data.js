@@ -2,7 +2,7 @@ var initialData_js =
 [
   {
   name: "Justin Vineyards & Winery",
-  url: "",
+  url: "http://justinwine.com/",
   addr1: "11680 Chimney Rock Road ",
   addr2: "Paso Robles, CA",
   lat: "35.6549549",
@@ -23,6 +23,7 @@ var initialData_js =
   infoAry: [
     {type: "Winery", infoText: "my winery info"},
     {type: "Food", infoText: "my food info"},
+    {type: "Lodging", infoText: "B&B"},
     ]
   },
   {
@@ -90,6 +91,17 @@ var initialData_js =
   lng: "-120.6194855",
   infoAry: [
     {type: "Lodging", infoText: "A B&B with good reviews (I've never stayed here)"},
+    ]
+  },
+  {
+  name: "Sculpterra Winery",
+  url: "www.sculpterra.com",
+  addr1: "5015 Linne Road",
+  addr2: "Paso Robles, CA",
+  lat: "35.6006138",
+  lng: "-120.61066119999998",
+  infoAry: [
+    {type: "Winery", infoText: "Great sculpture garden"},
     ]
   }
 ];

@@ -9,24 +9,29 @@
 <body>
     <div id="wrapper">
         <div id="text-div">
-            <div id="search-div">
-                <input data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
-                <button data-bind="">Search within Place Type</button>
+            <div id="col-1-div">
+                <div id="search-div">
+                    <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                    <p>Search within Place Type</p>
+                    <input data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
+                </div>
+                <div id="error-div">
+                    <p id="error-msg"></p>
+                </div>
+                <div id="dev-div">
+                    <a href="place-data.html">Add Places (development only)</a>
+                </div>
             </div>
-            <div id="list-div">
-                <p>Place Type Selected: <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType" id=""></select></p>
-                <ul id="list1" data-bind="foreach: places">
-                    <li id="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
-                </ul>
-            </div>
-            <div id="error-div">
-                <p id="error-msg"></p>
-            </div>
-            <div id="footer">
-                <a href="place-data.html">Add Places (development only)</a>
+            <div id="col-2-div">
+                <div id="list-div">
+                    <ul id="list1" data-bind="foreach: places">
+                        <li id="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div id="map-canvas" ></div>
+        <div id="map-canvas" >
+        </div>
     </div>
 
 

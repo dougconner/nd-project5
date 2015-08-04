@@ -112,7 +112,12 @@ var toggleBounce = function(index) {
     if (marker.getAnimation() !== null) {
     marker.setAnimation(null);
     } else {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
+        try {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+        catch(err) {
+            $('#error-msg').html(errorMsg.maps);
+        }
         window.setTimeout(function() {
             toggleBounce(index);
         }, 2100);
@@ -170,6 +175,7 @@ var get4sqSearch = function(index) {
     var lat = locations[index].lat;
     var lng = locations[index].lng;
     var name = locations[index].name;
+    console.log("name:", name);
     console.log("lat, lng: ", lat, lng);
 
     var jqxhr = $.get("https://api.foursquare.com/v2/venues/search" +
@@ -217,6 +223,65 @@ var get4sqSearch = function(index) {
     });
 };
 
+function attachInfotext(marker, i) {
+    try {
+        var infowindow = new google.maps.InfoWindow({
+            content: locations[i].infoWindowContent,
+            maxWidth: 300
+        });
+
+        // Store for list recall
+        infowindowArray[i] = infowindow;
+
+        google.maps.event.addListener(marker, 'click', function() {
+            closeInfoWindows();
+            $('#info-img').attr('src', '');
+            infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+            get4sqSearch(i);
+        });
+    }
+    catch(err) {
+        $('#error-msg').html(errorMsg.maps);
+    }
+}
+
+function setMarkers(map, locations) {
+    // add markers to map
+    // infowindow = new google.maps.InfoWindow({}); // Just one info window per best practice
+    console.log("locations:", locations);
+    for (var i = 0; i < locations.length; i++) {
+        try {
+            var marker = new google.maps.Marker({
+                position: locations[i].latLng,
+                map: map,
+                title: locations[i].name,
+                visible: true
+            });
+            markerArray[i] = marker;
+
+            // Attach info text
+            attachInfotext(marker, i);
+        }
+        catch(err) {
+            $('#error-msg').html(errorMsg.maps);
+        }
+    }
+}
+
+
+function initialize() {
+    var mapCanvas = document.getElementById('map-canvas');
+    var mapOptions = {
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    try {
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        return map;
+    }
+    catch(err) {
+        $('#error-msg').html(errorMsg.maps);
+    }
+}
 
 /************ KO code ******************/
 
@@ -316,54 +381,6 @@ var MyViewModel = function(places) {
 
 /************ End of KO code *************************/
 
-/************ Google map code, outside KO ************/
-
-function attachInfotext(marker, i) {
-    var infowindow = new google.maps.InfoWindow({
-        content: locations[i].infoWindowContent,
-        maxWidth: 300
-    });
-
-    // Store for list recall
-    infowindowArray[i] = infowindow;
-
-    google.maps.event.addListener(marker, 'click', function() {
-        closeInfoWindows();
-        $('#info-img').attr('src', '');
-        infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
-        get4sqSearch(i);
-    });
-}
-
-function setMarkers(map, locations) {
-    // add markers to map
-    // infowindow = new google.maps.InfoWindow({}); // Just one info window per best practice
-    console.log("locations:", locations);
-    for (var i = 0; i < locations.length; i++) {
-        var marker = new google.maps.Marker({
-            position: locations[i].latLng,
-            map: map,
-            title: locations[i].name,
-            visible: true
-        });
-        markerArray[i] = marker;
-
-        // Attach info text
-        attachInfotext(marker, i);
-    }
-}
-
-
-function initialize() {
-    var mapCanvas = document.getElementById('map-canvas');
-    var mapOptions = {
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    console.log("here 0");
-    var map = new google.maps.Map(mapCanvas, mapOptions);
-    console.log("here 1");
-    return map;
-}
 
 $(document).ready(function () {
     map = initialize();
@@ -371,11 +388,16 @@ $(document).ready(function () {
 
     // Set map size and position to include all markers
     var markers = markerArray;
-    var bounds = new google.maps.LatLngBounds();
-    for (var i = 0; i < markers.length; i++) {
-        bounds.extend(markers[i].getPosition());
+    try {
+        var bounds = new google.maps.LatLngBounds();
+        for (var i = 0; i < markers.length; i++) {
+            bounds.extend(markers[i].getPosition());
+        }
+        map.fitBounds(bounds);
     }
-    map.fitBounds(bounds);
+    catch(err) {
+        $('#error-msg').html(errorMsg.maps);
+    }
 
     ko.applyBindings(new MyViewModel(locations));
     // console.log("maps loaded");
@@ -385,6 +407,5 @@ $(document).ready(function () {
         enableMarkerLoad = true;
     }, 2000);
 });
-
 
 
