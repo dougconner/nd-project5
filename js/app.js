@@ -1,3 +1,9 @@
+// Temp to remove jshint issues
+var ko, console, google, show;
+
+var locations = initialData_js;
+var map;
+
 var enableMarkerLoad = false;
 var errorMsg = {};
 
@@ -15,9 +21,6 @@ var CLIENT_ID = "5MLJLSYO3U3D1NXRVDTDLYYWXNHP0CEMUOEG1C2ECMD20VO2";
 var CLIENT_SECRET = "40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH";
 
 
-var locations = initialData_js;
-var map;
-
 // placeTypes is an array of all the place types in the database
 // The array is initialized with "All" which will show all types.
 var placeTypes = ["All"];
@@ -25,11 +28,9 @@ var placeTypes = ["All"];
 var markerArray = [];
 var infowindowArray = [];
 
-// Temp to remove jshint issues
-var ko, console, google, show;
 
 // sort locations by name
-var sortNames = function() {
+var sortNames = function(locations) {
     // console.log("workingArray:", self.places());
     locations.sort(function(a,b) {
         if (a.name > b.name) {
@@ -41,13 +42,13 @@ var sortNames = function() {
         }
     });
 };
-sortNames();
+sortNames(locations);
 
 
 // Sets 'show' array values for visibility control
 // Locations are shown only when an included type is selected.
 // Also generates the  "types" list for the placeTypes array and sorts it by name
-var computeShowArray = function() {
+var computeShowArray = function(locations, placeTypes) {
     var testType;
     for (var i = 0; i < locations.length; i++) {
         show = ["All"];
@@ -65,10 +66,10 @@ var computeShowArray = function() {
         placeTypes.sort();
     }
 };
-computeShowArray();
+computeShowArray(locations, placeTypes);
 
 // Content for info window
-var computeContentString = function() {
+var computeContentString = function(locations) {
     for (var i = 0; i < locations.length; i++) {
         var contentString = "";
 
@@ -85,9 +86,9 @@ var computeContentString = function() {
     }
 };
 
-computeContentString();
+computeContentString(locations);
 
-var getLatLng = function() {
+var getLatLng = function(locations) {
     // first google map internet use, detect a failure
     try {
         for (var i = 0; i < locations.length; i++) {
@@ -99,7 +100,7 @@ var getLatLng = function() {
     }
 };
 
-getLatLng();
+getLatLng(locations);
 
 var closeInfoWindows = function() {
     for (var i = 0; i < markerArray.length; i++) {
@@ -198,7 +199,8 @@ var get4sqSearch = function(index) {
                 var id = data.response.venues[0].id;
                 var name = data.response.venues[0].name;
                 var result = {id: id, name: name};
-                // console.log("name, id:", result.name, result.id);
+
+                // get venue details and a photo
                 get4sqVenueDetail(index, name, id);
             }
 
@@ -213,7 +215,6 @@ var get4sqSearch = function(index) {
         jqxhr.fail(function() {
         console.log( "search error" );
         errorString = errorMsg.fail;
-        // $('#error-msg').html(errorString);
 
     });
 
@@ -247,7 +248,7 @@ function attachInfotext(marker, i) {
 
 function setMarkers(map, locations) {
     // add markers to map
-    // infowindow = new google.maps.InfoWindow({}); // Just one info window per best practice
+    // Just one info window per best practice
     console.log("locations:", locations);
     for (var i = 0; i < locations.length; i++) {
         try {
@@ -282,6 +283,7 @@ function initialize() {
         $('#error-msg').html(errorMsg.maps);
     }
 }
+
 
 /************ KO code ******************/
 
@@ -400,7 +402,6 @@ $(document).ready(function () {
     }
 
     ko.applyBindings(new MyViewModel(locations));
-    // console.log("maps loaded");
 
     // This timeout keeps infowindows off the screen during initialization
     window.setTimeout(function() {
