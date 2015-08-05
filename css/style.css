@@ -1,137 +1,158 @@
-body, textarea, select {
-    font-family: arial;
-    font-size: 110%;
+body,
+textarea,
+select,
+input {
+    font: 110% arial;
 }
 
-html, body, #wrapper{
+h3 {
+    text-align: center;
+}
+html,
+body,
+.wrapper {
+    background-color: #004;
     height: 100%;
     width: 100%;
-    background-color: #cdf;
 }
 
 label {
-    padding-left: 5%;
+    padding: 1% 2% 1% 5%;
 }
 
-li {
-    margin: 2%;
-    padding: 2%;
+.col-1-div,
+.col-2-div {
+    background-color: #f4efe8;
 }
 
-#list-div, select {
+select,
+.list-div  {
     cursor: pointer;
+}
+
+.list-div {
+    padding: 0 7% 5% 0%;
+    background-color: #faf7f3;
+
+}
+
+.list-item1 {
+    width: 100%;
+    padding: 0 8% 4% 2%;
 }
 
 @media (orientation: portrait) {
 
-    #text-div {
+    .text-div {
         height: 28%;
-        width: 100%;
-        float: top;
-    }
-
-    #map-canvas {
-        height: 68%;
-        margin: 1%;
         width: 98%;
-        float: bottom;
+        margin: 1%;
+        overflow: auto;
     }
 
-    #col-1-div{
-        background-color: #F0E8E0;
+    .map-div {
+        height: 69%;
+        width: 98%;
         margin: 1%;
-        height: 99%;
-        width: 48%;
+    }
+
+    .col-1-div {
+        height: 100%;
+        width: 49.5%;
         float: left;
         overflow: auto;
-   }
+    }
 
-    #error-div{
+    .error-div {
+        padding: 0 2% 0 5%;
         color: red;
     }
-    #search-div{
-        padding-left: 5%;
+
+    .search-div {
+        padding: 0 2% 0 5%;
     }
 
-    #dev-div{
-        padding-left: 5%;
+    .dev-div {
+        padding: 0 2% 0 5%;
     }
 
-    #col-2-div{
-        background-color: #F0E8E0;
-        margin: 1%;
-        height: 99%;
-        width: 48%;
-        float: right;
-        overflow: auto;
-    }
-
-    #list-div{
+    .col-2-div {
         height: 100%;
-        width: 100%;
+        width: 49.5%;
         float: right;
-        overflow: auto;
-        cursor: pointer;
+        background-color: #f4efe8;
+   }
+
+    .place-title {
+        background-color: #f4efe8;
+        border-bottom: 4px solid black;
+        height: 15%;
     }
 
-    #list-item1{
-        width: 100%;
+    .list-div {
+        height: 66%;
+        width: 93%;
+        float: right;
+        overflow: auto;
     }
+
+    .list-item1 {
+        width: 100%;
+        padding: 0 8% 4% 2%;
+   }
 }
 
 @media (orientation: landscape) {
-    #text-div{
-        height: 100%;
-        width: 30%;
+    .text-div {
+        height: 97%;
+        width: 29%;
+        margin: 0.5%;
         float: right;
     }
 
-    #map-canvas {
-        height: 100%;
-        width: 70%;
+    .map-div {
+        height: 98%;
+        width: 69%;
         float: left;
+        margin: 0.5%;
     }
 
-    #col-1-div{
-        background-color: #F0E8E0;
-        margin: 1%;
-        height: 29%;
-        width: 99%;
+    .col-1-div {
+        height: 28%;
+        width: 100%;
         overflow: auto;
     }
 
-    #error-div{
-        padding-left: 5%;
-        padding-right: 2%;
+    .error-div {
+        padding: 0 2% 0 5%;
         color: red;
     }
 
-    #search-div{
-        padding-left: 5%;
-        padding-right: 2%;
+    .search-div {
+        padding: 0 2% 0 5%;
     }
 
-    #dev-div{
-        padding-left: 5%;
-        padding-right: 2%;
+    .dev-div {
+        padding: 0 2% 0 5%;
     }
 
-    #col-2-div{
-        background-color: #F0E8E0;
-        margin: 1%;
-        height: 69%;
-        width: 98%;
-    }
-
-    #list-div{
+    .col-2-div {
+        height: 69.5%;
         width: 100%;
+        background-color: #f4efe8;
+   }
+
+    .place-title {
+        background-color: #f4efe8;
+        border-bottom: 4px solid black;
+        height: 10%;
+    }
+
+    .list-div {
+        height: 88%;
         overflow: auto;
-        cursor: pointer;
     }
 
-    #list-item1{
-        width: 100%;
-    }
 }
 
 
