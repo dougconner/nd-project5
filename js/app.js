@@ -320,7 +320,7 @@ var MyViewModel = function(places) {
 			self.showMarker(index);
 			// console.log('type is true');
 
-			if(self.places()[index].name.indexOf(self.searchText()) !== -1) {
+			if(self.places()[index].name.toLowerCase().indexOf(self.searchText().toLowerCase()) !== -1) {
 				// Also satisfies search text
 				// console.log('text search is true too');
 				return true;

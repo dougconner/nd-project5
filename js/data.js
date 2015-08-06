@@ -103,5 +103,49 @@ var initialData_js =
   infoAry: [
     {type: "Winery", infoText: "Great sculpture garden"},
     ]
+  },
+  {
+  name: "Epoch Estate Wines",
+  url: "www.epochwines.com",
+  addr1: "7505 York Mountain Road",
+  addr2: "Templeton, CA",
+  lat: "35.5448834",
+  lng: "-120.82751559999997",
+  infoAry: [
+    {type: "Winery", infoText: "Nice patio"},
+    ]
+  },
+  {
+  name: "Niner Wine Estates",
+  url: "www.ninerwine.com",
+  addr1: "2400 Highway 46 West",
+  addr2: "Paso Robles, CA",
+  lat: "35.5705018",
+  lng: "-120.74188509999999",
+  infoAry: [
+    {type: "Winery", infoText: "Have not visited"},
+    ]
+  },
+  {
+  name: "Peachy Canyon Winery",
+  url: "www.peachycanyon.com",
+  addr1: "1480 North Bethel Road",
+  addr2: "Templeton, CA",
+  lat: "35.579805",
+  lng: "-120.71890639999998",
+  infoAry: [
+    {type: "Winery", infoText: "Good Zin"},
+    ]
+  },
+  {
+  name: "Castoro Cellars",
+  url: "www.castorocellars.com",
+  addr1: "1315 North Bethel Road",
+  addr2: "Templeton, CA",
+  lat: "35.5772607",
+  lng: "-120.72292099999999",
+  infoAry: [
+    {type: "Winery", infoText: "popular venue"},
+    ]
   }
 ];
