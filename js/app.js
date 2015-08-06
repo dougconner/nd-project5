@@ -26,8 +26,7 @@ var CLIENT_SECRET = '40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH';
 // The array is initialized with "All" which will show all types.
 var placeTypes = ['All'];
 
-var markerArray = [];
-var markers = markerArray;
+var markers = [];
 var infowindowArray = [];
 
 
@@ -106,8 +105,8 @@ var getLatLng = function(locations) {
 getLatLng(locations);
 
 var closeInfoWindows = function() {
-	for (var i = 0; i < markerArray.length; i++) {
-		infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
+	for (var i = 0; i < markers.length; i++) {
+		infowindowArray[i].close(markers[i].get('map'), markers[i]);
 	}
 };
 
@@ -222,7 +221,7 @@ function attachInfotext(marker, i) {
 		google.maps.event.addListener(marker, 'click', function() {
 			closeInfoWindows();
 			$('#info-img').attr('src', '');
-			infowindowArray[i].open(markerArray[i].get('map'), markerArray[i]);
+			infowindowArray[i].open(markers[i].get('map'), markers[i]);
 			get4sqSearch(i);
 		});
 	}
@@ -242,7 +241,7 @@ function setMarkers(map, locations) {
 				title: locations[i].name,
 				visible: true
 			});
-			markerArray[i] = marker;
+			markers[i] = marker;
 
 			attachInfotext(marker, i);
 		}
@@ -253,7 +252,7 @@ function setMarkers(map, locations) {
 }
 
 var toggleBounce = function(index) {
-	var marker = markerArray[index];
+	var marker = markers[index];
 	if (marker.getAnimation() !== null) {
 		marker.setAnimation(null);
 	} else {
@@ -348,22 +347,22 @@ var MyViewModel = function(places) {
 
 	// show markers
 	self.showMarker = function(index) {
-		markerArray[index].setMap(map);
+		markers[index].setMap(map);
 	};
 
 	// hide markers
 	self.hideMarker = function(index) {
-		markerArray[index].setMap(null);
-		for (var i = 0; i < markerArray.length; i++) {
-			infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
+		markers[index].setMap(null);
+		for (var i = 0; i < markers.length; i++) {
+			infowindowArray[i].close(markers[i].get('map'), markers[i]);
 		}
 	};
 
 	// close info windows before opening another to follow best practice of
 	// a single info window open at a time
 	self.closeInfoWindows = function() {
-		for (var i = 0; i < markerArray.length; i++) {
-			infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
+		for (var i = 0; i < markers.length; i++) {
+			infowindowArray[i].close(markers[i].get('map'), markers[i]);
 			$('#info-img').attr('src', '');
 		}
 	};
@@ -372,7 +371,7 @@ var MyViewModel = function(places) {
 		// First clear any existing info windows
 		self.closeInfoWindows();
 		if(enableMarkerLoad) {
-			infowindowArray[index].open(markerArray[index].get('map'), markerArray[index]);
+			infowindowArray[index].open(markers[index].get('map'), markers[index]);
 			markers[index].setAnimation(null);
 			toggleBounce(index);
 			get4sqSearch(index);
