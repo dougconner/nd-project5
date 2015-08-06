@@ -1,5 +1,5 @@
 // Temp to remove jshint issues
-// var ko, console, google;
+var ko, console, google;
 
 var locations = initialData_js;
 var map;
@@ -27,6 +27,7 @@ var CLIENT_SECRET = '40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH';
 var placeTypes = ['All'];
 
 var markerArray = [];
+var markers = markerArray;
 var infowindowArray = [];
 
 
@@ -107,24 +108,6 @@ getLatLng(locations);
 var closeInfoWindows = function() {
 	for (var i = 0; i < markerArray.length; i++) {
 		infowindowArray[i].close(markerArray[i].get('map'), markerArray[i]);
-	}
-};
-
-var toggleBounce = function(index) {
-	var marker = markerArray[index];
-	if (marker.getAnimation() !== null) {
-	marker.setAnimation(null);
-	} else {
-		try {
-			marker.setAnimation(google.maps.Animation.BOUNCE);
-		}
-		catch(err) {
-			$('#error-msg').html(errorMsg.maps);
-		}
-		// Bounce for a few seconds then stop
-		window.setTimeout(function() {
-			toggleBounce(index);
-		}, 2100);
 	}
 };
 
@@ -269,6 +252,24 @@ function setMarkers(map, locations) {
 	}
 }
 
+var toggleBounce = function(index) {
+	var marker = markerArray[index];
+	if (marker.getAnimation() !== null) {
+		marker.setAnimation(null);
+	} else {
+		try {
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			// Bounce for a few seconds then stop
+			window.setTimeout(function() {
+				toggleBounce(index);
+			}, 2100);
+		}
+		catch(err) {
+			$('#error-msg').html(errorMsg.maps);
+		}
+	}
+};
+
 
 function initialize() {
 	var mapCanvas = document.getElementById('map-canvas');
@@ -368,11 +369,11 @@ var MyViewModel = function(places) {
 	};
 
 	self.showInfoWindow = function(index) {
-		console.log('ran showInfoWindows');
 		// First clear any existing info windows
 		self.closeInfoWindows();
 		if(enableMarkerLoad) {
 			infowindowArray[index].open(markerArray[index].get('map'), markerArray[index]);
+			markers[index].setAnimation(null);
 			toggleBounce(index);
 			get4sqSearch(index);
 		}
@@ -388,7 +389,6 @@ $(document).ready(function () {
 	setMarkers(map, locations);
 
 	// Set map size and position to include all markers
-	var markers = markerArray;
 	try {
 		var bounds = new google.maps.LatLngBounds();
 		for (var i = 0; i < markers.length; i++) {
