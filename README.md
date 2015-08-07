@@ -20,3 +20,6 @@ If you hover over a marker, a tooltip will appear with the place name. If you cl
 
 ####Smart phone use
 The tooltip and marker clicking do not seem to work on my Android phone, although all list-based operations and searchs work the same. For smart phone operations, I find the landscape view works best for selecting places from the list, and the portrait view is better for entering text into the search box, using the type selector, and still viewing the page. 
+
+####Errors & internet loss
+If an Ajax request to Foursquare fails, a text message in red appears in the upper right corner. A message will also appear if the internet is not available when Google maps loads. I am not able to detect every Google Ajax call that fails. For example, when the internet is off and you attempt to scroll the map. The map does indicate that data is not available. The app will continue to function normally without restart once internet is restored. Infowindow photos that have been loaded while internet was available will continue to reload if selected while internet service is not available. 
