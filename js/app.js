@@ -1,6 +1,7 @@
 // Temp to remove jshint issues
-var ko, console, google;
+// var ko, console, google;
 
+// Loads data from data.js
 var locations = initialData_js;
 var map;
 var show;
@@ -208,7 +209,7 @@ var get4sqSearch = function(index) {
 	});
 };
 
-function attachInfotext(marker, i) {
+ var attachInfotext = function(marker, i) {
 	try {
 		var infowindow = new google.maps.InfoWindow({
 			content: locations[i].infoWindowContent,
@@ -228,11 +229,10 @@ function attachInfotext(marker, i) {
 	catch(err) {
 		$('#error-msg').html(errorMsg.maps);
 	}
-}
+};
 
-function setMarkers(map, locations) {
+var setMarkers = function(map, locations) {
 	// add markers to map
-	// Just one info window at a time suggested as best practice
 	for (var i = 0; i < locations.length; i++) {
 		try {
 			var marker = new google.maps.Marker({
@@ -249,7 +249,7 @@ function setMarkers(map, locations) {
 			$('#error-msg').html(errorMsg.maps);
 		}
 	}
-}
+};
 
 var toggleBounce = function(index) {
 	var marker = markers[index];

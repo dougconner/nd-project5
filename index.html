@@ -9,32 +9,28 @@
     <body>
         <div class="wrapper">
             <div class="text-div">
-                <div class="col-1-div">
-                    <div class="error-div">
-                        <p id="error-msg"></p>
-                    </div>
-                    <div class="search-div">
-                        <p>Place Type: <br>
-                        <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                        <p>Search within Place Type:<br>
-                        <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
-                    </div>
-<!--                The following div is used only in development to
-                    link the page having the data-generating tools for places.
--->
-                    <div class="dev-div">
-                        <p><a href="place-data.html">Add Places (development only)</a></p>
-                    </div>
+                <div class="error-div">
+                    <p id="error-msg"></p>
                 </div>
-                <div class="col-2-div">
-                    <div class="place-title">
-                        <h3>Places</h2>
-                    </div>
-                    <div class="list-div">
-                        <ul id="list1" data-bind="foreach: places">
-                            <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
-                        </ul>
-                    </div>
+                <div class="search-div">
+                    <p>Place Type: <br>
+                    <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                    <p>Search within Place Type:<br>
+                    <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
+                </div>
+<!--                The following div is used only in development to
+                link the page having the data-generating tools for places.
+                <div class="dev-div">
+                    <p><a href="place-data.html">Add Places (development only)</a></p>
+                </div>
+-->
+               <div class="place-title">
+                    <h3>Places</h3>
+                </div>
+                <div class="list-div">
+                    <ul id="list1" data-bind="foreach: places">
+                        <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                    </ul>
                 </div>
             </div>
             <div id="map-canvas" class="map-div">
@@ -45,10 +41,10 @@
         <script src="js/lib/knockout-3.3.0.js"></script>
         <script src="js/min/data.js"></script>
         <script src="js/lib/jquery-2.1.4.min.js"></script>
-        <script src="js/app.js"></script>
+        <script src="js/min/app.js"></script>
 <!--
         <script src="js/lib/jquery-2.1.4.js"></script>
-        <script src="js/min/app.js"></script>
+        <script src="js/app.js"></script>
 -->
     </body>
 </html>
