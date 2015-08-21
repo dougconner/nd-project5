@@ -1,0 +1,73 @@
+body,
+textarea,
+select,
+li,
+input {
+    font: 1.5em arial;
+}
+
+h3 {
+    text-align: left;
+}
+html,
+body,
+.container-fluid {
+    height: 100%;
+    width: 100%;
+}
+
+.map-div {
+    height: 100%;
+}
+
+.row,
+.col-md-3,
+.col-md-9 {
+    height: 100%;
+}
+
+label {
+}
+
+select,
+.list-div  {
+    cursor: pointer;
+}
+
+ul {
+    overflow: auto;
+}
+
+.list-div {
+
+}
+
+li {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.text-div {
+    background-color: #f4efe8;
+}
+
+.error-div {
+    color: red;
+}
+
+.search-div {
+}
+
+.place-title {
+    background-color: #faf7f3;
+}
+
+.list-div {
+    background-color: #faf7f3;
+    overflow: auto;
+}
+
+
+
+
+
