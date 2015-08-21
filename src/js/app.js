@@ -1,10 +1,12 @@
 // Temp to remove jshint issues
-// var ko, console, google;
+var ko, console, google;
 
 // Loads data from data.js
 var locations = initialData_js;
 var map;
 var show;
+var photoArray;
+var flickrIndex = 0;
 
 var enableMarkerLoad = false;
 var errorMsg = {};
@@ -82,7 +84,7 @@ var computeContentString = function(locations) {
 		contentString += '</p>';
 
 		// Image and text placeholder for FourSquare data from ajax request
-		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="" />';
+		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="" >';
 		contentString += '<p id="info-text' + i + '"></p>';
 
 		locations[i].infoWindowContent = contentString;
@@ -109,6 +111,118 @@ var closeInfoWindows = function() {
 	for (var i = 0; i < markers.length; i++) {
 		infowindowArray[i].close(markers[i].get('map'), markers[i]);
 	}
+};
+
+//Flickr API
+var getFlickrSizes = function(id) {
+	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' +
+		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
+		'&format=json' +
+		'&photo_id=' + id,
+		function(data) {
+			console.log('data = ', data);
+			console.log('data.rsp.stat = ', data.rsp.stat);
+			console.log('success');
+		}
+	);
+
+		jqxhr.done(function() {
+		console.log( 'second success' );
+	});
+		jqxhr.fail(function() {
+		console.log( 'error' );
+	});
+		jqxhr.always(function() {
+		$('#error-msg').html(errorString);
+		console.log( 'finished' );
+	});
+
+};
+
+// Flickr API
+var getFlickrPhoto = function() {
+	flickrIndex = 0;
+	// get lat and lng
+	var lat = 35.5772607;
+	var lon = -120.72292099999999;
+	var deltaBox = 0.005; // +/- values are added to the lat/long for bounding box
+	// Four comma-separated values representing the bottom left-corner and top-right corner
+	// min lon, min lat, max lon, max lat.
+
+	var bbox = [];
+	bbox.push(lon - deltaBox);
+	bbox.push(lat - deltaBox);
+	bbox.push(lon + deltaBox);
+	bbox.push(lat + deltaBox);
+	console.log('bbox = ', bbox);
+
+	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.search' +
+		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
+		'&lat=35.655&lon=-120.901&accuracy=16' +
+		'&min_upload_date=2012' +
+		'&accuracy=16' +
+		'&bbox=' + bbox[0] + ',' + bbox[1] + ',' + bbox[2] + ',' + bbox[3] +
+		'&media=photos' +
+		'&format=json&nojsoncallback=1',
+		function(data) {
+			console.log('data = ', data);
+			console.log('json=' , JSON.stringify(data));
+			console.log('data.photos', data.photos);
+			photoArray = data.photos.photo;
+			flickrIndex = 0;
+			getFlickrNext(flickrIndex);
+			// var imgId = data.photos.photo[flickrIndex].id;
+			// var imgSecret = data.photos.photo[flickrIndex].secret;
+			// var imgFarm = data.photos.photo[flickrIndex].farm;
+			// var imgServer = data.photos.photo[flickrIndex].server;
+			// var sizeSuffix = 'n';
+			// console.log('farm, server, id, secret', imgFarm, imgServer, imgId, imgSecret);
+
+			// var photoStr = 'https://farm' + imgFarm + '.staticflickr.com/' + imgServer +
+			// 	'/' + imgId + '_' + imgSecret + '_' + sizeSuffix + '.jpg';
+
+			// console.log("photoStr = " + photoStr);
+
+			// // var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
+			// // var textStr2 = '<br>Photo provided by: <br><a href="https://foursquare.com">Foursquare</a>';
+
+			// // // Now load or reload the info window with the photo
+			// // $('#info-text' + index).html(textStr + textStr2);
+			// $('#flickr-img').attr('src', photoStr);
+
+			console.log('success');
+			// getFlickrSizes('4924701870');
+		}
+	);
+
+		jqxhr.done(function() {
+		console.log( 'second success' );
+	});
+		jqxhr.fail(function() {
+		console.log( 'error' );
+		errorString = errorMsg.fail;
+	});
+		jqxhr.always(function() {
+		$('#error-msg').html(errorString);
+		console.log( 'finished' );
+	});
+};
+
+var getFlickrNext = function(flickrIndex) {
+			flickrIndex = flickrIndex % photoArray.length;
+			var imgId = photoArray[flickrIndex].id;
+			var imgSecret = photoArray[flickrIndex].secret;
+			var imgFarm = photoArray[flickrIndex].farm;
+			var imgServer = photoArray[flickrIndex].server;
+			var sizeSuffix = 'n';
+			console.log('farm, server, id, secret', imgFarm, imgServer, imgId, imgSecret);
+
+			var photoStr = 'https://farm' + imgFarm + '.staticflickr.com/' + imgServer +
+				'/' + imgId + '_' + imgSecret + '_' + sizeSuffix + '.jpg';
+
+			console.log("photoStr = " + photoStr);
+
+			$('#flickr-img').attr('src', photoStr);
 };
 
 
@@ -267,6 +381,15 @@ var toggleBounce = function(index) {
 			$('#error-msg').html(errorMsg.maps);
 		}
 	}
+};
+
+var flickrApi = function() {
+	getFlickrPhoto();
+};
+
+var flickrNext = function() {
+	flickrIndex += 1;
+	getFlickrNext(flickrIndex);
 };
 
 
