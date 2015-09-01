@@ -64,6 +64,7 @@ li {
 
 .list-div {
     background-color: #faf7f3;
+    height: 45%;
     overflow: auto;
 }
 
