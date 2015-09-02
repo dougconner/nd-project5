@@ -24,10 +24,10 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div id="search-div" class="col-md-3" role="navigation">
-                    <ul class="nav nav-tabs">
+                <div id="search-div" class="col-lg-3" role="navigation">
+                    <ul class="nav nav-pills">
                         <li role="presentation" class="active"><a href="#search-div">Srch</a></li>
-                        <li role="presentation"><a href="#map-div">Map</a></li>
+                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
                         <li role="presentation"><a href="#photo-div">Phts</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
@@ -38,9 +38,6 @@
                     <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
     <!-- removeIf(distribution) -->
                     <p><a href="place-data.html">Add Places (development only)</a></p>
-                    <button id="flickrNext" data-bind="click: flickrNext">next photo</button>
-                    <button id="flickr" data-bind="click: flickrApi">flickr test</button>
-                    <img src="" id="flickr-img" alt="">
         <!-- endRemoveIf(distribution) -->
                     <h3>Places</h3>
                         <div class="list-div">
@@ -49,29 +46,31 @@
                             </ul>
                         </div>
                 </div>
-                <div id="map-div" class="col-md-3" role="navigation">
-                    <ul class="nav nav-tabs">
+                <div id="map-div" class="col-lg-3" role="navigation">
+                    <ul class="nav nav-pills">
                         <li role="presentation"><a href="#search-div">Srch</a></li>
-                        <li role="presentation" class="active"><a href="#map-div">Map</a></li>
+                        <li role="presentation" class="active" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
                         <li role="presentation"><a href="#photo-div">Phts</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
                     <div id="map-canvas" class="map-div">
                     </div>
                 </div>
-                <div id="photo-div" class="col-md3" role="navigation">
-                    <ul class="nav nav-tabs">
+                <div id="photo-div" class="col-lg-3" role="navigation">
+                    <ul class="nav nav-pills">
                         <li role="presentation"><a href="#search-div">Srch</a></li>
-                        <li role="presentation"><a href="#map-div">Map</a></li>
+                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
                         <li role="presentation" class="active"><a href="#photo-div">Phts</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
-                    <p>Photo gallery goes here</p>
+                    <button id="flickrNext" data-bind="click: flickrNext">next photo</button>
+                    <button id="flickr" data-bind="click: flickrApi">flickr test</button>
+                    <img src="" id="flickr-img" alt="">
                 </div>
-                <div id="info-div" class="col-md3" role="navigation">
-                    <ul class="nav nav-tabs">
+                <div id="info-div" class="col-lg-3" role="navigation">
+                    <ul class="nav nav-pills">
                         <li role="presentation"><a href="#search-div">Srch</a></li>
-                        <li role="presentation" class="active"><a href="#map-div">Map</a></li>
+                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
                         <li role="presentation"><a href="#photo-div">Phts</a></li>
                         <li role="presentation" class="active"><a href="#info-div">Info</a></li>
                     </ul>

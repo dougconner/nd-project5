@@ -3,7 +3,7 @@ textarea,
 select,
 li,
 input {
-    font: 1.5em arial;
+    font: 1.45em arial;
 }
 
 h3 {
@@ -17,12 +17,12 @@ body,
 }
 
 .map-div {
-    height: 100%;
+    height: 90%;
 }
 
 .row,
 .col-md-3,
-.col-md-9 {
+.col-lg-3 {
     height: 100%;
 }
 
@@ -32,6 +32,7 @@ label {
 select,
 .list-div  {
     cursor: pointer;
+    height: 40%;
 }
 
 ul {
@@ -51,7 +52,7 @@ li {
     background-color: #f4efe8;
 }
 
-.error-div {
+p#error-msg {
     color: red;
 }
 
@@ -64,7 +65,6 @@ li {
 
 .list-div {
     background-color: #faf7f3;
-    height: 45%;
     overflow: auto;
 }
 

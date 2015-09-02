@@ -113,6 +113,20 @@ var closeInfoWindows = function() {
 	}
 };
 
+var setBounds = function() {
+	// Set map size and position to include all markers
+	try {
+		var bounds = new google.maps.LatLngBounds();
+		for (var i = 0; i < markers.length; i++) {
+			bounds.extend(markers[i].getPosition());
+		}
+		map.fitBounds(bounds);
+	}
+	catch(err) {
+		$('#error-msg').html(errorMsg.maps);
+	}
+};
+
 //Flickr API
 var getFlickrSizes = function(id) {
 	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' +
@@ -501,6 +515,11 @@ var MyViewModel = function(places) {
 		}
 	};
 
+	self.setBounds = function() {
+		// Set map size and position to include all markers
+		setBounds();
+	};
+
 };
 
 /************ End of KO code *************************/
@@ -511,16 +530,7 @@ $(document).ready(function () {
 	setMarkers(map, locations);
 
 	// Set map size and position to include all markers
-	try {
-		var bounds = new google.maps.LatLngBounds();
-		for (var i = 0; i < markers.length; i++) {
-			bounds.extend(markers[i].getPosition());
-		}
-		map.fitBounds(bounds);
-	}
-	catch(err) {
-		$('#error-msg').html(errorMsg.maps);
-	}
+	setBounds();
 
 	ko.applyBindings(new MyViewModel(locations));
 
