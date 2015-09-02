@@ -6,6 +6,12 @@ input {
     font: 1.45em arial;
 }
 
+@media (min-width: 992px) {
+    .nav {
+        visibility: hidden;
+    }
+}
+
 h3 {
     text-align: left;
 }

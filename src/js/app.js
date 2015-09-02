@@ -348,6 +348,7 @@ var get4sqSearch = function(index) {
 		infowindowArray[i] = infowindow;
 
 		google.maps.event.addListener(marker, 'click', function() {
+			// close all other infowindows before opening this one
 			closeInfoWindows();
 			$('#info-img').attr('src', '');
 			infowindowArray[i].open(markers[i].get('map'), markers[i]);
