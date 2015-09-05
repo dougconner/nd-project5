@@ -32,13 +32,11 @@
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
                     <p id="error-msg"></p>
+                    <p id="selected-list-pg" class="selected-venue">Selected: none</p>
                     <p>Place Type: <br>
                     <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
                     <p>Search within Place Type:<br>
                     <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
-    <!-- removeIf(distribution) -->
-                    <p><a href="place-data.html">Add Places (development only)</a></p>
-        <!-- endRemoveIf(distribution) -->
                     <h3>Places</h3>
                         <div class="list-div">
                             <ul id="list1" data-bind="foreach: places">
@@ -48,11 +46,12 @@
                 </div>
                 <div id="map-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#search-div">Srch</a></li>
-                        <li role="presentation" class="active" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation"><a href="#photo-div">Phts</a></li>
-                        <li role="presentation"><a href="#info-div">Info</a></li>
+                        <li class="nav" role="presentation"><a href="#search-div">Srch</a></li>
+                        <li role="presentation" class="active nav" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
+                        <li class="nav" role="presentation"><a href="#photo-div">Phts</a></li>
+                        <li class="nav" role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
+                    <button class="btn btn-default not-nav" type="button" data-bind="click:$root.setBounds()">show markers</button>
                     <div id="map-canvas" class="map-div">
                     </div>
                 </div>
@@ -63,9 +62,26 @@
                         <li role="presentation" class="active"><a href="#photo-div">Phts</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
-                    <button id="flickrNext" data-bind="click: flickrNext">next photo</button>
-                    <button id="flickr" data-bind="click: flickrApi">flickr test</button>
-                    <img src="" id="flickr-img" alt="">
+                    <p id="selected-photo-pg" class="selected-venue">Selected: none</p>
+                        <div class="radio">
+                        <span class="input-group">
+                        <label>Photos:
+                            <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</a><label>
+                            <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare</a></label>
+                        </span>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button id="previous-img" type="button" class="btn btn-default" data-bind="click:$root.previousPhoto()">
+                            <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
+                          </button>
+                          <button id="img-counter" type="button" class="btn btn-default">0 images</button>
+                          <button id="next-img" type="button" class="btn btn-default" data-bind="click:$root.nextPhoto()">
+                            <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                          </button>
+                        </div>
+                    <img id="info-img" class="img-responsive" src="" alt="Venue photo">
+                    <p id="info-text"></p>
+
                 </div>
                 <div id="info-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
@@ -74,7 +90,11 @@
                         <li role="presentation"><a href="#photo-div">Phts</a></li>
                         <li role="presentation" class="active"><a href="#info-div">Info</a></li>
                     </ul>
+                    <p id="selected-info-pg" class="selected-venue">Selected: none</p>
                     <p>info page goes here</p>
+    <!-- removeIf(distribution) -->
+                    <p><a href="place-data.html">Add Places (development only)</a></p>
+        <!-- endRemoveIf(distribution) -->
                 </div>
             </div>
         </div>

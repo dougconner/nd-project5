@@ -3,12 +3,30 @@ var ko, console, google;
 
 // Loads data from data.js
 var locations = initialData_js;
+
 var map;
 var show;
-var photoArray;
+
+// Object array holding the flickr photo info
+var flickrPhotoArray;
+// Index of current photo in flickrPhotoArray
 var flickrIndex = 0;
 
+
+var foursquareIndex = 0;
+
+// Stores selected venue index
+// Change only using setSelectedVenue(index)
+var selectedVenueIndex;
+
+// photoSrc is either 'flickr' or 'FourSquare'
+var photoSrc = '';
+
+// enableMarkerLoad is used to disable marker infowindows
+// on initial load. It is also used to disable the
+// Selected Venue at the same time (so that it remains "none").
 var enableMarkerLoad = false;
+
 var errorMsg = {};
 
 // Foursquare Ajax request fails
@@ -31,7 +49,6 @@ var placeTypes = ['All'];
 
 var markers = [];
 var infowindowArray = [];
-
 
 // sort locations by name
 var sortNames = function(locations) {
@@ -127,64 +144,74 @@ var setBounds = function() {
 	}
 };
 
-//Flickr API
-var getFlickrSizes = function(id) {
-	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' +
-		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
-		'&format=json' +
-		'&photo_id=' + id,
-		function(data) {
-			console.log('data = ', data);
-			console.log('data.rsp.stat = ', data.rsp.stat);
-			console.log('success');
-		}
-	);
+//Flickr Sizes. Not currently used
+// var getFlickrSizes = function(id) {
+// 	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' +
+// 		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
+// 		'&format=json' +
+// 		'&photo_id=' + id,
+// 		function(data) {
+// 			console.log('data = ', data);
+// 			console.log('data.rsp.stat = ', data.rsp.stat);
+// 			console.log('success');
+// 		}
+// 	);
 
-		jqxhr.done(function() {
-		console.log( 'second success' );
-	});
-		jqxhr.fail(function() {
-		console.log( 'error' );
-	});
-		jqxhr.always(function() {
-		$('#error-msg').html(errorString);
-		console.log( 'finished' );
-	});
+// 		jqxhr.done(function() {
+// 		console.log( 'second success' );
+// 	});
+// 		jqxhr.fail(function() {
+// 		console.log( 'error' );
+// 	});
+// 		jqxhr.always(function() {
+// 		$('#error-msg').html(errorString);
+// 		console.log( 'finished' );
+// 	});
 
-};
+// };
 
 // Flickr API
-var getFlickrPhoto = function() {
+// index is for the venue locations array
+// flickrIndex is for the photo in the flickrPhotoArray
+var getFlickrPhoto = function(index) {
 	flickrIndex = 0;
 	// get lat and lng
-	var lat = 35.5772607;
-	var lon = -120.72292099999999;
+	var lat = locations[index].lat;
+	var lon = locations[index].lng;
+
 	var deltaBox = 0.005; // +/- values are added to the lat/long for bounding box
 	// Four comma-separated values representing the bottom left-corner and top-right corner
 	// min lon, min lat, max lon, max lat.
-
 	var bbox = [];
-	bbox.push(lon - deltaBox);
-	bbox.push(lat - deltaBox);
-	bbox.push(lon + deltaBox);
-	bbox.push(lat + deltaBox);
+	bbox.push(parseFloat(lon) - deltaBox);
+	bbox.push(parseFloat(lat) - deltaBox);
+	bbox.push(parseFloat(lon) + deltaBox);
+	bbox.push(parseFloat(lat) + deltaBox);
 	console.log('bbox = ', bbox);
 
 	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.search' +
 		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
-		'&lat=35.655&lon=-120.901&accuracy=16' +
+		'&lat=' + lat + '&lon=' + lon +
 		'&min_upload_date=2012' +
 		'&accuracy=16' +
 		'&bbox=' + bbox[0] + ',' + bbox[1] + ',' + bbox[2] + ',' + bbox[3] +
 		'&media=photos' +
 		'&format=json&nojsoncallback=1',
 		function(data) {
-			console.log('data = ', data);
-			console.log('json=' , JSON.stringify(data));
-			console.log('data.photos', data.photos);
-			photoArray = data.photos.photo;
+			// console.log('data = ', data);
+			// console.log('json=' , JSON.stringify(data));
+			// console.log('data.photos', data.photos);
+			flickrPhotoArray = data.photos.photo;
 			flickrIndex = 0;
-			getFlickrNext(flickrIndex);
+			if (flickrPhotoArray.length > 0) {
+				console.log("number of photos for venue = ", flickrPhotoArray.length);
+				getFlickrNext(flickrIndex);
+			} else {
+				$('#info-img').attr('src', '');
+				$('#info-img').attr('alt', 'Venue photo not available');
+				$('#img-counter').html('0 images');
+				console.log("no photos for this venue");
+			}
 			// var imgId = data.photos.photo[flickrIndex].id;
 			// var imgSecret = data.photos.photo[flickrIndex].secret;
 			// var imgFarm = data.photos.photo[flickrIndex].farm;
@@ -223,11 +250,12 @@ var getFlickrPhoto = function() {
 };
 
 var getFlickrNext = function(flickrIndex) {
-			flickrIndex = flickrIndex % photoArray.length;
-			var imgId = photoArray[flickrIndex].id;
-			var imgSecret = photoArray[flickrIndex].secret;
-			var imgFarm = photoArray[flickrIndex].farm;
-			var imgServer = photoArray[flickrIndex].server;
+	// console.log("flickrPhotoArray", JSON.stringify(flickrPhotoArray));
+			flickrIndex = flickrIndex % flickrPhotoArray.length;
+			var imgId = flickrPhotoArray[flickrIndex].id;
+			var imgSecret = flickrPhotoArray[flickrIndex].secret;
+			var imgFarm = flickrPhotoArray[flickrIndex].farm;
+			var imgServer = flickrPhotoArray[flickrIndex].server;
 			var sizeSuffix = 'n';
 			console.log('farm, server, id, secret', imgFarm, imgServer, imgId, imgSecret);
 
@@ -236,7 +264,12 @@ var getFlickrNext = function(flickrIndex) {
 
 			console.log("photoStr = " + photoStr);
 
-			$('#flickr-img').attr('src', photoStr);
+			var textStr2 = 'Photo provided by: <a href="https://flickr.com">Flickr</a>';
+
+			// Now load or reload the info window with the photo
+			$('#info-text').html(textStr2);
+			$('#info-img').attr('src', photoStr);
+			$('#img-counter').html('Image '+ (flickrIndex + 1) + ' of ' + flickrPhotoArray.length);
 };
 
 
@@ -250,21 +283,30 @@ var get4sqVenueDetail = function(index, name, id) {
 		'&v=20140115' +
 		'&m=foursquare',
 		function(data) {
+			console.log("data=", JSON.stringify(data));
 			var url = data.response.venue.canonicalUrl;
-			var photoStr = '' +
-				data.response.venue.bestPhoto.prefix +
-				'cap300' +
-				data.response.venue.bestPhoto.suffix;
-			// console.log("photoStr = " + photoStr);
 
-			var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
-			var textStr2 = '<br>Photo provided by: <br><a href="https://foursquare.com">Foursquare</a>';
+			if (data.response.venue.bestPhoto) {
+				var photoStr = '' +
+					data.response.venue.bestPhoto.prefix +
+					'cap300' +
+					data.response.venue.bestPhoto.suffix;
+				// console.log("photoStr = " + photoStr);
 
-			// Now load or reload the info window with the photo
-			$('#info-text' + index).html(textStr + textStr2);
-			$('#info-img' + index).attr('src', photoStr);
+				// var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
+				var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
+
+				// Now load or reload the info window with the photo
+				$('#info-text').html(textStr2);
+				$('#info-img').attr('src', photoStr);
+			} else {
+				// No photos
+				$('#info-img').attr('src', '');
+				$('#info-img').attr('alt', 'Venue photo not available');
+			}
 
 			// The following puts the name in the tool-tip of image and marker
+			// Check iff still working
 			$('#info-img' + index).attr('title', name);
 
 			errorString = '';
@@ -308,12 +350,16 @@ var get4sqSearch = function(index) {
 			if (!data.response.venues[0]) {
 				var textStr = '<br>This venue was not found at <a href="https://foursquare.com">Foursquare</a>';
 				$('#info-text' + index).html(textStr);
-				$('#info-img' + index).attr('alt', 'Venue photo not available');
+				console.log("foursquare photo not available");
+				$('#info-img').attr('src', '');
+				$('#info-img').attr('alt', 'Venue photo not available');
+				// $('#info-img' + index).attr('alt', 'Venue photo not available');
 			} else {
 				var id = data.response.venues[0].id;
 				var name = data.response.venues[0].name;
 
 				// get venue details and a photo
+				console.log("index, name, id",index, name, id);
 				get4sqVenueDetail(index, name, id);
 			}
 
@@ -349,10 +395,13 @@ var get4sqSearch = function(index) {
 
 		google.maps.event.addListener(marker, 'click', function() {
 			// close all other infowindows before opening this one
-			closeInfoWindows();
-			$('#info-img').attr('src', '');
-			infowindowArray[i].open(markers[i].get('map'), markers[i]);
-			get4sqSearch(i);
+			// closeInfoWindows();
+			// $('#info-img').attr('src', '');
+			// infowindowArray[i].open(markers[i].get('map'), markers[i]);
+			photoSearch(i);
+			markers[i].setAnimation(null);
+			toggleBounce(i);
+			setSelectedVenue(i);
 		});
 	}
 	catch(err) {
@@ -398,13 +447,59 @@ var toggleBounce = function(index) {
 	}
 };
 
-var flickrApi = function() {
-	getFlickrPhoto();
+// Set the selected venue in all columns or pages
+// after it has been either selected (clicked) on
+// the Places list or (clicked) on the map marker.
+// If it is a new venue, clear any photos on display
+// in the photo page.
+var setSelectedVenue = function(index) {
+	selectedVenueIndex = index;
+	var textStr = "Selected: ";
+	var venueName;
+	if (index >= 0 && enableMarkerLoad) {
+		venueName = locations[index].name;
+	} else {
+		venueName = "none";
+	}
+
+	//
+	$('#selected-list-pg').html(textStr + venueName);
+	$('#selected-map-pg').html(textStr + venueName);
+	$('#selected-photo-pg').html(textStr + venueName);
+	$('#selected-info-pg').html(textStr + venueName);
+
+	// Clear old photo
+	$('#info-img').attr('src', "");
+
+	photoSearch(index);
+
 };
 
-var flickrNext = function() {
-	flickrIndex += 1;
-	getFlickrNext(flickrIndex);
+// Requires a selected venue and photo source
+// Photo source is set to a default to start with
+var photoSearch = function(index) {
+	if (index >= 0) {
+		// First clear out old venue info
+		$('#info-img').attr('src', '');
+		$('#info-img').attr('alt', 'Venue photo not available');
+		$('#img-counter').html('0 images');
+		$('#info-text').html('');
+
+		// If venue selected, initiate search
+		switch (photoSrc) {
+			case 'foursquare':
+				get4sqSearch(index);
+				break;
+			case 'flickr':
+				getFlickrPhoto(index);
+				break;
+			default:
+				getFlickrPhoto(index);
+		}
+	} else {
+		// No venue selected
+		$('#info-img').attr('alt', 'No Venue selected');
+	}
 };
 
 
@@ -435,6 +530,9 @@ var MyViewModel = function(places) {
 
 	// search text
 	self.searchText = ko.observable('');
+
+	// photo source select
+	self.photoSource = ko.observable("flickr");
 
 	self.places = ko.observableArray(ko.utils.arrayMap(places, function(place) {
 		return { name: place.name,
@@ -491,28 +589,30 @@ var MyViewModel = function(places) {
 	// hide markers
 	self.hideMarker = function(index) {
 		markers[index].setMap(null);
-		for (var i = 0; i < markers.length; i++) {
-			infowindowArray[i].close(markers[i].get('map'), markers[i]);
-		}
+		// for (var i = 0; i < markers.length; i++) {
+		// 	infowindowArray[i].close(markers[i].get('map'), markers[i]);
+		// }
 	};
 
 	// close info windows before opening another to follow best practice of
 	// a single info window open at a time
-	self.closeInfoWindows = function() {
-		for (var i = 0; i < markers.length; i++) {
-			infowindowArray[i].close(markers[i].get('map'), markers[i]);
-			$('#info-img').attr('src', '');
-		}
-	};
+	// self.closeInfoWindows = function() {
+	// 	for (var i = 0; i < markers.length; i++) {
+	// 		infowindowArray[i].close(markers[i].get('map'), markers[i]);
+	// 		$('#info-img').attr('src', '');
+	// 	}
+	// };
 
 	self.showInfoWindow = function(index) {
 		// First clear any existing info windows
-		self.closeInfoWindows();
+		// self.closeInfoWindows();
 		if(enableMarkerLoad) {
-			infowindowArray[index].open(markers[index].get('map'), markers[index]);
+			setSelectedVenue(index);
+			console.log("ran showInfoWindow");
+			// infowindowArray[index].open(markers[index].get('map'), markers[index]);
 			markers[index].setAnimation(null);
 			toggleBounce(index);
-			get4sqSearch(index);
+			// photoSearch(index);
 		}
 	};
 
@@ -521,6 +621,57 @@ var MyViewModel = function(places) {
 		setBounds();
 	};
 
+	self.setPhotoSource = function() {
+		photoSrc = self.photoSource();
+		console.log("photoSrc = ", photoSrc);
+		photoSearch(selectedVenueIndex);
+	};
+
+	self.previousPhoto = function() {
+		if (selectedVenueIndex >= 0) {
+			// A venue is selected
+			switch (photoSrc) {
+				case 'foursquare':
+					get4sqSearch(selectedVenueIndex);
+					break;
+				case 'flickr':
+					if (flickrPhotoArray.length <= 0) {
+						// No photos available
+					} else {
+						flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : flickrPhotoArray.length - 1;
+						getFlickrNext(flickrIndex);
+					}
+						// Need to check if data is already loaded
+					break;
+				default:
+					getFlickrPhoto(selectedVenueIndex);
+			}
+		} else {
+			// No venue selected
+			$('#info-img').attr('alt', 'No Venue selected');
+		}
+	};
+
+	self.nextPhoto = function() {
+		if (selectedVenueIndex >= 0) {
+			// A venue is selected
+			switch (photoSrc) {
+				case 'foursquare':
+					get4sqSearch(selectedVenueIndex);
+					break;
+				case 'flickr':
+					flickrIndex += 1;
+					getFlickrNext(flickrIndex);
+					// Need to check if data is already loaded
+					break;
+				default:
+					getFlickrPhoto(selectedVenueIndex);
+			}
+		} else {
+			// No venue selected
+			$('#info-img').attr('alt', 'No Venue selected');
+		}
+	};
 };
 
 /************ End of KO code *************************/
@@ -538,6 +689,9 @@ $(document).ready(function () {
 	// This timeout keeps infowindows off the screen during initialization
 	window.setTimeout(function() {
 		enableMarkerLoad = true;
+
+		// Start with no venue selected
+		setSelectedVenue(-1);
 	}, 2000);
 });
 

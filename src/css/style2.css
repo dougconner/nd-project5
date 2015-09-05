@@ -6,9 +6,27 @@ input {
     font: 1.45em arial;
 }
 
+p {
+    font: 1.1em arial;
+}
+
+.nav-pills {
+}
+
+.not-nav {
+    visibility: hidden;
+}
+
 @media (min-width: 992px) {
     .nav {
         visibility: hidden;
+    }
+
+    .not-nav {
+        visibility: visible;
+    }
+    .nav-pills {
+        height: 0%;
     }
 }
 
@@ -23,7 +41,7 @@ body,
 }
 
 .map-div {
-    height: 90%;
+    height: 82%;
 }
 
 .row,
@@ -35,10 +53,14 @@ body,
 label {
 }
 
-select,
+.search-div {
+    height: 100%;
+}
+
+
 .list-div  {
     cursor: pointer;
-    height: 40%;
+    height: 50%;
 }
 
 ul {
@@ -60,9 +82,6 @@ li {
 
 p#error-msg {
     color: red;
-}
-
-.search-div {
 }
 
 .place-title {
