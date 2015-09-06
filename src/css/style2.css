@@ -10,11 +10,9 @@ p {
     font: 1.1em arial;
 }
 
-.nav-pills {
-}
-
 .not-nav {
     visibility: hidden;
+    height: 0%;
 }
 
 @media (min-width: 992px) {
@@ -24,6 +22,8 @@ p {
 
     .not-nav {
         visibility: visible;
+        height: 3%;
+        margin: 0 0 2% 0;
     }
     .nav-pills {
         height: 0%;
@@ -41,7 +41,7 @@ body,
 }
 
 .map-div {
-    height: 82%;
+    height: 75%;
 }
 
 .row,
@@ -60,15 +60,11 @@ label {
 
 .list-div  {
     cursor: pointer;
-    height: 50%;
+    height: 40%;
 }
 
 ul {
     overflow: auto;
-}
-
-.list-div {
-
 }
 
 li {
@@ -91,6 +87,9 @@ p#error-msg {
 .list-div {
     background-color: #faf7f3;
     overflow: auto;
+}
+
+.search-box {
 }
 
 

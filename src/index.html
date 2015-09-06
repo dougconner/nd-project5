@@ -33,16 +33,16 @@
                     </ul>
                     <p id="error-msg"></p>
                     <p id="selected-list-pg" class="selected-venue">Selected: none</p>
-                    <p>Place Type: <br>
+                    <p>Place Type:
                     <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
                     <p>Search within Place Type:<br>
-                    <input class="search-box" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
-                    <h3>Places</h3>
-                        <div class="list-div">
-                            <ul id="list1" data-bind="foreach: places">
-                                <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
-                            </ul>
-                        </div>
+                    <input class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
+                    <h3>Places: Click to select</h3>
+                    <div class="list-div">
+                        <ul id="list1" data-bind="foreach: places">
+                            <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                        </ul>
+                    </div>
                 </div>
                 <div id="map-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
@@ -51,7 +51,8 @@
                         <li class="nav" role="presentation"><a href="#photo-div">Phts</a></li>
                         <li class="nav" role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
-                    <button class="btn btn-default not-nav" type="button" data-bind="click:$root.setBounds()">show markers</button>
+                    <p id="selected-map-pg" class="selected-venue">Selected: none</p>
+                    <button class="btn btn-primary not-nav btn-xs" type="button" data-bind="click:$root.setBounds()">show markers</button>
                     <div id="map-canvas" class="map-div">
                     </div>
                 </div>
@@ -71,11 +72,11 @@
                         </span>
                         </div>
                         <div class="btn-group" role="group" aria-label="...">
-                          <button id="previous-img" type="button" class="btn btn-default" data-bind="click:$root.previousPhoto()">
+                          <button id="previous-img" type="button" class="btn btn-primary" data-bind="click:$root.previousPhoto()">
                             <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
                           </button>
                           <button id="img-counter" type="button" class="btn btn-default">0 images</button>
-                          <button id="next-img" type="button" class="btn btn-default" data-bind="click:$root.nextPhoto()">
+                          <button id="next-img" type="button" class="btn btn-primary" data-bind="click:$root.nextPhoto()">
                             <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
                           </button>
                         </div>
