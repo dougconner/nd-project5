@@ -48,6 +48,11 @@ var CLIENT_SECRET = '40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH';
 // placeTypes is an array of all the place types in the database
 // The array is initialized with "All" which will show all types.
 var placeTypes = ['All'];
+var markerPng = {
+	Winery: 'js/lib/purple_MarkerW.png',
+	Restaurant: 'js/lib/orange_MarkerR.png',
+	Lodging: 'js/lib/darkgreen_MarkerL.png'
+};
 
 var markers = [];
 var infowindowArray = [];
@@ -479,13 +484,17 @@ var get4sqSearch = function(index) {
 
 var setMarkers = function(map, locations) {
 	// add markers to map
+
 	for (var i = 0; i < locations.length; i++) {
+		var	markerType = locations[i].infoAry[0].type;
+		var markerIcon = markerPng[markerType];
 		try {
 			var marker = new google.maps.Marker({
 				position: locations[i].latLng,
 				map: map,
 				title: locations[i].name,
-				visible: true
+				visible: true,
+				icon: markerIcon
 			});
 			markers[i] = marker;
 
@@ -503,6 +512,7 @@ var toggleBounce = function(index) {
 		marker.setAnimation(null);
 	} else {
 		try {
+			marker.MAX_ZINDEX + 1;
 			marker.setAnimation(google.maps.Animation.BOUNCE);
 			// Bounce for a few seconds then stop
 			window.setTimeout(function() {

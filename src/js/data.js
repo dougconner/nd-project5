@@ -9,8 +9,6 @@ var initialData_js =
   lng: "-120.90086100000002",
   infoAry: [
     {type: "Winery", infoText: "my winery info"},
-    {type: "Food", infoText: "my food info"},
-    {type: "Lodging", infoText: "my lodging info"},
     ]
   },
   {
@@ -22,8 +20,6 @@ var initialData_js =
   lng: "-120.73473939999997",
   infoAry: [
     {type: "Winery", infoText: "my winery info"},
-    {type: "Food", infoText: "my food info"},
-    {type: "Lodging", infoText: "B&B"},
     ]
   },
   {
@@ -35,7 +31,6 @@ var initialData_js =
   lng: "-120.82076139999998",
   infoAry: [
     {type: "Winery", infoText: "winery info"},
-    {type: "Food", infoText: "BBQ on weekends"},
     ]
   },
   {
@@ -46,7 +41,7 @@ var initialData_js =
   lat: "35.549482",
   lng: "-120.70558699999998",
   infoAry: [
-    {type: "Food", infoText: "Excellent food. The prices are not low."},
+    {type: "Restaurant", infoText: "Excellent food. The prices are not low."},
     ]
   },
   {
@@ -57,7 +52,7 @@ var initialData_js =
   lat: "35.62799040000001",
   lng: "-120.69050370000002",
   infoAry: [
-    {type: "Food", infoText: "If you like places with \"organic\" in the name you should be very happy here. It's excellent."},
+    {type: "Restaurant", infoText: "If you like places with organic food you should be very happy here. It's excellent."},
     ]
   },
   {
@@ -68,7 +63,7 @@ var initialData_js =
   lat: "35.5488203",
   lng: "-120.70616949999999",
   infoAry: [
-    {type: "Food", infoText: "Ranch/western food. If you're suspicious of places with \"organic\" in the name, you'll probably be happier here.  "},
+    {type: "Restaurant", infoText: "Ranch/western food. If you're suspicious of places with organic food you should be happy here."},
     ]
   },
   {
