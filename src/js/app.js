@@ -7,6 +7,9 @@ var locations = initialData_js;
 var map;
 var show;
 
+// A google Constant
+var MAX_ZINDEX = google.maps.Marker.MAX_ZINDEX;
+
 // Object array holding the flickr photo info
 var flickrPhotoArray;
 // Index of current photo in flickrPhotoArray
@@ -48,9 +51,17 @@ var CLIENT_SECRET = '40QSTRMCYD4IOTESKJVF532Z015MMI2M35GUXO2K5UQBQDYH';
 // placeTypes is an array of all the place types in the database
 // The array is initialized with "All" which will show all types.
 var placeTypes = ['All'];
+
+// markerPng designates the matching marker for each location type
+// markerSelectedPng is used when the venue is selected
 var markerPng = {
 	Winery: 'js/lib/purple_MarkerW.png',
 	Restaurant: 'js/lib/orange_MarkerR.png',
+	Lodging: 'js/lib/blue_MarkerL.png'
+};
+var markerSelectedPng = {
+	Winery: 'js/lib/darkgreen_MarkerW.png',
+	Restaurant: 'js/lib/darkgreen_MarkerR.png',
 	Lodging: 'js/lib/darkgreen_MarkerL.png'
 };
 
@@ -474,8 +485,8 @@ var get4sqSearch = function(index) {
 		google.maps.event.addListener(marker, 'click', function() {
 			photoSearch(i);
 			markers[i].setAnimation(null);
-			toggleBounce(i);
 			setSelectedVenue(i);
+			toggleBounce(i);
 		});
 	}
 	catch(err) {
@@ -499,7 +510,6 @@ var setMarkers = function(map, locations) {
 				icon: markerIcon
 			});
 			markers[i] = marker;
-
 			attachInfotext(marker, i);
 		}
 		catch(err) {
@@ -514,7 +524,6 @@ var toggleBounce = function(index) {
 		marker.setAnimation(null);
 	} else {
 		try {
-			// marker.MAX_ZINDEX + 1;
 			marker.setAnimation(google.maps.Animation.BOUNCE);
 			// Bounce for a few seconds then stop
 			window.setTimeout(function() {
@@ -525,6 +534,9 @@ var toggleBounce = function(index) {
 			$('#error-msg').html(errorMsg.maps);
 		}
 	}
+	var zInd = MAX_ZINDEX + 1;
+	marker.zIndex = zInd;
+
 };
 
 // Set the selected venue in all columns or pages
@@ -533,22 +545,39 @@ var toggleBounce = function(index) {
 // If it is a new venue, clear any photos on display
 // in the photo page.
 var setSelectedVenue = function(index) {
-	selectedVenueIndex = index;
 	var textStr = "Selected: ";
 	var venueName;
+
 	if (index >= 0 && enableMarkerLoad) {
+		// reset previous selectedVenue marker to ordinary markerPng
+		if (selectedVenueIndex >= 0 && enableMarkerLoad) {
+			var marker = markers[selectedVenueIndex];
+			var	markerType = locations[selectedVenueIndex].infoAry[0].type;
+			var markerIcon = markerPng[markerType];
+			marker.setIcon(markerIcon);
+			marker.setZIndex(MAX_ZINDEX);
+		}
+		// set new selectedVenue to markerSelectedPng
 		venueName = locations[index].name;
+		selectedVenueIndex = index;
+		var marker = markers[index];
+		var	markerType = locations[index].infoAry[0].type;
+		var markerIcon = markerSelectedPng[markerType];
+		marker.setIcon(markerIcon);
+		var zInd = MAX_ZINDEX + 1;
+		marker.setZIndex(zInd);
+		console.log("markerNew = ", markerIcon);
 	} else {
 		venueName = "none";
 	}
 
-	//
+	// Show the selected venue on each page
 	$('#selected-list-pg').html(textStr + venueName);
 	$('#selected-map-pg').html(textStr + venueName);
 	$('#selected-photo-pg').html(textStr + venueName);
 	$('#selected-info-pg').html(textStr + venueName);
 
-	// Clear old photo
+	// Clear old photo and selected map marker
 	$('#info-img').attr('src', "");
 
 	photoSearch(index);
