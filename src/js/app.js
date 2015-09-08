@@ -81,6 +81,7 @@ var computeShowArray = function(locations, placeTypes) {
 	for (var i = 0; i < locations.length; i++) {
 		show = ['All'];
 		for (var j = 0; j < locations[i].infoAry.length; j++) {
+			// infoAry[0] contains primary place type
 			testType = locations[i].infoAry[j].type;
 			// Store types in  array
 			show.push(testType);
@@ -486,6 +487,7 @@ var setMarkers = function(map, locations) {
 	// add markers to map
 
 	for (var i = 0; i < locations.length; i++) {
+		// infoAry[0] contains primary place type
 		var	markerType = locations[i].infoAry[0].type;
 		var markerIcon = markerPng[markerType];
 		try {
@@ -512,7 +514,7 @@ var toggleBounce = function(index) {
 		marker.setAnimation(null);
 	} else {
 		try {
-			marker.MAX_ZINDEX + 1;
+			// marker.MAX_ZINDEX + 1;
 			marker.setAnimation(google.maps.Animation.BOUNCE);
 			// Bounce for a few seconds then stop
 			window.setTimeout(function() {

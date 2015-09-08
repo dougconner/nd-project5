@@ -53,10 +53,10 @@
                     </ul>
                     <p id="selected-map-pg" class="selected-venue">Selected: none</p>
                     <button class="btn btn-primary not-nav btn-xs" type="button" data-bind="click:$root.setBounds()">show markers</button>
-                    <div id="map-canvas" class="map-div">
+                    <div id="map-canvas" class="map-canvas-div">
                     </div>
                 </div>
-                <div id="photo-div" class="col-md-3" role="navigation">
+                <div id="photo-div" class="col-md-3 photo-div" role="navigation">
                     <ul class="nav nav-pills">
                         <li role="presentation"><a href="#search-div">Srch</a></li>
                         <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
@@ -66,9 +66,9 @@
                     <p id="selected-photo-pg" class="selected-venue">Selected: none</p>
                         <div class="radio">
                         <span class="input-group">
-                        <label>Photos:
-                            <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</a><label>
-                            <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare</a></label>
+                        <label>Photos:</label>
+                            <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</label>
+                            <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare</label>
                         </span>
                         </div>
                         <div class="btn-group" role="group" aria-label="...">
@@ -80,8 +80,10 @@
                             <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
                           </button>
                         </div>
-                    <img id="info-img" class="img-responsive" src="" alt="Venue photo">
-                    <p id="info-text"></p>
+                        <div class="img-div">
+                            <img id="info-img" class="img" src="" alt="Venue photo">
+                            <p id="info-text"></p>
+                        </div>
 
                 </div>
                 <div id="info-div" class="col-md-3" role="navigation">
