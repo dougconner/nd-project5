@@ -544,19 +544,23 @@ var toggleBounce = function(index) {
 // the Places list or (clicked) on the map marker.
 // If it is a new venue, clear any photos on display
 // in the photo page.
+// If it is not in the current place type then it must be
+// removed: selectedVenueIndex() = -1 and remove
+// markerSelectedPng
 var setSelectedVenue = function(index) {
 	var textStr = "Selected: ";
 	var venueName;
 
+	// reset previous selectedVenue marker to ordinary markerPng
+	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
+		var marker = markers[selectedVenueIndex];
+		var	markerType = locations[selectedVenueIndex].infoAry[0].type;
+		var markerIcon = markerPng[markerType];
+		marker.setIcon(markerIcon);
+		marker.setZIndex(MAX_ZINDEX);
+	}
+
 	if (index >= 0 && enableMarkerLoad) {
-		// reset previous selectedVenue marker to ordinary markerPng
-		if (selectedVenueIndex >= 0 && enableMarkerLoad) {
-			var marker = markers[selectedVenueIndex];
-			var	markerType = locations[selectedVenueIndex].infoAry[0].type;
-			var markerIcon = markerPng[markerType];
-			marker.setIcon(markerIcon);
-			marker.setZIndex(MAX_ZINDEX);
-		}
 		// set new selectedVenue to markerSelectedPng
 		venueName = locations[index].name;
 		selectedVenueIndex = index;
@@ -673,6 +677,8 @@ var MyViewModel = function(places) {
 		}
 		self.hideMarker(index);
 		// Fails at least one of the two above conditions
+		// Set selectedVenueIndex = -1 and reset marker
+		setSelectedVenue(-1);
 		return false;
 	};
 
@@ -786,6 +792,11 @@ var MyViewModel = function(places) {
 			// No venue selected
 			$('#info-img').attr('alt', 'No Venue selected');
 		}
+	};
+
+	self.clearSearch = function() {
+		$('#search-text').val('').trigger('change');
+		setSelectedVenue(-1);
 	};
 };
 

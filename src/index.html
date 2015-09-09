@@ -35,8 +35,12 @@
                     <p id="selected-list-pg" class="selected-venue">Selected: none</p>
                     <p>Place Type:
                     <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                    <p>Search within Place Type:<br>
-                    <input class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" /></p>
+                    <span>
+                        <p>Search within Place Type:</p>
+                        <button class="btn btn-primary btn-s clear-search" type="button" data-bind="click:$root.clearSearch()">clear search</button>
+                    </span>
+                    <br>
+                    <input id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
                     <h3>Places: Click to select</h3>
                     <div class="list-div">
                         <ul id="list1" data-bind="foreach: places">

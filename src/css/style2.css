@@ -15,7 +15,7 @@ p {
     height: 0%;
 }
 
-@media (min-width: 992) {
+@media (min-width: 992px) {
     .nav {
         visibility: hidden;
     }
@@ -52,10 +52,6 @@ body,
     width:75%;
 }
 
-/*.map-div {
-    height: 100%;
-}
-*/
 .img-div {
     max-height: 300px;
 }
@@ -114,6 +110,11 @@ p#error-msg {
 .list-div {
     background-color: #faf7f3;
     overflow: auto;
+}
+
+.clear-search {
+    margin: 0 0 2% 0;
+
 }
 
 .search-box {
