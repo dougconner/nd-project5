@@ -20,14 +20,24 @@
 7. Save the file using CodeKit or note: The program looks for a minified file
    created by CodeKit. Although data.js does not need to be minified, it must be found.
    Make sure the paths to the new file are correct.
-
+8. To force a reload from the data.js file, go into the console and set
+	workingData = []
+	That should force a reload. This will of course delete the workingData file in
+	local memory.
 ***************************************/
+
+// Temp to remove jshint issues
+var ko, console, google, geocoder;
 
 var initialData;
 var initialData_js;
 var storedData = JSON.parse(localStorage.getItem('workingData'));
 
-if (storedData !== null) {
+console.log("storedData = ", storedData);
+console.log("typeof storedData = ", (typeof storedData));
+
+if (storedData.length > 1) {
+	console.log("storedData = ", storedData);
 	// load storedData as initialData
 	initialData = storedData;
 } else {
@@ -202,6 +212,10 @@ var MyViewModel = function(places) {
 		return string;
 		// console.log("generateLocationsObj output: ");
 		// console.log(string);
+	};
+
+	self.loadFromDataJs = function() {
+			storedData = null;
 	};
 
 };

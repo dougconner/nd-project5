@@ -2,7 +2,7 @@ var initialData_js =
 [
   {
   name: "Justin Vineyards & Winery",
-  url: "http://justinwine.com/",
+  url: "http://justinwine.com",
   addr1: "11680 Chimney Rock Road ",
   addr2: "Paso Robles, CA",
   lat: "35.6549549",
@@ -141,6 +141,17 @@ var initialData_js =
   lng: "-120.72292099999999",
   infoAry: [
     {type: "Winery", infoText: "popular venue"},
+    ]
+  },
+  {
+  name: "Calcareous Vineyard",
+  url: "www.calcareous.com",
+  addr1: "3430 Peachy Canyon Road",
+  addr2: "Paso Robles, CA",
+  lat: "35.629444",
+  lng: "-120.75043700000003",
+  infoAry: [
+    {type: "Winery", infoText: "Wood-fire pizza oven, tables and umbrellas"},
     ]
   }
 ];
