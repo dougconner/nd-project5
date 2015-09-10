@@ -328,6 +328,41 @@ var getFlickrPhoto = function(index) {
 // 	});
 // };
 
+// this will load the current foursquare photo
+var get4sqNext = function() {
+
+	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
+	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
+	var photoSize = 'cap300';
+	var suffix = foursquarePhotoArray[foursquareIndex].suffix;
+
+	console.log('prefix, photoSize, suffix', prefix, photoSize, suffix);
+
+	var photoStr = prefix + photoSize + suffix;
+
+	console.log("photoStr = " + photoStr);
+
+	var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
+
+	// Now load or reload the info window with the photo
+	$('#info-text').html(textStr2);
+	$('#info-img').attr('src', photoStr);
+	$('#img-counter').html('Image '+ (foursquareIndex + 1) + ' of ' + foursquarePhotoArray.length);
+
+		// 		var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
+
+		// 		// Now load or reload the info window with the photo
+		// 		$('#info-text').html(textStr2);
+		// 		$('#info-img').attr('src', photoStr);
+		// 	} else {
+		// 		// No photos
+		// 		$('#info-img').attr('src', '');
+		// 		$('#info-img').attr('alt', 'Venue photo not available');
+		// 	}
+		// }
+
+};
+
 // If the search found the venue, this will load the foursquarePhotoArray
 var get4sqVenueDetail = function(index, name, id) {
 	var venueID = id;
@@ -379,41 +414,6 @@ var get4sqVenueDetail = function(index, name, id) {
 		$('#error-msg').html(errorString);
 		console.log( 'finished' );
 	});
-};
-
-// this will load the current foursquare photo
-var get4sqNext = function() {
-
-	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
-	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
-	var photoSize = 'cap300';
-	var suffix = foursquarePhotoArray[foursquareIndex].suffix;
-
-	console.log('prefix, photoSize, suffix', prefix, photoSize, suffix);
-
-	var photoStr = prefix + photoSize + suffix;
-
-	console.log("photoStr = " + photoStr);
-
-	var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
-
-	// Now load or reload the info window with the photo
-	$('#info-text').html(textStr2);
-	$('#info-img').attr('src', photoStr);
-	$('#img-counter').html('Image '+ (foursquareIndex + 1) + ' of ' + foursquarePhotoArray.length);
-
-		// 		var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
-
-		// 		// Now load or reload the info window with the photo
-		// 		$('#info-text').html(textStr2);
-		// 		$('#info-img').attr('src', photoStr);
-		// 	} else {
-		// 		// No photos
-		// 		$('#info-img').attr('src', '');
-		// 		$('#info-img').attr('alt', 'Venue photo not available');
-		// 	}
-		// }
-
 };
 
 // search for the selected venue in the 4sq database
@@ -472,6 +472,131 @@ var get4sqSearch = function(index) {
 	});
 };
 
+var toggleBounce = function(index) {
+	var marker = markers[index];
+	if (marker.getAnimation() !== null) {
+		marker.setAnimation(null);
+	} else {
+		try {
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			// Bounce for a few seconds then stop
+			window.setTimeout(function() {
+				toggleBounce(index);
+			}, 2100);
+		}
+		catch(err) {
+			$('#error-msg').html(errorMsg.maps);
+		}
+	}
+	var zInd = MAX_ZINDEX + 1;
+	marker.zIndex = zInd;
+
+};
+
+// Requires a selected venue and photo source
+// Photo source is set to a default to start with
+var photoSearch = function(index) {
+	if (index >= 0) {
+		// First clear out old venue info
+		$('#info-img').attr('src', '');
+		$('#info-img').attr('alt', 'Venue photo not available');
+		$('#img-counter').html('0 images');
+		$('#info-text').html('');
+
+		// If venue selected, initiate search
+		switch (photoSrc) {
+			case 'foursquare':
+				get4sqSearch(index);
+				break;
+			case 'flickr':
+				getFlickrPhoto(index);
+				break;
+			default:
+				getFlickrPhoto(index);
+		}
+	} else {
+		// No venue selected
+		$('#info-img').attr('alt', 'No Venue selected');
+	}
+};
+
+// Set the selected venue in all columns or pages
+// after it has been either selected (clicked) on
+// the Places list or (clicked) on the map marker.
+// If it is a new venue, clear any photos on display
+// in the photo page.
+// If it is not in the current place type then it must be
+// removed: selectedVenueIndex() = -1 and remove
+// markerSelectedPng
+var setSelectedVenue = function(index) {
+	var textStr = "Venue: ";
+	var venueName;
+	var venueUrl;
+	var venueAddr1;
+	var venueAddr2;
+	var markerIcon;
+	var markerType;
+	var marker;
+
+	// reset previous selectedVenue marker to ordinary markerPng
+	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
+		marker = markers[selectedVenueIndex];
+		markerType = locations[selectedVenueIndex].infoAry[0].type;
+		markerIcon = markerPng[markerType];
+		marker.setIcon(markerIcon);
+		marker.setZIndex(MAX_ZINDEX);
+	}
+
+	if (index >= 0 && enableMarkerLoad) {
+		// set new selectedVenue to markerSelectedPng
+		venueName = locations[index].name;
+		selectedVenueIndex = index;
+		marker = markers[index];
+		markerType = locations[index].infoAry[0].type;
+		markerIcon = markerSelectedPng[markerType];
+		marker.setIcon(markerIcon);
+		var zInd = MAX_ZINDEX + 1;
+		marker.setZIndex(zInd);
+		console.log("markerNew = ", markerIcon);
+
+		// info page
+		venueUrl = locations[index].url;
+		venueAddr1 = locations[index].addr1;
+		venueAddr2 = locations[index].addr2;
+		console.log("venueUrl", venueUrl);
+	} else {
+		venueName = "none";
+		venueUrl = "";
+		venueAddr1 = "";
+		venueAddr2 = "";
+	}
+
+	// Show the selected venue on each page
+	$('#selected-list-pg').html(textStr + venueName);
+	$('#selected-map-pg').html(textStr + venueName);
+	$('#selected-photo-pg').html(textStr + venueName);
+	$('#selected-info-pg').html(textStr + venueName);
+
+	// Show the selected venue info on the info page
+	// Venue name will already be at top of page
+	if (index >= 0 && enableMarkerLoad) {
+		// $('#venue-url').html("<a href=" + venueUrl + ">" + venueUrl);
+		// $('#venue-addr1').html(venueAddr1);
+		// $('#venue-addr2').html(venueAddr2);
+		var contentStr = "<a href=" + venueUrl + ">" + venueUrl + "</a>" + "<br>";
+		contentStr += venueAddr1 + "<br>";
+		contentStr += venueAddr2;
+		$('#venue-info').html(contentStr);
+	} else {
+
+	}
+	// Clear old photo and selected map marker
+	$('#info-img').attr('src', "");
+
+	photoSearch(index);
+
+};
+
  var attachInfotext = function(marker, i) {
 	try {
 		var infowindow = new google.maps.InfoWindow({
@@ -518,103 +643,6 @@ var setMarkers = function(map, locations) {
 	}
 };
 
-var toggleBounce = function(index) {
-	var marker = markers[index];
-	if (marker.getAnimation() !== null) {
-		marker.setAnimation(null);
-	} else {
-		try {
-			marker.setAnimation(google.maps.Animation.BOUNCE);
-			// Bounce for a few seconds then stop
-			window.setTimeout(function() {
-				toggleBounce(index);
-			}, 2100);
-		}
-		catch(err) {
-			$('#error-msg').html(errorMsg.maps);
-		}
-	}
-	var zInd = MAX_ZINDEX + 1;
-	marker.zIndex = zInd;
-
-};
-
-// Set the selected venue in all columns or pages
-// after it has been either selected (clicked) on
-// the Places list or (clicked) on the map marker.
-// If it is a new venue, clear any photos on display
-// in the photo page.
-// If it is not in the current place type then it must be
-// removed: selectedVenueIndex() = -1 and remove
-// markerSelectedPng
-var setSelectedVenue = function(index) {
-	var textStr = "Selected: ";
-	var venueName;
-
-	// reset previous selectedVenue marker to ordinary markerPng
-	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
-		var marker = markers[selectedVenueIndex];
-		var	markerType = locations[selectedVenueIndex].infoAry[0].type;
-		var markerIcon = markerPng[markerType];
-		marker.setIcon(markerIcon);
-		marker.setZIndex(MAX_ZINDEX);
-	}
-
-	if (index >= 0 && enableMarkerLoad) {
-		// set new selectedVenue to markerSelectedPng
-		venueName = locations[index].name;
-		selectedVenueIndex = index;
-		var marker = markers[index];
-		var	markerType = locations[index].infoAry[0].type;
-		var markerIcon = markerSelectedPng[markerType];
-		marker.setIcon(markerIcon);
-		var zInd = MAX_ZINDEX + 1;
-		marker.setZIndex(zInd);
-		console.log("markerNew = ", markerIcon);
-	} else {
-		venueName = "none";
-	}
-
-	// Show the selected venue on each page
-	$('#selected-list-pg').html(textStr + venueName);
-	$('#selected-map-pg').html(textStr + venueName);
-	$('#selected-photo-pg').html(textStr + venueName);
-	$('#selected-info-pg').html(textStr + venueName);
-
-	// Clear old photo and selected map marker
-	$('#info-img').attr('src', "");
-
-	photoSearch(index);
-
-};
-
-// Requires a selected venue and photo source
-// Photo source is set to a default to start with
-var photoSearch = function(index) {
-	if (index >= 0) {
-		// First clear out old venue info
-		$('#info-img').attr('src', '');
-		$('#info-img').attr('alt', 'Venue photo not available');
-		$('#img-counter').html('0 images');
-		$('#info-text').html('');
-
-		// If venue selected, initiate search
-		switch (photoSrc) {
-			case 'foursquare':
-				get4sqSearch(index);
-				break;
-			case 'flickr':
-				getFlickrPhoto(index);
-				break;
-			default:
-				getFlickrPhoto(index);
-		}
-	} else {
-		// No venue selected
-		$('#info-img').attr('alt', 'No Venue selected');
-	}
-};
-
 
 function initialize() {
 	var mapCanvas = document.getElementById('map-canvas');
@@ -639,7 +667,7 @@ var MyViewModel = function(places) {
 	self.placeTypes = ko.observableArray(placeTypes);
 
 	// Holds the currently selected place type
-	self.selectedPlaceType = ko.observableArray(['All']);
+	self.selectedPlaceType = ko.observableArray(['Winery']);
 
 	// search text
 	self.searchText = ko.observable('');
@@ -675,9 +703,10 @@ var MyViewModel = function(places) {
 				return true;
 			}
 		}
-		self.hideMarker(index);
+
 		// Fails at least one of the two above conditions
-		// Set selectedVenueIndex = -1 and reset marker
+		self.hideMarker(index);
+		// Set selectedVenueIndex = -1 and reset marker symbol
 		setSelectedVenue(-1);
 		return false;
 	};

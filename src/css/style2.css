@@ -1,13 +1,17 @@
 body,
 textarea,
-select,
 li,
 input {
-    font: 1.45em arial;
+    font: 1.5em arial;
+}
+
+label,
+select  {
+    font: 1.3em arial;
 }
 
 p {
-    font: 1.1em arial;
+    font: 1.2em arial;
 }
 
 .not-nav {
@@ -16,17 +20,20 @@ p {
 }
 
 @media (min-width: 992px) {
-    .nav {
+    .nav,
+    .selected-venue-2 {
         visibility: hidden;
     }
 
     .not-nav {
         visibility: visible;
-        height: 25px;
-        margin: 0 0 2% 0;
+        height: 30px;
+        margin: 2% 0 2% 0;
     }
-    .nav-pills {
+    .nav-pills,
+    .nav {
         height: 0;
+        underline: none;
     }
 }
 
@@ -48,8 +55,9 @@ body,
 }
 
 .map-canvas-div {
-    height: 75%;
-    width:75%;
+    height: 55%;
+    width:90%;
+    margin: 0 5% 0 5%;
 }
 
 .img-div {
@@ -65,8 +73,8 @@ body,
     height: 8%;
 }
 
-.selected-venue {
-    height: 5%;
+.selected-venue-1,
+.selected-venue-2 {
 }
 
 .input-group {
@@ -117,8 +125,14 @@ p#error-msg {
 
 }
 
-.search-box {
+.centered  {
+    text-align: center;
 }
+
+.info-text {
+}
+
+
 
 
 

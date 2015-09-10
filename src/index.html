@@ -26,22 +26,23 @@
             <div class="row">
                 <div id="search-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
-                        <li role="presentation" class="active"><a href="#search-div">Srch</a></li>
+                        <li role="presentation" class="active"><a href="#search-div">List</a></li>
                         <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation"><a href="#photo-div">Phts</a></li>
+                        <li role="presentation"><a href="#photo-div">Img</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
                     <p id="error-msg"></p>
-                    <p id="selected-list-pg" class="selected-venue">Selected: none</p>
-                    <p>Place Type:
+                    <p id="selected-list-pg" class="selected-venue-1">Selected: none</p>
+                    <p>Venue Type:
                     <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                    <span>
-                        <p>Search within Place Type:</p>
-                        <button class="btn btn-primary btn-s clear-search" type="button" data-bind="click:$root.clearSearch()">clear search</button>
-                    </span>
+                    <div class="input-group">
+                        <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
+                      </span>
+                    </div><!-- /input-group -->
                     <br>
-                    <input id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" />
-                    <h3>Places: Click to select</h3>
+                    <h3>Venues List: </h3>
                     <div class="list-div">
                         <ul id="list1" data-bind="foreach: places">
                             <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
@@ -50,24 +51,37 @@
                 </div>
                 <div id="map-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
-                        <li class="nav" role="presentation"><a href="#search-div">Srch</a></li>
+                        <li class="nav" role="presentation"><a href="#search-div">List</a></li>
                         <li role="presentation" class="active nav" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li class="nav" role="presentation"><a href="#photo-div">Phts</a></li>
+                        <li class="nav" role="presentation"><a href="#photo-div">Img</a></li>
                         <li class="nav" role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
-                    <p id="selected-map-pg" class="selected-venue">Selected: none</p>
-                    <button class="btn btn-primary not-nav btn-xs" type="button" data-bind="click:$root.setBounds()">show markers</button>
+                    <p id="selected-map-pg" class="selected-venue-2">Venue: none</p>
+                    <div class="nav">
+                        <p>Venue Type:
+                        <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                    </div>
+                    <div class="input-group nav">
+                        <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search..."/>
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
+                      </span>
+                    </div><!-- /input-group -->
+                    <div class="centered">
+                        <button class="btn btn-primary not-nav btn-xs" type="button" data-bind="click:$root.setBounds()">Reset map</button>
+                    </div>
+                    <br>
                     <div id="map-canvas" class="map-canvas-div">
                     </div>
                 </div>
                 <div id="photo-div" class="col-md-3 photo-div" role="navigation">
                     <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#search-div">Srch</a></li>
+                        <li role="presentation"><a href="#search-div">List</a></li>
                         <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation" class="active"><a href="#photo-div">Phts</a></li>
+                        <li role="presentation" class="active"><a href="#photo-div">Img</a></li>
                         <li role="presentation"><a href="#info-div">Info</a></li>
                     </ul>
-                    <p id="selected-photo-pg" class="selected-venue">Selected: none</p>
+                    <p id="selected-photo-pg" class="selected-venue-2">Selected: none</p>
                         <div class="radio">
                         <span class="input-group">
                         <label>Photos:</label>
@@ -92,14 +106,17 @@
                 </div>
                 <div id="info-div" class="col-md-3" role="navigation">
                     <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#search-div">Srch</a></li>
+                        <li role="presentation"><a href="#search-div">List</a></li>
                         <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation"><a href="#photo-div">Phts</a></li>
+                        <li role="presentation"><a href="#photo-div">Img</a></li>
                         <li role="presentation" class="active"><a href="#info-div">Info</a></li>
                     </ul>
-                    <p id="selected-info-pg" class="selected-venue">Selected: none</p>
-                    <p>info page goes here</p>
+                    <p id="selected-info-pg" class="selected-venue-1">Selected: none</p>
+                    <p id="venue-info" class="info-text"></p>
+                    <p id="venue-addr1"></p>
+                    <p id="venue-addr2"></p>
     <!-- removeIf(distribution) -->
+                    <br>
                     <p><a href="place-data.html">Add Places (development only)</a></p>
         <!-- endRemoveIf(distribution) -->
                 </div>
