@@ -273,61 +273,6 @@ var getFlickrPhoto = function(index) {
 	});
 };
 
-// Not currently using this function
-// If the search found the venue, see if a "bestPhoto" is available
-// var get4sqBestPhoto = function(index, name, id) {
-// 	var venueID = id;
-
-// 	var jqxhr = $.get('https://api.foursquare.com/v2/venues/' + venueID +
-// 		'?client_id=' + CLIENT_ID +
-// 		'&client_secret=' + CLIENT_SECRET +
-// 		'&v=20140115' +
-// 		'&m=foursquare',
-// 		function(data) {
-// 			// console.log("data=", JSON.stringify(data));
-// 			// var url = data.response.venue.canonicalUrl;
-
-// 			// This code will get the "bestPhoto" if available
-// 			if (data.response.venue.bestPhoto) {
-// 				var photoStr = '' +
-// 					data.response.venue.bestPhoto.prefix +
-// 					'cap300' +
-// 					data.response.venue.bestPhoto.suffix;
-
-// 				// var textStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
-// 				var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
-
-// 				// Now load or reload the info window with the photo
-// 				$('#info-text').html(textStr2);
-// 				$('#info-img').attr('src', photoStr);
-// 			} else {
-// 				// No photos
-// 				$('#info-img').attr('src', '');
-// 				$('#info-img').attr('alt', 'Venue photo not available');
-// 			}
-
-// 			// The following puts the name in the tool-tip of image and marker
-// 			// Check iff still working
-// 			$('#info-img' + index).attr('title', name);
-
-// 			errorString = '';
-// 			console.log('success');
-// 		}
-// 	);
-
-// 		jqxhr.done(function() {
-// 		console.log( 'second success' );
-// 	});
-// 		jqxhr.fail(function() {
-// 		console.log( 'Venue detail error' );
-// 		errorString = errorMsg.fail;
-// 	});
-// 		jqxhr.always(function() {
-// 		$('#error-msg').html(errorString);
-// 		console.log( 'finished' );
-// 	});
-// };
-
 // this will load the current foursquare photo
 var get4sqNext = function() {
 
@@ -537,6 +482,7 @@ var setSelectedVenue = function(index) {
 	var markerIcon;
 	var markerType;
 	var marker;
+	var venueInfoText;
 
 	// reset previous selectedVenue marker to ordinary markerPng
 	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
@@ -564,11 +510,14 @@ var setSelectedVenue = function(index) {
 		venueAddr1 = locations[index].addr1;
 		venueAddr2 = locations[index].addr2;
 		console.log("venueUrl", venueUrl);
+
+		venueInfoText = locations[index].infoAry[0].infoText;
 	} else {
 		venueName = "none";
 		venueUrl = "";
 		venueAddr1 = "";
 		venueAddr2 = "";
+		venueInfoText = "";
 	}
 
 	// Show the selected venue on each page
@@ -587,6 +536,7 @@ var setSelectedVenue = function(index) {
 		contentStr += venueAddr1 + "<br>";
 		contentStr += venueAddr2;
 		$('#venue-info').html(contentStr);
+		$('#venue-info-text').html(venueInfoText);
 	} else {
 
 	}
