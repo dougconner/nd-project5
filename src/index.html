@@ -26,11 +26,13 @@
             <div class="row">
 
                 <div id="search-div" class="col-md-4" role="navigation">
-                    <div id="search-sub-div">
-                        <p id="error-msg"></p>
-                        <p id="selected-list-pg" class="selected-venue-1">Selected: none</p>
-                        <p>Venue Type:
-                        <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                    <div id="search-sub-div" class="search-sub">
+                        <div>
+                            <p id="error-msg"></p>
+                            <p id="selected-list-pg" class="selected-venue-1">Selected: none</p>
+                            <p>Venue Type:
+                            <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                        </div>
                         <div class="input-group">
                             <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
                           <span class="input-group-btn">
@@ -38,7 +40,7 @@
                           </span>
                         </div><!-- /input-group -->
                     </div>
-                    <div id="list-sub-div">
+                    <div id="list-sub-div" class="list-sub">
                         <h3>Venues List: </h3>
                         <div class="list-div">
                             <ul id="list1" data-bind="foreach: places">
@@ -49,22 +51,11 @@
                 </div>
 
                 <div id="map-div" class="col-md-4" role="navigation">
-                    <p id="selected-map-pg" class="selected-venue-2">Venue: none</p>
-                    <div class="nav">
-                        <p>Venue Type:
-                        <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                    </div>
-                    <div class="input-group nav">
-                        <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search..."/>
-                      <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
-                      </span>
-                    </div><!-- /input-group -->
                     <div class="centered">
                         <button class="btn btn-primary btn-xs" type="button" data-bind="click:$root.setBounds()">Reset map</button>
                     </div>
                     <br>
-                    <div id="map-canvas" class="map-canvas-div">
+                    <div id="map-canvas" class="map-cl">
                     </div>
                 </div>
 

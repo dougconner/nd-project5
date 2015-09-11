@@ -1,6 +1,6 @@
 body,
 textarea,
-li {
+ul {
     font: 1.4em arial;
 }
 
@@ -11,10 +11,16 @@ body,
     width: 100%;
 }
 
+.row,
+.col-md-4 {
+    height: 100%;
+}
+
 label,
 input,
-select  {
-    font: 1.2em arial;
+select,
+li  {
+    font: 1.3em arial;
 }
 
 h3 {
@@ -25,6 +31,15 @@ p {
     font: 1.2em arial;
 }
 
+ul,
+li {
+    overflow: auto;
+}
+li {
+    color: blue;
+    cursor: pointer;
+}
+
 @media (min-width: 992px) {
     .nav,
     .selected-venue-2 {
@@ -32,19 +47,9 @@ p {
         height: 0;
     }
 
-    .not-nav {
-        visibility: visible;
-        height: 30px;
-        margin: 2% 0 2% 0;
-    }
 }
 
-.row,
-.col-md-4 {
-    height: 100%;
-}
-
-.map-canvas-div {
+.map-cl {
     height: 55%;
     width:90%;
     margin: 0 5% 0 5%;
@@ -77,37 +82,21 @@ label {
     height: 100%;
 }
 
-.search-sub-div {
-    height: 40%;
+.search-sub {
+    height: 30%;
 }
 
-.list-sub-div {
-    height: 60%;
+.list-sub {
+    height: 65%;
+    overflow: auto;
 }
 
 .list-div  {
     cursor: pointer;
 }
 
-ul {
-    overflow: auto;
-}
-
-li {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.text-div {
-    background-color: #f4efe8;
-}
-
 p#error-msg {
     color: red;
-}
-
-.place-title {
-    background-color: #faf7f3;
 }
 
 .list-div {
@@ -117,14 +106,10 @@ p#error-msg {
 
 .clear-search {
     margin: 0 0 2% 0;
-
 }
 
 .centered  {
     text-align: center;
-}
-
-.info-text {
 }
 
 
