@@ -1,45 +1,9 @@
 body,
 textarea,
-li,
-input {
-    font: 1.5em arial;
+li {
+    font: 1.4em arial;
 }
 
-label,
-select  {
-    font: 1.3em arial;
-}
-
-p {
-    font: 1.2em arial;
-}
-
-.not-nav {
-    visibility: hidden;
-    height: 0%;
-}
-
-@media (min-width: 992px) {
-    .nav,
-    .selected-venue-2 {
-        visibility: hidden;
-    }
-
-    .not-nav {
-        visibility: visible;
-        height: 30px;
-        margin: 2% 0 2% 0;
-    }
-    .nav-pills,
-    .nav {
-        height: 0;
-        underline: none;
-    }
-}
-
-h3 {
-    text-align: left;
-}
 html,
 body,
 .container-fluid {
@@ -47,10 +11,36 @@ body,
     width: 100%;
 }
 
+label,
+input,
+select  {
+    font: 1.2em arial;
+}
+
+h3 {
+    text-align: left;
+}
+
+p {
+    font: 1.2em arial;
+}
+
+@media (min-width: 992px) {
+    .nav,
+    .selected-venue-2 {
+        visibility: hidden;
+        height: 0;
+    }
+
+    .not-nav {
+        visibility: visible;
+        height: 30px;
+        margin: 2% 0 2% 0;
+    }
+}
+
 .row,
-.col-md-3,
-.col-md-6,
-.col-lg-6 {
+.col-md-4 {
     height: 100%;
 }
 
@@ -61,7 +51,6 @@ body,
 }
 
 .img-div {
-    max-height: 300px;
     max-width: 100%;
 }
 
@@ -71,7 +60,6 @@ body,
 }
 
 .btn-group {
-    height: 8%;
 }
 
 .selected-venue-1,
@@ -86,13 +74,19 @@ label {
 }
 
 .search-div {
-    height: 90%;
+    height: 100%;
 }
 
+.search-sub-div {
+    height: 40%;
+}
+
+.list-sub-div {
+    height: 60%;
+}
 
 .list-div  {
     cursor: pointer;
-    height: 40%;
 }
 
 ul {

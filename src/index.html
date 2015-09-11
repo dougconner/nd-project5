@@ -24,38 +24,31 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div id="search-div" class="col-md-3" role="navigation">
-                    <ul class="nav nav-pills">
-                        <li role="presentation" class="active"><a href="#search-div">List</a></li>
-                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation"><a href="#photo-div">Img</a></li>
-                        <li role="presentation"><a href="#info-div">Info</a></li>
-                    </ul>
-                    <p id="error-msg"></p>
-                    <p id="selected-list-pg" class="selected-venue-1">Selected: none</p>
-                    <p>Venue Type:
-                    <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-                    <div class="input-group">
-                        <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
-                      <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
-                      </span>
-                    </div><!-- /input-group -->
-                    <br>
-                    <h3>Venues List: </h3>
-                    <div class="list-div">
-                        <ul id="list1" data-bind="foreach: places">
-                            <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
-                        </ul>
+
+                <div id="search-div" class="col-md-4" role="navigation">
+                    <div id="search-sub-div">
+                        <p id="error-msg"></p>
+                        <p id="selected-list-pg" class="selected-venue-1">Selected: none</p>
+                        <p>Venue Type:
+                        <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+                        <div class="input-group">
+                            <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
+                          <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
+                          </span>
+                        </div><!-- /input-group -->
+                    </div>
+                    <div id="list-sub-div">
+                        <h3>Venues List: </h3>
+                        <div class="list-div">
+                            <ul id="list1" data-bind="foreach: places">
+                                <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div id="map-div" class="col-md-3" role="navigation">
-                    <ul class="nav nav-pills">
-                        <li class="nav" role="presentation"><a href="#search-div">List</a></li>
-                        <li role="presentation" class="active nav" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li class="nav" role="presentation"><a href="#photo-div">Img</a></li>
-                        <li class="nav" role="presentation"><a href="#info-div">Info</a></li>
-                    </ul>
+
+                <div id="map-div" class="col-md-4" role="navigation">
                     <p id="selected-map-pg" class="selected-venue-2">Venue: none</p>
                     <div class="nav">
                         <p>Venue Type:
@@ -68,58 +61,46 @@
                       </span>
                     </div><!-- /input-group -->
                     <div class="centered">
-                        <button class="btn btn-primary not-nav btn-xs" type="button" data-bind="click:$root.setBounds()">Reset map</button>
+                        <button class="btn btn-primary btn-xs" type="button" data-bind="click:$root.setBounds()">Reset map</button>
                     </div>
                     <br>
                     <div id="map-canvas" class="map-canvas-div">
                     </div>
                 </div>
-                <div id="photo-div" class="col-md-3 photo-div" role="navigation">
-                    <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#search-div">List</a></li>
-                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation" class="active"><a href="#photo-div">Img</a></li>
-                        <li role="presentation"><a href="#info-div">Info</a></li>
-                    </ul>
-                    <p id="selected-photo-pg" class="selected-venue-2">Selected: none</p>
-                        <div class="radio">
-                        <span class="input-group">
-                        <label>Photos:</label>
-                            <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</label>
-                            <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare</label>
-                        </span>
-                        </div>
-                        <div class="btn-group" role="group" aria-label="...">
-                          <button id="previous-img" type="button" class="btn btn-primary" data-bind="click:$root.previousPhoto()">
-                            <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
-                          </button>
-                          <button id="img-counter" type="button" class="btn btn-default">0 images</button>
-                          <button id="next-img" type="button" class="btn btn-primary" data-bind="click:$root.nextPhoto()">
-                            <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                          </button>
-                        </div>
-                        <div class="img-div">
-                            <img id="info-img" class="img-responsive" src="" alt="Venue photo">
-                            <p id="info-text"></p>
-                            <p id="img-venue-attr"></p>
-                        </div>
 
-                </div>
-                <div id="info-div" class="col-md-3" role="navigation">
-                    <ul class="nav nav-pills">
-                        <li role="presentation"><a href="#search-div">List</a></li>
-                        <li role="presentation" data-bind="click:$root.setBounds()"><a href="#map-div">Map</a></li>
-                        <li role="presentation"><a href="#photo-div">Img</a></li>
-                        <li role="presentation" class="active"><a href="#info-div">Info</a></li>
-                    </ul>
-                    <p id="selected-info-pg" class="selected-venue-1">Selected: none</p>
+                <div id="photo-div" class="col-md-4 photo-div" role="navigation">
+                    <p id="selected-photo-pg" class="selected-venue-2">Selected: none</p>
+                    <div class="radio">
+                    <span class="input-group">
+                    <label>Photos:</label>
+                        <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</label>
+                        <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare</label>
+                    </span>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button id="previous-img" type="button" class="btn btn-primary" data-bind="click:$root.previousPhoto()">
+                        <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
+                      </button>
+                      <button id="img-counter" type="button" class="btn btn-default">0 images</button>
+                      <button id="next-img" type="button" class="btn btn-primary" data-bind="click:$root.nextPhoto()">
+                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    <div class="img-div">
+                        <img id="info-img" class="img-responsive" src="" alt="Venue photo">
+                        <p id="info-text"></p>
+                        <p id="img-venue-attr"></p>
+                    </div>
+                    <br>
                     <p id="venue-info" class="info-text"></p>
                     <p id="venue-info-text" class="info-text"></p>
     <!-- removeIf(distribution) -->
                     <br>
                     <p><a href="place-data.html">Add Places (development only)</a></p>
         <!-- endRemoveIf(distribution) -->
+
                 </div>
+
             </div>
         </div>
 <!-- inject:js -->

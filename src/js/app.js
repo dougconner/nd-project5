@@ -316,17 +316,8 @@ var get4sqVenueDetail = function(index, name, id) {
 				$('#img-venue-attr').html('');
 			}
 
-			// The following puts the name in the tool-tip of image and marker
-			// Check if still working
-			$('#info-img' + index).attr('title', name);
-
-			// console.log("data.response.venue.photos.groups[0].items[0].prefix  = ",data.response.venue.photos.groups[0].items[0].prefix);
-			// console.log("data.response.venue.photos.groups[0].items[0].suffix  = ",data.response.venue.photos.groups[0].items[0].suffix);
 			console.log("data.response.venue.photos.groups[0].items[0].user.firstName  = ",data.response.venue.photos.groups[0].items[0].user.firstName);
 			console.log("data.response.venue.photos.groups[0].items[0].user.id  = ",data.response.venue.photos.groups[0].items[0].user.id);
-
-			// foursquarePhotoArray = data.response.venue.photos.groups[0].items;
-			// console.log('foursquarePhotoArray = ', foursquarePhotoArray);
 
 			errorString = '';
 			console.log('success');
@@ -520,7 +511,7 @@ var setSelectedVenue = function(index) {
 		// $('#venue-addr2').html(venueAddr2);
 		var contentStr = "<a href=" + venueUrl + ">" + venueName + "</a>" + "<br>";
 		contentStr += venueAddr1 + "<br>";
-		contentStr += venueAddr2;
+		contentStr += venueAddr2 + "<br>";
 		$('#venue-info').html(contentStr);
 		$('#venue-info-text').html(venueInfoText);
 	} else {
