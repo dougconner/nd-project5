@@ -35,8 +35,12 @@ var enableMarkerLoad = false;
 var errorMsg = {};
 
 // Foursquare Ajax request fails
-errorMsg.fail = 'The data request to Foursquare failed. ';
-errorMsg.fail += '<br>Please check your internet connection.';
+errorMsg.FourSqfail = 'The data request to Foursquare failed. ';
+errorMsg.FourSqfail += '<br>Please check your internet connection.';
+
+// Flickr Ajax request fails
+errorMsg.Flickrfail = 'The data request to Flickr failed. ';
+errorMsg.Flickrfail += '<br>Please check your internet connection.';
 
 // Google.maps request fails
 errorMsg.maps = 'The data requrest to google.maps failed.';
@@ -163,32 +167,6 @@ var setBounds = function() {
 	}
 };
 
-//Flickr Sizes. Not currently used
-// var getFlickrSizes = function(id) {
-// 	var jqxhr = $.get('https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' +
-// 		'&api_key=22fc9c37821f6a73591b5bc4ad048e35' +
-// 		'&format=json' +
-// 		'&photo_id=' + id,
-// 		function(data) {
-// 			console.log('data = ', data);
-// 			console.log('data.rsp.stat = ', data.rsp.stat);
-// 			console.log('success');
-// 		}
-// 	);
-
-// 		jqxhr.done(function() {
-// 		console.log( 'second success' );
-// 	});
-// 		jqxhr.fail(function() {
-// 		console.log( 'error' );
-// 	});
-// 		jqxhr.always(function() {
-// 		$('#error-msg').html(errorString);
-// 		console.log( 'finished' );
-// 	});
-
-// };
-
 var getFlickrNext = function(flickrIndex) {
 	// console.log("flickrPhotoArray", JSON.stringify(flickrPhotoArray));
 	flickrIndex = flickrIndex % flickrPhotoArray.length;
@@ -196,6 +174,7 @@ var getFlickrNext = function(flickrIndex) {
 	var imgSecret = flickrPhotoArray[flickrIndex].secret;
 	var imgFarm = flickrPhotoArray[flickrIndex].farm;
 	var imgServer = flickrPhotoArray[flickrIndex].server;
+	var owner = flickrPhotoArray[flickrIndex].owner;
 	var sizeSuffix = 'n';
 	console.log('farm, server, id, secret', imgFarm, imgServer, imgId, imgSecret);
 
@@ -210,6 +189,9 @@ var getFlickrNext = function(flickrIndex) {
 	$('#info-text').html(textStr2);
 	$('#info-img').attr('src', photoStr);
 	$('#img-counter').html('Image '+ (flickrIndex + 1) + ' of ' + flickrPhotoArray.length);
+
+	var imageVenueAttributionStr = '<a href="' + "https://flickr.com/people/" + owner +"/" + '">' + "Photographer" + '</a>';
+	$('#img-venue-attr').html(imageVenueAttributionStr);
 };
 
 // Flickr API
@@ -252,24 +234,25 @@ var getFlickrPhoto = function(index) {
 				$('#info-img').attr('src', '');
 				$('#info-img').attr('alt', 'Venue photo not available');
 				$('#img-counter').html('0 images');
+				$('#img-venue-attr').html('');
 				console.log("no photos for this venue");
 			}
 
 			console.log('success');
-			// getFlickrSizes('4924701870');
 		}
 	);
 
 		jqxhr.done(function() {
-		console.log( 'second success' );
+			errorString = '';
+			console.log( 'second success' );
 	});
 		jqxhr.fail(function() {
-		console.log( 'error' );
-		errorString = errorMsg.fail;
+			console.log( 'error' );
+			errorString = errorMsg.Flickrfail;
 	});
 		jqxhr.always(function() {
-		$('#error-msg').html(errorString);
-		console.log( 'finished' );
+			$('#error-msg').html(errorString);
+			console.log( 'finished' );
 	});
 };
 
@@ -280,11 +263,9 @@ var get4sqNext = function() {
 	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
 	var photoSize = 'cap300';
 	var suffix = foursquarePhotoArray[foursquareIndex].suffix;
-
 	console.log('prefix, photoSize, suffix', prefix, photoSize, suffix);
 
 	var photoStr = prefix + photoSize + suffix;
-
 	console.log("photoStr = " + photoStr);
 
 	var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
@@ -325,14 +306,18 @@ var get4sqVenueDetail = function(index, name, id) {
 				foursquarePhotoArray = data.response.venue.photos.groups[0].items;
 				foursquareIndex = 0;
 				get4sqNext();
+				var url = data.response.venue.canonicalUrl;
+				var imageVenueAttributionStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
+				$('#img-venue-attr').html(imageVenueAttributionStr);
 			} else {
 				// No photos
 				$('#info-img').attr('src', '');
 				$('#info-img').attr('alt', 'Venue photo not available');
+				$('#img-venue-attr').html('');
 			}
 
 			// The following puts the name in the tool-tip of image and marker
-			// Check iff still working
+			// Check if still working
 			$('#info-img' + index).attr('title', name);
 
 			// console.log("data.response.venue.photos.groups[0].items[0].prefix  = ",data.response.venue.photos.groups[0].items[0].prefix);
@@ -349,15 +334,16 @@ var get4sqVenueDetail = function(index, name, id) {
 	);
 
 		jqxhr.done(function() {
-		console.log( 'second success' );
+			errorString = '';
+			console.log( 'second success' );
 	});
 		jqxhr.fail(function() {
-		console.log( 'Venue detail error' );
-		errorString = errorMsg.fail;
+			console.log( 'Venue detail error' );
+			errorString = errorMsg.FourSqfail;
 	});
 		jqxhr.always(function() {
-		$('#error-msg').html(errorString);
-		console.log( 'finished' );
+			$('#error-msg').html(errorString);
+			console.log( 'finished' );
 	});
 };
 
@@ -387,7 +373,7 @@ var get4sqSearch = function(index) {
 				console.log("foursquare photo not available");
 				$('#info-img').attr('src', '');
 				$('#info-img').attr('alt', 'Venue photo not available');
-				// $('#info-img' + index).attr('alt', 'Venue photo not available');
+				$('#img-venue-attr').html('');
 			} else {
 				var id = data.response.venues[0].id;
 				var name = data.response.venues[0].name;
@@ -403,17 +389,17 @@ var get4sqSearch = function(index) {
 	);
 
 		jqxhr.done(function() {
-		console.log( 'second success' );
+			errorString = '';
+			console.log( 'second success' );
 	});
 		jqxhr.fail(function() {
-		console.log( 'search error' );
-		errorString = errorMsg.fail;
-
+			console.log( 'search error' );
+			errorString = errorMsg.FourSqfail;
 	});
 
 		jqxhr.always(function() {
-		$('#error-msg').html(errorString);
-		console.log( 'finished' );
+			$('#error-msg').html(errorString);
+			console.log( 'finished' );
 	});
 };
 
@@ -532,7 +518,7 @@ var setSelectedVenue = function(index) {
 		// $('#venue-url').html("<a href=" + venueUrl + ">" + venueUrl);
 		// $('#venue-addr1').html(venueAddr1);
 		// $('#venue-addr2').html(venueAddr2);
-		var contentStr = "<a href=" + venueUrl + ">" + venueUrl + "</a>" + "<br>";
+		var contentStr = "<a href=" + venueUrl + ">" + venueName + "</a>" + "<br>";
 		contentStr += venueAddr1 + "<br>";
 		contentStr += venueAddr2;
 		$('#venue-info').html(contentStr);
@@ -542,6 +528,7 @@ var setSelectedVenue = function(index) {
 	}
 	// Clear old photo and selected map marker
 	$('#info-img').attr('src', "");
+	$('#img-venue-attr').html('');
 
 	photoSearch(index);
 
