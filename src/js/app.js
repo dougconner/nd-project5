@@ -756,8 +756,6 @@ var MyViewModel = function(places) {
 		setSelectedVenue(-1);
 	};
 
-	self.toggleListMap = function() {
-	};
 };
 
 /************ End of KO code *************************/
