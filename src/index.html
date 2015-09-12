@@ -25,7 +25,7 @@
         <div class="container-fluid">
             <div class="row">
 
-                <div id="search-div" class="col-md-4" role="navigation">
+                <div id="search-div" class="col-md-4 search-col" role="navigation">
                     <div id="search-sub-div" class="search-sub">
                         <div>
                             <p id="error-msg"></p>
@@ -35,13 +35,20 @@
                         </div>
                         <div class="input-group">
                             <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
-                          <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
-                          </span>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
+                            </span>
                         </div><!-- /input-group -->
+<!--                         <h4>Venues List: </h4>
+ -->
+                        <div>
+                            <p>Venue list</p>
+                        </div>
                     </div>
+                        <div class="map-list-btn-cl">
+                            <button class="btn btn-primary btn-s toggle-list-map" type="button" data-bind="click:$root.toggleListMap()">Map view</button>
+                        </div>
                     <div id="list-sub-div" class="list-sub">
-                        <h3>Venues List: </h3>
                         <div class="list-div">
                             <ul id="list1" data-bind="foreach: places">
                                 <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
@@ -50,16 +57,16 @@
                     </div>
                 </div>
 
-                <div id="map-div" class="col-md-4" role="navigation">
-                    <div class="centered">
-                        <button class="btn btn-primary btn-xs" type="button" data-bind="click:$root.setBounds()">Reset map</button>
+                <div id="map-div" class="col-md-4 map-col" role="navigation">
+                    <div class="centered map-btn-div">
+                        <button class="btn btn-primary btn-s reset-map" type="button" data-bind="click:$root.setBounds()">Reset map</button>
                     </div>
                     <br>
                     <div id="map-canvas" class="map-cl">
                     </div>
                 </div>
 
-                <div id="photo-div" class="col-md-4 photo-div" role="navigation">
+                <div id="photo-div" class="col-md-4 photo-col" role="navigation">
                     <p id="selected-photo-pg" class="selected-venue-2">Selected: none</p>
                     <div class="radio">
                     <span class="input-group">

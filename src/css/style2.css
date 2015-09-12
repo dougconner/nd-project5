@@ -11,10 +11,19 @@ body,
     width: 100%;
 }
 
-.row,
-.col-md-4 {
+.row {
     height: 100%;
 }
+
+.map-col {
+    height: 100%;
+}
+
+.search-col,
+.photo-col {
+    max-height: 100%;
+}
+
 
 label,
 input,
@@ -23,7 +32,8 @@ li  {
     font: 1.3em arial;
 }
 
-h3 {
+h3,
+h4 {
     text-align: left;
 }
 
@@ -31,7 +41,7 @@ p {
     font: 1.2em arial;
 }
 
-ul,
+
 li {
     overflow: auto;
 }
@@ -40,26 +50,59 @@ li {
     cursor: pointer;
 }
 
+.map-list-btn-cl {
+    visibility: hidden;
+    height: 0;
+}
+
 @media (min-width: 992px) {
     .nav,
     .selected-venue-2 {
-        visibility: hidden;
+        visibility: visible;
         height: 0;
     }
+
+    .map-cl {
+        height: 90%;
+        width:90%;
+        margin: 0 5% 0 5%;
+    }
+
+/*    .list-sub {
+        visibility: hidden;
+        height: 70%;
+        overflow: auto;
+    }
+*/
+/*    .set-list {
+        visibility: hidden;
+        width: 0;
+    }
+*/
+
+}
+
+.search-col {
+    max-height:100%;
+    overflow: auto;
 
 }
 
 .map-cl {
-    height: 55%;
+    height: 90%;
     width:90%;
     margin: 0 5% 0 5%;
+}
+
+.map-btn-div {
+    height: 5%;
 }
 
 .img-div {
     max-width: 100%;
 }
 
-.photo-div {
+.photo-col {
     height: 100%;
 
 }
@@ -78,16 +121,17 @@ li {
 label {
 }
 
-.search-div {
-    height: 100%;
-}
-
 .search-sub {
-    height: 30%;
+    overflow: auto;
 }
 
+/*.search-col {
+    height: 25%;
+}
+*/
 .list-sub {
-    height: 65%;
+    visibility: visible;
+    max-height: 80%;
     overflow: auto;
 }
 

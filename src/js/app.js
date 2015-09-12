@@ -755,6 +755,9 @@ var MyViewModel = function(places) {
 		$('#search-text').val('').trigger('change');
 		setSelectedVenue(-1);
 	};
+
+	self.toggleListMap = function() {
+	};
 };
 
 /************ End of KO code *************************/
