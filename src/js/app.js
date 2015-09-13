@@ -124,7 +124,7 @@ var computeContentString = function(locations) {
 		contentString += '</p>';
 
 		// Image and text placeholder for FourSquare data from ajax request
-		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="" >';
+		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="//:0" >';
 		contentString += '<p id="info-text' + i + '"></p>';
 
 		locations[i].infoWindowContent = contentString;
@@ -424,6 +424,8 @@ var photoSearch = function(index) {
 		$('#info-img').attr('alt', 'Venue photo not available');
 		$('#img-counter').html('0 images');
 		$('#info-text').html('');
+        $('#venue-info').html('');
+        $('#venue-info-text').html('');
 
 		// If venue selected, initiate search
 		switch (photoSrc) {
@@ -439,6 +441,11 @@ var photoSearch = function(index) {
 	} else {
 		// No venue selected
 		$('#info-img').attr('alt', 'No Venue selected');
+		$('#info-img').attr('src', '');
+		$('#img-counter').html('0 images');
+		$('#info-text').html('');
+        $('#venue-info').html('');
+        $('#venue-info-text').html('');
 	}
 };
 
@@ -451,7 +458,7 @@ var photoSearch = function(index) {
 // removed: selectedVenueIndex() = -1 and remove
 // markerSelectedPng
 var setSelectedVenue = function(index) {
-	var textStr = "Venue: ";
+	var textStr = "Selected venue: ";
 	var venueName;
 	var venueUrl;
 	var venueAddr1;
@@ -495,13 +502,22 @@ var setSelectedVenue = function(index) {
 		venueAddr1 = "";
 		venueAddr2 = "";
 		venueInfoText = "";
+		markerIcon = "";
 	}
 
-	// Show the selected venue on each page
+	// Show the selected venue
 	$('#selected-list-pg').html(textStr + venueName);
-	$('#selected-map-pg').html(textStr + venueName);
 	$('#selected-photo-pg').html(textStr + venueName);
 	$('#selected-info-pg').html(textStr + venueName);
+
+	// Show marker for selected venue
+	if (markerIcon !== "") {
+		$('#selected-map-pg').html('<img id="marker-ref" class="marker inline" src="' + markerIcon + '" alt="marker icon">' + ' ' +venueName);
+	} else {
+		$('#selected-map-pg').html('');
+	}
+
+	// Deselect photo if venue not included in Type
 
 	// Show the selected venue info on the info page
 	// Venue name will already be at top of page

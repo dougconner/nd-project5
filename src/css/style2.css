@@ -17,6 +17,7 @@ body,
 
 .map-col {
     height: 100%;
+    min-height: 99%;
 }
 
 .search-col,
@@ -35,6 +36,7 @@ li  {
 h3,
 h4 {
     text-align: left;
+    margin: 5px 0 5px 0;
 }
 
 p {
@@ -68,18 +70,6 @@ li {
         margin: 0 5% 0 5%;
     }
 
-/*    .list-sub {
-        visibility: hidden;
-        height: 70%;
-        overflow: auto;
-    }
-*/
-/*    .set-list {
-        visibility: hidden;
-        width: 0;
-    }
-*/
-
 }
 
 .search-col {
@@ -95,7 +85,6 @@ li {
 }
 
 .map-btn-div {
-    height: 5%;
 }
 
 .img-div {
@@ -103,11 +92,12 @@ li {
 }
 
 .photo-col {
-    height: 100%;
+    max-height: 100%;
 
 }
 
 .btn-group {
+    margin: 2px 0 5px 0;
 }
 
 .selected-venue-1,
@@ -117,6 +107,10 @@ li {
 .input-group {
     height: 3%px;
 }
+
+.reset-map {
+/*    margin: 15px 0 10px 0;
+*/}
 
 label {
 }
@@ -149,11 +143,15 @@ p#error-msg {
 }
 
 .clear-search {
-    margin: 0 0 2% 0;
+    margin: 0 0 0 2% 0;
 }
 
 .centered  {
     text-align: center;
+}
+
+.inline {
+    display: inline-block;
 }
 
 
