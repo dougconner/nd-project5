@@ -124,7 +124,7 @@ var computeContentString = function(locations) {
 		contentString += '</p>';
 
 		// Image and text placeholder for FourSquare data from ajax request
-		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="//:0" >';
+		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="#" >';
 		contentString += '<p id="info-text' + i + '"></p>';
 
 		locations[i].infoWindowContent = contentString;
@@ -183,15 +183,14 @@ var getFlickrNext = function(flickrIndex) {
 
 	console.log("photoStr = " + photoStr);
 
-	var textStr2 = 'Photo provided by: <a href="https://flickr.com">Flickr</a>';
+	var textStr1 = 'Source: <a href="https://flickr.com">Flickr</a>';
+		textStr1 += '  by: <a href="' + "https://flickr.com/people/" + owner +"/" + '">' + " Photographer" + '</a>';
 
 	// Now load or reload the info window with the photo
-	$('#info-text').html(textStr2);
+	$('#img-text1').html(textStr1);
 	$('#info-img').attr('src', photoStr);
 	$('#img-counter').html('Image '+ (flickrIndex + 1) + ' of ' + flickrPhotoArray.length);
 
-	var imageVenueAttributionStr = '<a href="' + "https://flickr.com/people/" + owner +"/" + '">' + "Photographer" + '</a>';
-	$('#img-venue-attr').html(imageVenueAttributionStr);
 };
 
 // Flickr API
@@ -231,10 +230,9 @@ var getFlickrPhoto = function(index) {
 				console.log("number of photos for venue = ", flickrPhotoArray.length);
 				getFlickrNext(flickrIndex);
 			} else {
-				$('#info-img').attr('src', '');
-				$('#info-img').attr('alt', 'Venue photo not available');
+				$('#info-img').attr('src', '#');
+				$('#info-img').attr('alt', 'No venue photos on Flickr');
 				$('#img-counter').html('0 images');
-				$('#img-venue-attr').html('');
 				console.log("no photos for this venue");
 			}
 
@@ -257,7 +255,7 @@ var getFlickrPhoto = function(index) {
 };
 
 // this will load the current foursquare photo
-var get4sqNext = function() {
+var get4sqNext = function(textStr2) {
 
 	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
 	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
@@ -268,10 +266,11 @@ var get4sqNext = function() {
 	var photoStr = prefix + photoSize + suffix;
 	console.log("photoStr = " + photoStr);
 
-	var textStr2 = 'Photo provided by: <a href="https://foursquare.com">Foursquare</a>';
+	var textStr1 = 'Source: <a href="https://foursquare.com">Foursquare</a><br>';
+		textStr1 += textStr2;
 
 	// Now load or reload the info window with the photo
-	$('#info-text').html(textStr2);
+	$('#img-text1').html(textStr1);
 	$('#info-img').attr('src', photoStr);
 	$('#img-counter').html('Image '+ (foursquareIndex + 1) + ' of ' + foursquarePhotoArray.length);
 
@@ -305,15 +304,13 @@ var get4sqVenueDetail = function(index, name, id) {
 			if (data.response.venue.photos.groups[0].items) {
 				foursquarePhotoArray = data.response.venue.photos.groups[0].items;
 				foursquareIndex = 0;
-				get4sqNext();
 				var url = data.response.venue.canonicalUrl;
-				var imageVenueAttributionStr = '<a href="' + url + '?ref=' + CLIENT_ID + '">' + name + '</a>';
-				$('#img-venue-attr').html(imageVenueAttributionStr);
+				var textStr2 = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
+				get4sqNext(textStr2);
 			} else {
 				// No photos
-				$('#info-img').attr('src', '');
-				$('#info-img').attr('alt', 'Venue photo not available');
-				$('#img-venue-attr').html('');
+				$('#info-img').attr('src', '#');
+				$('#info-img').attr('alt', 'No venue photos on FourSquare');
 			}
 
 			console.log("data.response.venue.photos.groups[0].items[0].user.firstName  = ",data.response.venue.photos.groups[0].items[0].user.firstName);
@@ -359,12 +356,10 @@ var get4sqSearch = function(index) {
 
 			// if the id is undefined, then the venue is not listed.
 			if (!data.response.venues[0]) {
-				var textStr = '<br>This venue was not found at <a href="https://foursquare.com">Foursquare</a>';
-				$('#info-text' + index).html(textStr);
-				console.log("foursquare photo not available");
-				$('#info-img').attr('src', '');
-				$('#info-img').attr('alt', 'Venue photo not available');
-				$('#img-venue-attr').html('');
+				var textStr1 = '<br>This venue was not found at <a href="https://foursquare.com">Foursquare</a>';
+				$('#img-text1' + index).html(textStr1);
+				$('#info-img').attr('src', '#');
+				$('#info-img').attr('alt', 'No venue photos on FourSquare');
 			} else {
 				var id = data.response.venues[0].id;
 				var name = data.response.venues[0].name;
@@ -420,12 +415,10 @@ var toggleBounce = function(index) {
 var photoSearch = function(index) {
 	if (index >= 0) {
 		// First clear out old venue info
-		$('#info-img').attr('src', '');
-		$('#info-img').attr('alt', 'Venue photo not available');
+		$('#info-img').attr('src', '#');
+		$('#info-img').attr('alt', '');
 		$('#img-counter').html('0 images');
-		$('#info-text').html('');
-        $('#venue-info').html('');
-        $('#venue-info-text').html('');
+		$('#img-text1').html('');
 
 		// If venue selected, initiate search
 		switch (photoSrc) {
@@ -441,9 +434,9 @@ var photoSearch = function(index) {
 	} else {
 		// No venue selected
 		$('#info-img').attr('alt', 'No Venue selected');
-		$('#info-img').attr('src', '');
+		$('#info-img').attr('src', '#');
 		$('#img-counter').html('0 images');
-		$('#info-text').html('');
+		$('#img-text1').html('');
         $('#venue-info').html('');
         $('#venue-info-text').html('');
 	}
@@ -498,6 +491,7 @@ var setSelectedVenue = function(index) {
 
 		venueInfoText = locations[index].infoAry[0].infoText;
 	} else {
+		// Nothing selected so clear out the old selection
 		venueName = "none";
 		venueUrl = "";
 		venueAddr1 = "";
@@ -507,10 +501,6 @@ var setSelectedVenue = function(index) {
 		markerLegend = '<img id="marker-ref" class="marker inline" src="' + markerPng.Winery + '" alt="marker icon">' + ' ' + 'Winery  ';
 			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Lodging + '" alt="marker icon">' + ' ' + 'Lodging  ';
 			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Restaurant + '" alt="marker icon">' + ' ' + 'Restaurant  ';
-	// Winery: 'js/lib/purple_MarkerW.png',
-	// Restaurant: 'js/lib/orange_MarkerR.png',
-	// Lodging: 'js/lib/blue_MarkerL.png'
-
 	}
 
 	// Show the selected venue
@@ -523,8 +513,6 @@ var setSelectedVenue = function(index) {
 		$('#selected-map-pg').html('<img id="marker-ref" class="marker inline" src="' + markerIcon + '" alt="marker icon">' + ' ' + venueName);
 	} else {
 		$('#selected-map-pg').html(markerLegend);
-
-		// $('#selected-map-pg').html('None selected');
 	}
 
 	// Deselect photo if venue not included in Type
@@ -532,20 +520,17 @@ var setSelectedVenue = function(index) {
 	// Show the selected venue info on the info page
 	// Venue name will already be at top of page
 	if (index >= 0 && enableMarkerLoad) {
-		// $('#venue-url').html("<a href=" + venueUrl + ">" + venueUrl);
-		// $('#venue-addr1').html(venueAddr1);
-		// $('#venue-addr2').html(venueAddr2);
 		var contentStr = "<a href=" + venueUrl + ">" + venueName + "</a>" + "<br>";
 		contentStr += venueAddr1 + "<br>";
 		contentStr += venueAddr2 + "<br>";
+		console.log("contentStr = ", contentStr);
 		$('#venue-info').html(contentStr);
 		$('#venue-info-text').html(venueInfoText);
 	} else {
 
 	}
 	// Clear old photo and selected map marker
-	$('#info-img').attr('src', "");
-	$('#img-venue-attr').html('');
+	$('#info-img').attr('src', '#');
 
 	photoSearch(index);
 
