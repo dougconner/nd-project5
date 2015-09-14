@@ -467,6 +467,7 @@ var setSelectedVenue = function(index) {
 	var markerType;
 	var marker;
 	var venueInfoText;
+	var markerLegend;
 
 	// reset previous selectedVenue marker to ordinary markerPng
 	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
@@ -503,6 +504,13 @@ var setSelectedVenue = function(index) {
 		venueAddr2 = "";
 		venueInfoText = "";
 		markerIcon = "";
+		markerLegend = '<img id="marker-ref" class="marker inline" src="' + markerPng.Winery + '" alt="marker icon">' + ' ' + 'Winery  ';
+			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Lodging + '" alt="marker icon">' + ' ' + 'Lodging  ';
+			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Restaurant + '" alt="marker icon">' + ' ' + 'Restaurant  ';
+	// Winery: 'js/lib/purple_MarkerW.png',
+	// Restaurant: 'js/lib/orange_MarkerR.png',
+	// Lodging: 'js/lib/blue_MarkerL.png'
+
 	}
 
 	// Show the selected venue
@@ -512,9 +520,11 @@ var setSelectedVenue = function(index) {
 
 	// Show marker for selected venue
 	if (markerIcon !== "") {
-		$('#selected-map-pg').html('<img id="marker-ref" class="marker inline" src="' + markerIcon + '" alt="marker icon">' + ' ' +venueName);
+		$('#selected-map-pg').html('<img id="marker-ref" class="marker inline" src="' + markerIcon + '" alt="marker icon">' + ' ' + venueName);
 	} else {
-		$('#selected-map-pg').html('');
+		$('#selected-map-pg').html(markerLegend);
+
+		// $('#selected-map-pg').html('None selected');
 	}
 
 	// Deselect photo if venue not included in Type
