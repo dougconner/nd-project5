@@ -25,7 +25,7 @@ var selectedVenueIndex;
 // photoSrc is either 'flickr' or 'FourSquare'
 var photoSrc = '';
 
-// enableMarkerLoad is used to disable marker infowindows
+// enableMarkerLoad is used to disable markers
 // on initial load. It is also used to disable the
 // Selected Venue at the same time (so that it remains "none").
 var enableMarkerLoad = false;
@@ -715,8 +715,6 @@ $(document).ready(function () {
 
 	// Set map size and position to include all markers
 	setBounds();
-
 	ko.applyBindings(new MyViewModel(locations));
-	setSelectedVenue(-1);
 	enableMarkerLoad = true;
 });

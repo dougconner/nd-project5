@@ -50,6 +50,7 @@ body,
 li {
     overflow: auto;
     cursor: pointer;
+    color: #22f;
 }
 
 .map-list-btn-cl {
