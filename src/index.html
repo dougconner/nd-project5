@@ -43,14 +43,14 @@
 <!--                         <h4>Venues List: </h4>
  -->
                         <div>
-                            <h4>Venue list</h4>
+                            <h3>Venue list</h4\3>
                             <h4 id="selected-list-pg" class="selected-venue-1">Selected venue</h4>
                         </div>
                     </div>
                     <div id="list-sub-div" class="list-sub">
                         <div class="list-div">
                             <ul id="list1" data-bind="foreach: places">
-                                <li class="list-item1" data-bind="text: name, click: $root.showInfoWindow(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                                <li class="list-item1" data-bind="text: name, click: $root.showInfo(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
                             </ul>
                         </div>
                     </div>

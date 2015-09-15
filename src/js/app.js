@@ -69,7 +69,6 @@ var markerSelectedPng = {
 };
 
 var markers = [];
-var infowindowArray = [];
 
 // sort locations by name
 var sortNames = function(locations) {
@@ -85,7 +84,6 @@ var sortNames = function(locations) {
 	});
 };
 sortNames(locations);
-
 
 // Sets 'show' array values for visibility control
 // Locations are shown only when an included type is selected.
@@ -111,26 +109,6 @@ var computeShowArray = function(locations, placeTypes) {
 };
 
 computeShowArray(locations, placeTypes);
-
-// Content for info window
-var computeContentString = function(locations) {
-	for (var i = 0; i < locations.length; i++) {
-		var contentString = '';
-
-		// Text from my database
-		contentString += '<p>';
-		contentString += '<a href="' + locations[i].url + '"> ' + locations[i].name  + '</a>';
-		contentString += '</p>';
-
-		// Image and text placeholder for FourSquare data from ajax request
-		contentString += '<img id="info-img' + i + '" alt="Venue photo" title="" src="#" >';
-		contentString += '<p id="info-text' + i + '"></p>';
-
-		locations[i].infoWindowContent = contentString;
-	}
-};
-
-computeContentString(locations);
 
 var getLatLng = function(locations) {
 	// first google map internet use, detect a failure
@@ -402,7 +380,6 @@ var toggleBounce = function(index) {
 };
 
 // Requires a selected venue and photo source
-// Photo source is set to a default to start with
 var photoSearch = function(index) {
 	if (index >= 0) {
 		// First clear out old venue info
@@ -435,10 +412,10 @@ var photoSearch = function(index) {
 
 // Set the selected venue in all columns or pages
 // after it has been either selected (clicked) on
-// the Places list or (clicked) on the map marker.
+// the Venue list or (clicked) on the map marker.
 // If it is a new venue, clear any photos on display
 // in the photo page.
-// If it is not in the current place type then it must be
+// If it is not in the current venue type then it must be
 // removed: selectedVenueIndex() = -1 and remove
 // markerSelectedPng
 var setSelectedVenue = function(index) {
@@ -453,7 +430,7 @@ var setSelectedVenue = function(index) {
 	var venueInfoText;
 	var markerLegend;
 
-	// clear out the old photo arrays:
+	// clear out the old photo objects:
 	foursquarePhotoArray = {};
 	flickrPhotoArray = {};
 
@@ -466,8 +443,8 @@ var setSelectedVenue = function(index) {
 		marker.setZIndex(MAX_ZINDEX);
 	}
 
+	// Set the new selected venue marker and info
 	if (index >= 0 && enableMarkerLoad) {
-		// set new selectedVenue to markerSelectedPng
 		venueName = locations[index].name;
 		selectedVenueIndex = index;
 		marker = markers[index];
@@ -478,7 +455,7 @@ var setSelectedVenue = function(index) {
 		marker.setZIndex(zInd);
 		console.log("markerNew = ", markerIcon);
 
-		// info page
+		// info page data
 		venueUrl = locations[index].url;
 		venueAddr1 = locations[index].addr1;
 		venueAddr2 = locations[index].addr2;
@@ -510,8 +487,6 @@ var setSelectedVenue = function(index) {
 		$('#selected-map-pg').html(markerLegend);
 	}
 
-	// Deselect photo if venue not included in Type
-
 	// Show the selected venue info on the info page
 	// Venue name will already be at top of page
 	if (index >= 0 && enableMarkerLoad) {
@@ -527,30 +502,18 @@ var setSelectedVenue = function(index) {
 	// Clear old photo and selected map marker
 	$('#info-img').attr('src', '#');
 
+	// Search for a photo on the new selected venue
 	photoSearch(index);
-
 };
 
- var attachInfotext = function(marker, i) {
-	try {
-		var infowindow = new google.maps.InfoWindow({
-			content: locations[i].infoWindowContent,
-			maxWidth: 300
-		});
-
-		// Store for list recall
-		infowindowArray[i] = infowindow;
-
-		google.maps.event.addListener(marker, 'click', function() {
-			photoSearch(i);
-			markers[i].setAnimation(null);
-			setSelectedVenue(i);
-			toggleBounce(i);
-		});
-	}
-	catch(err) {
-		$('#error-msg').html(errorMsg.maps);
-	}
+// When a map marker is clicked
+var attachMarkerListener = function(marker, i) {
+	google.maps.event.addListener(marker, 'click', function() {
+		photoSearch(i);
+		markers[i].setAnimation(null);
+		setSelectedVenue(i);
+		toggleBounce(i);
+	});
 };
 
 var setMarkers = function(map, locations) {
@@ -569,7 +532,7 @@ var setMarkers = function(map, locations) {
 				icon: markerIcon
 			});
 			markers[i] = marker;
-			attachInfotext(marker, i);
+			attachMarkerListener(marker, i);
 		}
 		catch(err) {
 			$('#error-msg').html(errorMsg.maps);
@@ -618,8 +581,7 @@ var MyViewModel = function(places) {
 			lat: place.lat,
 			lng: place.lng,
 			infoAry: ko.observableArray(place.infoAry),
-			show: ko.observableArray(place.show),
-			infoWindowContent: place.infoWindowContent
+			show: ko.observableArray(place.show)
 		};
 	}));
 
@@ -667,7 +629,7 @@ var MyViewModel = function(places) {
 		markers[index].setMap(null);
 	};
 
-	self.showInfoWindow = function(index) {
+	self.showInfo = function(index) {
 		if(enableMarkerLoad) {
 			setSelectedVenue(index);
 			markers[index].setAnimation(null);
@@ -688,11 +650,9 @@ var MyViewModel = function(places) {
 		switch (photoSrc) {
 			case 'foursquare':
 				flickrPhotoArray = {};
-				console.log("flickrPhotoArray.length = ", flickrPhotoArray.length);
 				break;
 			case 'flickr':
 				foursquarePhotoArray = {};
-				console.log("foursquarePhotoArray.length = ", foursquarePhotoArray.length);
 				break;
 		}
 		photoSearch(selectedVenueIndex);
