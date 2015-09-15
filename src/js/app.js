@@ -177,7 +177,7 @@ var getFlickrNext = function(flickrIndex) {
 	console.log("photoStr = " + photoStr);
 
 	var textStr1 = 'Source: <a href="https://flickr.com">Flickr</a>';
-		textStr1 += '  by: <a href="' + "https://flickr.com/people/" + owner +"/" + '">' + " Photographer" + '</a>';
+		textStr1 += '  by: <a href="' + "https://flickr.com/people/" + owner +"/" + '">' + " photographer" + '</a>';
 
 	// Now load or reload the info window with the photo
 	$('#img-text1').html(textStr1);
@@ -250,6 +250,7 @@ var getFlickrPhoto = function(index) {
 // this will load the current foursquare photo
 var get4sqNext = function(textStr2) {
 
+	console.log("start get4sqNext");
 	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
 	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
 	var photoSize = 'cap300';
@@ -271,7 +272,10 @@ var get4sqNext = function(textStr2) {
 
 // If the search found the venue, this will load the foursquarePhotoArray
 var get4sqVenueDetail = function(index, name, id) {
+	console.log("start get4sqVenueDetail");
+	foursquarePhotoArray = {};
 	var venueID = id;
+	var textStr2 = '';
 
 	var jqxhr = $.get('https://api.foursquare.com/v2/venues/' + venueID +
 		'?client_id=' + CLIENT_ID +
@@ -279,9 +283,9 @@ var get4sqVenueDetail = function(index, name, id) {
 		'&v=20140115' +
 		'&m=foursquare',
 		function(data) {
-			console.log("data=", JSON.stringify(data));
+			// console.log("data=", JSON.stringify(data));
 			console.log("data.response.venue.photos:", data.response.venue.photos);
-			console.log("data.response.venue.photos.groups[0]:", data.response.venue.photos.groups[0]);
+			// console.log("data.response.venue.photos.groups[0]:", data.response.venue.photos.groups[0]);
 			// console.log("data.response.venue.photos.groups[0].items:", data.response.venue.photos.groups[0].items);
 
 			// See if there is data for this venue
@@ -289,7 +293,7 @@ var get4sqVenueDetail = function(index, name, id) {
 				foursquarePhotoArray = data.response.venue.photos.groups[0].items;
 				foursquareIndex = 0;
 				var url = data.response.venue.canonicalUrl;
-				var textStr2 = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
+				textStr2 = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
 				get4sqNext(textStr2);
 
 				// console.log("data.response.venue.photos.groups[0].items[0].user.firstName  = ",data.response.venue.photos.groups[0].items[0].user.firstName);
@@ -297,6 +301,7 @@ var get4sqVenueDetail = function(index, name, id) {
 
 			} else {
 				// No photos
+				foursquarePhotoArray = {};
 				$('#info-img').attr('src', '#');
 				$('#info-img').attr('alt', 'No venue photos on FourSquare');
 			}
@@ -345,6 +350,7 @@ var get4sqSearch = function(index) {
 				$('#img-text1' + index).html(textStr1);
 				$('#info-img').attr('src', '#');
 				$('#info-img').attr('alt', 'No venue photos on FourSquare');
+				console.log("The venue was not found on get4sqSearch");
 			} else {
 				var id = data.response.venues[0].id;
 				var name = data.response.venues[0].name;
@@ -446,6 +452,10 @@ var setSelectedVenue = function(index) {
 	var marker;
 	var venueInfoText;
 	var markerLegend;
+
+	// clear out the old photo arrays:
+	foursquarePhotoArray = {};
+	flickrPhotoArray = {};
 
 	// reset previous selectedVenue marker to ordinary markerPng
 	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
@@ -673,6 +683,18 @@ var MyViewModel = function(places) {
 	self.setPhotoSource = function() {
 		photoSrc = self.photoSource();
 		console.log("photoSrc = ", photoSrc);
+
+		// zero un-selected photo array
+		switch (photoSrc) {
+			case 'foursquare':
+				flickrPhotoArray = {};
+				console.log("flickrPhotoArray.length = ", flickrPhotoArray.length);
+				break;
+			case 'flickr':
+				foursquarePhotoArray = {};
+				console.log("foursquarePhotoArray.length = ", foursquarePhotoArray.length);
+				break;
+		}
 		photoSearch(selectedVenueIndex);
 	};
 
@@ -681,12 +703,16 @@ var MyViewModel = function(places) {
 			// A venue is selected
 			switch (photoSrc) {
 				case 'foursquare':
-					foursquareIndex = foursquareIndex > 0 ?  foursquareIndex - 1 : foursquarePhotoArray.length - 1;
-					get4sqNext(foursquareIndex);
+					if (foursquarePhotoArray.length > 0) {
+						foursquareIndex = foursquareIndex > 0 ?  foursquareIndex - 1 : foursquarePhotoArray.length - 1;
+						get4sqNext(foursquareIndex);
+					}
 					break;
 				case 'flickr':
-					flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : flickrPhotoArray.length - 1;
-					getFlickrNext(flickrIndex);
+					if (flickrPhotoArray.length > 0) {
+						flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : flickrPhotoArray.length - 1;
+						getFlickrNext(flickrIndex);
+					}
 					break;
 				default:
 					getFlickrPhoto(selectedVenueIndex);
@@ -702,13 +728,16 @@ var MyViewModel = function(places) {
 			// A venue is selected
 			switch (photoSrc) {
 				case 'foursquare':
-					foursquareIndex += 1;
-					get4sqNext(foursquareIndex);
+					if (foursquarePhotoArray.length > 0) {
+						foursquareIndex += 1;
+						get4sqNext(foursquareIndex);
+					}
 					break;
 				case 'flickr':
-					flickrIndex += 1;
-					getFlickrNext(flickrIndex);
-					// Need to check if data is already loaded
+					if (flickrPhotoArray.length > 0) {
+						flickrIndex += 1;
+						getFlickrNext(flickrIndex);
+					}
 					break;
 				default:
 					getFlickrPhoto(selectedVenueIndex);
