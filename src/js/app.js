@@ -173,7 +173,7 @@ var getFlickrPhoto = function(index) {
 	var lat = locations[index].lat;
 	var lon = locations[index].lng;
 
-	var deltaBox = 0.005; // +/- values are added to the lat/long for bounding box
+	var deltaBox = 0.002; // +/- values are added to the lat/long for bounding box
 	// Four comma-separated values representing the bottom left-corner and top-right corner
 	// min lon, min lat, max lon, max lat.
 	var bbox = [];
@@ -192,7 +192,6 @@ var getFlickrPhoto = function(index) {
 		'&media=photos' +
 		'&format=json&nojsoncallback=1',
 		function(data) {
-			// console.log('data = ', data);
 			// console.log('json=' , JSON.stringify(data));
 			// console.log('data.photos', data.photos);
 			flickrPhotoArray = data.photos.photo;
@@ -227,8 +226,6 @@ var getFlickrPhoto = function(index) {
 
 // this will load the current foursquare photo
 var get4sqNext = function(textStr2) {
-
-	console.log("start get4sqNext");
 	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
 	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
 	var photoSize = 'cap300';
@@ -250,7 +247,6 @@ var get4sqNext = function(textStr2) {
 
 // If the search found the venue, this will load the foursquarePhotoArray
 var get4sqVenueDetail = function(index, name, id) {
-	console.log("start get4sqVenueDetail");
 	foursquarePhotoArray = {};
 	var venueID = id;
 	var textStr2 = '';
@@ -263,8 +259,6 @@ var get4sqVenueDetail = function(index, name, id) {
 		function(data) {
 			// console.log("data=", JSON.stringify(data));
 			console.log("data.response.venue.photos:", data.response.venue.photos);
-			// console.log("data.response.venue.photos.groups[0]:", data.response.venue.photos.groups[0]);
-			// console.log("data.response.venue.photos.groups[0].items:", data.response.venue.photos.groups[0].items);
 
 			// See if there is data for this venue
 			if (data.response.venue.photos.count > 0) {
@@ -506,7 +500,7 @@ var setSelectedVenue = function(index) {
 	photoSearch(index);
 };
 
-// When a map marker is clicked
+// Map marker listner action
 var attachMarkerListener = function(marker, i) {
 	google.maps.event.addListener(marker, 'click', function() {
 		photoSearch(i);
@@ -518,9 +512,7 @@ var attachMarkerListener = function(marker, i) {
 
 var setMarkers = function(map, locations) {
 	// add markers to map
-
 	for (var i = 0; i < locations.length; i++) {
-		// infoAry[0] contains primary place type
 		var	markerType = locations[i].infoAry[0].type;
 		var markerIcon = markerPng[markerType];
 		try {
@@ -717,7 +709,6 @@ var MyViewModel = function(places) {
 
 /************ End of KO code *************************/
 
-
 $(document).ready(function () {
 	map = initialize();
 	setMarkers(map, locations);
@@ -726,12 +717,6 @@ $(document).ready(function () {
 	setBounds();
 
 	ko.applyBindings(new MyViewModel(locations));
-
-	// This timeout keeps infowindows off the screen during initialization
-	window.setTimeout(function() {
-		enableMarkerLoad = true;
-
-		// Start with no venue selected
-		setSelectedVenue(-1);
-	}, 2000);
+	setSelectedVenue(-1);
+	enableMarkerLoad = true;
 });
