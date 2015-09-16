@@ -24,7 +24,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-
+                <!-- column 1 -->
                 <div id="search-div" class="col-md-4 search-col" role="navigation">
                     <div id="search-sub-div" class="search-sub">
                         <div>
@@ -32,16 +32,13 @@
                             <h3>Venue selection</h3>
                             <p>Venue Type:
                             <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
-
                         </div>
                         <div class="input-group">
                             <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
                             </span>
-                        </div><!-- /input-group -->
-<!--                         <h4>Venues List: </h4>
- -->
+                        </div>
                         <div>
                             <h3>Venue list</h4\3>
                             <h4 id="selected-list-pg" class="selected-venue-1">Selected venue</h4>
@@ -55,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-
+                <!-- column 2 -->
                 <div id="map-div" class="col-md-4 map-col" role="navigation">
                     <div class="centered map-btn-div">
                         <button class="btn btn-primary btn-s reset-map" type="button" data-bind="click:$root.setBounds()">Reset map</button>
@@ -65,6 +62,7 @@
                     </div>
                 </div>
                 <br>
+                <!-- column 3 -->
                 <div id="photo-div" class="col-md-4 photo-col" role="navigation">
                     <p id="selected-photo-pg" class="selected-venue-2">Selected venue: none</p>
                     <div class="radio">
