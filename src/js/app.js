@@ -82,6 +82,7 @@ var sortNames = function(locations) {
 		}
 	});
 };
+
 sortNames(locations);
 
 // Sets 'show' array values for visibility control
