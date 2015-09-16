@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <title>P5</title>
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style2.css">
+        <!-- Custom styles for this template -->
+
+        <script src="https://maps.googleapis.com/maps/api/js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+
+                <div id="search-div" class="col-md-4 search-col" role="navigation">
+                    <div id="search-sub-div" class="search-sub">
+                        <div>
+                            <p id="error-msg"></p>
+                            <h3>Venue selection</h3>
+                            <p>Venue Type:
+                            <select data-bind="options: placeTypes, selectedOptions: selectedPlaceType"></select></p>
+
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="search-text" class="search-box form-control" data-bind="textInput: searchText, event: { keypress: $root.searchForText() }" placeholder="Venue name search"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="button" data-bind="click:$root.clearSearch()">Clear</button>
+                            </span>
+                        </div><!-- /input-group -->
+<!--                         <h4>Venues List: </h4>
+ -->
+                        <div>
+                            <h3>Venue list</h4\3>
+                            <h4 id="selected-list-pg" class="selected-venue-1">Selected venue</h4>
+                        </div>
+                    </div>
+                    <div id="list-sub-div" class="list-sub">
+                        <div class="list-div">
+                            <ul id="list1" data-bind="foreach: places">
+                                <li class="list-item1" data-bind="text: name, click: $root.showInfo(index), visible: $root.includesSelectedType($root.selectedPlaceType, index, show())"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="map-div" class="col-md-4 map-col" role="navigation">
+                    <div class="centered map-btn-div">
+                        <button class="btn btn-primary btn-s reset-map" type="button" data-bind="click:$root.setBounds()">Reset map</button>
+                    </div>
+                    <h4 id="selected-map-pg" class="selected-venue-1">Selected venue: none</h4>
+                    <div id="map-canvas" class="map-cl">
+                    </div>
+                </div>
+                <br>
+                <div id="photo-div" class="col-md-4 photo-col" role="navigation">
+                    <p id="selected-photo-pg" class="selected-venue-2">Selected venue: none</p>
+                    <div class="radio">
+                        <span class="input-group">
+                            <label>Photo source:</label>
+                                <label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</label>
+                                <label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare
+                            </label>
+                        </span>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="...">
+                      <button id="previous-img" type="button" class="btn btn-primary" data-bind="click:$root.previousPhoto()">
+                        <span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span>
+                      </button>
+                      <button id="img-counter" type="button" class="btn btn-default">0 images</button>
+                      <button id="next-img" type="button" class="btn btn-primary" data-bind="click:$root.nextPhoto()">
+                        <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                    <div class="img-div">
+                        <img id="info-img" class="img-responsive" src="#" alt="Venue photo">
+                        <p id="img-text1"></p>
+                    </div>
+                    <br>
+                    <p id="venue-info" class="info-text"></p>
+                    <p id="venue-info-text" class="info-text"></p>
+    <!-- removeIf(distribution) -->
+                    <br>
+                    <p><a href="place-data.html">Add Places (development only)</a></p>
+        <!-- endRemoveIf(distribution) -->
+
+                </div>
+
+            </div>
+        </div>
+<!-- inject:js -->
+<!-- endinject -->
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<!-- removeIf(distribution) -->
+        <script src="js/lib/knockout-3.3.0.js"></script>
+<!--endRemoveIf(distribution)-->
+
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="js/data.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
