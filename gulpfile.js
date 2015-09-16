@@ -12,8 +12,9 @@ var minifyhtml = require('gulp-minify-html');
 // paths to files
 var paths =  {
     scripts: ['src/js/data.js', 'src/js/app.js'],
-    styles: ['src/css/style.css'],
+    styles: ['src/css/style2.css'],
     content: ['src/index.html'],
+    markers: ['src/markers/*.png'],
     injectFiles: ['src/js/lib/min/knockout-3.3.0.js', 'src/js/lib/min/jquery-2.1.4.min.js']
 };
 
@@ -21,6 +22,12 @@ var paths =  {
 gulp.task('minFiles', function() {
     return gulp.src(paths.injectFiles)
     .pipe(gulp.dest('./dist/js/lib/min'));
+});
+
+// move markers files to dist folder
+gulp.task('markers', function() {
+    return gulp.src(paths.markers)
+    .pipe(gulp.dest('./dist/markers'));
 });
 
 // minify css and output to dist/css/*.css
@@ -66,4 +73,23 @@ gulp.task('index', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('default', [ 'index', 'styles', 'scripts', 'minFiles']);
+// run using "gulp watch". Is not in default list
+gulp.task('watch', function() {
+    // watch minfiles
+    gulp.watch('src/js/lib/min/*.js', ['minfiles']);
+
+    // watch markers
+    gulp.watch('src/markers', ['markers']);
+
+    // watch styles
+    gulp.watch('src/css/style2.css', ['styles']);
+
+    // watch .js files
+    gulp.watch('src/js/*.js', ['scripts']);
+
+    // watch index files
+    gulp.watch('src/index.html', ['index']);
+});
+
+// NOTE: You need to run "gulp watch" independently -- see above
+gulp.task('default', [ 'index', 'styles', 'scripts', 'minFiles', 'markers']);
