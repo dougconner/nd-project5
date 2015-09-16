@@ -4,8 +4,7 @@ var ko, console, google;
 // Loads data from data.js
 var locations = initialData_js;
 
-var map;
-var show;
+var map; // Google map
 
 // A google Constant
 var MAX_ZINDEX = google.maps.Marker.MAX_ZINDEX;
@@ -14,13 +13,13 @@ var MAX_ZINDEX = google.maps.Marker.MAX_ZINDEX;
 var flickrPhotoArray;
 var foursquarePhotoArray;
 
-// Index of current photo in flickrPhotoArray
+// Index of photo in array
 var flickrIndex = 0;
 var foursquareIndex = 0;
 
 // Stores selected venue index
 // Change only using setSelectedVenue(index)
-var selectedVenueIndex;
+var selectedVenueIndex = -1;
 
 // photoSrc is either 'flickr' or 'FourSquare'
 var photoSrc = '';
@@ -90,9 +89,13 @@ sortNames(locations);
 // Also generates the  "types" list for the placeTypes array and sorts it by name
 var computeShowArray = function(locations, placeTypes) {
 	var testType;
-	for (var i = 0; i < locations.length; i++) {
+	var show;
+	var iLength = locations.length;
+	var jLength;
+	for (var i = 0; i < iLength; i++) {
 		show = ['All'];
-		for (var j = 0; j < locations[i].infoAry.length; j++) {
+		jLength = locations[i].infoAry.length;
+		for (var j = 0; j < jLength; j++) {
 			// infoAry[0] contains primary place type
 			testType = locations[i].infoAry[j].type;
 			// Store types in  array
@@ -113,7 +116,8 @@ computeShowArray(locations, placeTypes);
 var getLatLng = function(locations) {
 	// first google map internet use, detect a failure
 	try {
-		for (var i = 0; i < locations.length; i++) {
+		var len = locations.length;
+		for (var i = 0; i < len; i++) {
 			locations[i].latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
 		}
 	}
@@ -127,8 +131,9 @@ getLatLng(locations);
 var setBounds = function() {
 	// Set map size and position to include all markers
 	try {
+		var len = markers.length;
 		var bounds = new google.maps.LatLngBounds();
-		for (var i = 0; i < markers.length; i++) {
+		for (var i = 0; i < len; i++) {
 			bounds.extend(markers[i].getPosition());
 		}
 		map.fitBounds(bounds);
@@ -169,11 +174,10 @@ var getFlickrNext = function(flickrIndex) {
 // flickrIndex is for the photo in the flickrPhotoArray
 var getFlickrPhoto = function(index) {
 	flickrIndex = 0;
-	// get lat and lng
 	var lat = locations[index].lat;
 	var lon = locations[index].lng;
 
-	var deltaBox = 0.002; // +/- values are added to the lat/long for bounding box
+	var deltaBox = 0.003; // +/- values are added to the lat/long for bounding box
 	// Four comma-separated values representing the bottom left-corner and top-right corner
 	// min lon, min lat, max lon, max lat.
 	var bbox = [];
@@ -238,7 +242,7 @@ var get4sqNext = function(textStr2) {
 	var textStr1 = 'Source: <a href="https://foursquare.com">Foursquare</a><br>';
 		textStr1 += textStr2;
 
-	// Now load or reload the info window with the photo
+	// load or reload the photo and photo info
 	$('#img-text1').html(textStr1);
 	$('#info-img').attr('src', photoStr);
 	$('#img-counter').html('Image '+ (foursquareIndex + 1) + ' of ' + foursquarePhotoArray.length);
@@ -267,9 +271,6 @@ var get4sqVenueDetail = function(index, name, id) {
 				var url = data.response.venue.canonicalUrl;
 				textStr2 = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
 				get4sqNext(textStr2);
-
-				// console.log("data.response.venue.photos.groups[0].items[0].user.firstName  = ",data.response.venue.photos.groups[0].items[0].user.firstName);
-				// console.log("data.response.venue.photos.groups[0].items[0].user.id  = ",data.response.venue.photos.groups[0].items[0].user.id);
 
 			} else {
 				// No photos
@@ -303,7 +304,6 @@ var get4sqSearch = function(index) {
 	var lng = locations[index].lng;
 	var name = locations[index].name;
 	console.log('name:', name);
-	// console.log('lat, lng: ', lat, lng);
 
 	var jqxhr = $.get('https://api.foursquare.com/v2/venues/search' +
 		'?ll=' + lat +',' + lng +
@@ -404,14 +404,13 @@ var photoSearch = function(index) {
 	}
 };
 
-// Set the selected venue in all columns or pages
-// after it has been either selected (clicked) on
-// the Venue list or (clicked) on the map marker.
-// If it is a new venue, clear any photos on display
-// in the photo page.
-// If it is not in the current venue type then it must be
-// removed: selectedVenueIndex() = -1 and remove
-// markerSelectedPng
+// Sets the selected venue after it has been selected
+// from the Venue list or the map.
+// If it is a new venue, clear all photos.
+// If the venue is not in the current venue type
+// then the venue must be de-selected (selectedVenueIndex() = -1)
+// Also change map marker back to un-selected
+
 var setSelectedVenue = function(index) {
 	var textStr = "Selected venue: ";
 	var venueName;
@@ -424,9 +423,12 @@ var setSelectedVenue = function(index) {
 	var venueInfoText;
 	var markerLegend;
 
-	// clear out the old photo objects:
+	// clear out the old photo arrays:
 	foursquarePhotoArray = {};
 	flickrPhotoArray = {};
+
+	// Remove old photo
+	$('#info-img').attr('src', '#');
 
 	// reset previous selectedVenue marker to ordinary markerPng
 	if (selectedVenueIndex >= 0 && enableMarkerLoad) {
@@ -490,17 +492,13 @@ var setSelectedVenue = function(index) {
 		console.log("contentStr = ", contentStr);
 		$('#venue-info').html(contentStr);
 		$('#venue-info-text').html(venueInfoText);
-	} else {
-
 	}
-	// Clear old photo and selected map marker
-	$('#info-img').attr('src', '#');
 
 	// Search for a photo on the new selected venue
 	photoSearch(index);
 };
 
-// Map marker listner action
+// Map marker listner
 var attachMarkerListener = function(marker, i) {
 	google.maps.event.addListener(marker, 'click', function() {
 		photoSearch(i);
@@ -510,9 +508,10 @@ var attachMarkerListener = function(marker, i) {
 	});
 };
 
+// add markers to map
 var setMarkers = function(map, locations) {
-	// add markers to map
-	for (var i = 0; i < locations.length; i++) {
+	var len = locations.length;
+	for (var i = 0; i < len; i++) {
 		var	markerType = locations[i].infoAry[0].type;
 		var markerIcon = markerPng[markerType];
 		try {
@@ -555,7 +554,7 @@ var MyViewModel = function(places) {
 	var self = this;
 	self.placeTypes = ko.observableArray(placeTypes);
 
-	// Holds the currently selected place type
+	// Holds the currently selected place type (venue type)
 	self.selectedPlaceType = ko.observableArray(['Winery']);
 
 	// search text
@@ -592,7 +591,7 @@ var MyViewModel = function(places) {
 
 		// Fails at least one of the two above conditions
 		self.hideMarker(index);
-		// Set selectedVenueIndex = -1 and reset marker symbol
+		// Reset selected venue to "none"
 		setSelectedVenue(-1);
 		return false;
 	};
@@ -602,7 +601,8 @@ var MyViewModel = function(places) {
 		console.log('self.searchText:', self.searchText());
 		// search through all names for match
 		// look for string and selected type match
-		for (var i = 0; i < self.places().length; i++) {
+		var len = self.places().length;
+		for (var i = 0; i < len; i++) {
 			if (self.places()[i].show.indexOf(self.selectedPlaceType()[0]) !== -1) {
 				if (self.places()[i].name.indexOf(self.searchText()) !== -1) {
 					console.log('match: ', self.searchText());
@@ -621,6 +621,7 @@ var MyViewModel = function(places) {
 		markers[index].setMap(null);
 	};
 
+	// selects the clicked marker and shows info
 	self.showInfo = function(index) {
 		if(enableMarkerLoad) {
 			setSelectedVenue(index);
@@ -629,8 +630,8 @@ var MyViewModel = function(places) {
 		}
 	};
 
+	// Set map size and position to include all markers
 	self.setBounds = function() {
-		// Set map size and position to include all markers
 		setBounds();
 	};
 
@@ -653,16 +654,19 @@ var MyViewModel = function(places) {
 	self.previousPhoto = function() {
 		if (selectedVenueIndex >= 0) {
 			// A venue is selected
+			var len;
 			switch (photoSrc) {
 				case 'foursquare':
-					if (foursquarePhotoArray.length > 0) {
-						foursquareIndex = foursquareIndex > 0 ?  foursquareIndex - 1 : foursquarePhotoArray.length - 1;
+					len = foursquarePhotoArray.length;
+					if (len > 0) {
+						foursquareIndex = foursquareIndex > 0 ?  foursquareIndex - 1 : len - 1;
 						get4sqNext(foursquareIndex);
 					}
 					break;
 				case 'flickr':
-					if (flickrPhotoArray.length > 0) {
-						flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : flickrPhotoArray.length - 1;
+					len = flickrPhotoArray.length;
+					if (len > 0) {
+						flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : len - 1;
 						getFlickrNext(flickrIndex);
 					}
 					break;
@@ -700,6 +704,7 @@ var MyViewModel = function(places) {
 		}
 	};
 
+	// Clears the text search
 	self.clearSearch = function() {
 		$('#search-text').val('').trigger('change');
 		setSelectedVenue(-1);
