@@ -53,13 +53,7 @@ li {
     color: #22f;
 }
 
-.map-list-btn-cl {
-    visibility: hidden;
-    height: 0;
-}
-
 @media (min-width: 992px) {
-
 /*    This section applies to
     3-column displays
 */
@@ -85,9 +79,6 @@ li {
     overflow: auto;
 }
 
-.map-btn-div {
-}
-
 .img-div {
     max-width: 100%;
 }
@@ -105,10 +96,6 @@ li {
     height: 3%px;
 }
 
-.reset-map {
-/*    margin: 15px 0 10px 0;
-*/}
-
 label {
 }
 
@@ -116,10 +103,6 @@ label {
     overflow: auto;
 }
 
-/*.search-col {
-    height: 25%;
-}
-*/
 .list-sub {
     visibility: visible;
     max-height: 80%;
