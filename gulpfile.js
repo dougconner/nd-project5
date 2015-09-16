@@ -8,7 +8,6 @@ var inject = require('gulp-inject');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var minifyhtml = require('gulp-minify-html');
-var ghPages = require('gulp-gh-pages');
 
 // paths to files
 var paths =  {
@@ -90,12 +89,6 @@ gulp.task('watch', function() {
 
     // watch index files
     gulp.watch('src/index.html', ['index']);
-});
-
-// run using "gulp deploy"
-gulp.task('deploy', function() {
-    return gulp.src('./dist/**.*')
-        pipe(ghPages());
 });
 
 // NOTE: You need to run "gulp watch" independently -- see above
