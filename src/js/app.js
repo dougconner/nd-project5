@@ -56,15 +56,15 @@ var placeTypes = ['All'];
 // markerPng designates the matching marker for each location type
 // markerSelectedPng is used when the venue is selected
 var markerPng = {
-	Winery: 'js/lib/purple_MarkerW.png',
-	Restaurant: 'js/lib/orange_MarkerR.png',
-	Lodging: 'js/lib/blue_MarkerL.png'
+	Winery: 'markers/purple_MarkerW.png',
+	Restaurant: 'markers/orange_MarkerR.png',
+	Lodging: 'markers/blue_MarkerL.png'
 };
 
 var markerSelectedPng = {
-	Winery: 'js/lib/darkgreen_MarkerW.png',
-	Restaurant: 'js/lib/darkgreen_MarkerR.png',
-	Lodging: 'js/lib/darkgreen_MarkerL.png'
+	Winery: 'markers/darkgreen_MarkerW.png',
+	Restaurant: 'markers/darkgreen_MarkerR.png',
+	Lodging: 'markers/darkgreen_MarkerL.png'
 };
 
 var markers = [];
