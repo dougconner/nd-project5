@@ -32,6 +32,34 @@ body,
 	height: 100%;
 }
 
+/* search & list section */
+.search-col {
+	max-height:100%;
+	overflow: auto;
+}
+
+.list-sub {
+	visibility: visible;
+	max-height: 80%;
+	overflow: auto;
+}
+
+.list-div {
+	background-color: #faf7f3;
+	cursor: pointer;
+}
+
+li {
+	overflow: auto;
+	cursor: pointer;
+	color: #22f;
+}
+
+.error {
+	color: red;
+}
+
+/* map section */
 .map-col {
 	height: 100%;
 }
@@ -42,21 +70,29 @@ body,
 	margin: 0 5% 0 5%;
 }
 
-.search-col,
+.centered  {
+	text-align: center;
+}
+
+/* photo & info section */
 .photo-col {
 	max-height: 100%;
 }
 
-li {
-	overflow: auto;
-	cursor: pointer;
-	color: #22f;
+.btn-group {
+	margin: 2px 0 5px 0;
 }
 
+.inline {
+	display: inline-block;
+}
+
+.img-div {
+	max-width: 100%;
+}
+
+/* 3-column displays section */
 @media (min-width: 992px) {
-/*    This section applies to
-	3-column displays
-*/
 	.map-cl {
 		height: 75%;
 		width:100%;
@@ -71,50 +107,5 @@ li {
 		visibility: hidden;
 		height: 0;
 	}
-
 }
 
-.search-col {
-	max-height:100%;
-	overflow: auto;
-}
-
-.img-div {
-	max-width: 100%;
-}
-
-.photo-col {
-	max-height: 100%;
-
-}
-
-.btn-group {
-	margin: 2px 0 5px 0;
-}
-
-.search-sub {
-	overflow: auto;
-}
-
-.list-sub {
-	visibility: visible;
-	max-height: 80%;
-	overflow: auto;
-}
-
-.error {
-	color: red;
-}
-
-.list-div {
-	background-color: #faf7f3;
-	cursor: pointer;
-}
-
-.centered  {
-	text-align: center;
-}
-
-.inline {
-	display: inline-block;
-}
