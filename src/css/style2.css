@@ -1,142 +1,120 @@
 body,
 textarea,
 ul {
-    font: 1.4em arial;
+	font: 1.4em arial;
 }
 
 label,
 input,
 select,
 li  {
-    font: 1.3em arial;
+	font: 1.3em arial;
 }
 
 h3,
 h4 {
-    text-align: left;
-    margin: 5px 0 5px 0;
+	text-align: left;
+	margin: 5px 0 5px 0;
 }
 
 p {
-    font: 1.2em arial;
+	font: 1.2em arial;
 }
 
 html,
 body,
 .container-fluid {
-    height: 100%;
-    width: 100%;
+	height: 100%;
+	width: 100%;
 }
 
 .row {
-    height: 100%;
+	height: 100%;
 }
 
 .map-col {
-    height: 100%;
+	height: 100%;
 }
 
 .map-cl {
-    height: 80%;
-    width:90%;
-    margin: 0 5% 0 5%;
+	height: 80%;
+	width:90%;
+	margin: 0 5% 0 5%;
 }
 
 .search-col,
 .photo-col {
-    max-height: 100%;
+	max-height: 100%;
 }
 
 li {
-    overflow: auto;
-    cursor: pointer;
-    color: #22f;
+	overflow: auto;
+	cursor: pointer;
+	color: #22f;
 }
 
 @media (min-width: 992px) {
 /*    This section applies to
-    3-column displays
+	3-column displays
 */
-    .map-cl {
-        height: 75%;
-        width:100%;
-        margin: 0 5% 0 0;
-    }
+	.map-cl {
+		height: 75%;
+		width:100%;
+		margin: 0 5% 0 0;
+	}
 
-    li {
-    font: 1.0em arial;
-    }
+	li {
+	font: 1.0em arial;
+	}
 
-    .selected-venue-2 {
-        visibility: hidden;
-        height: 0;
-    }
+	.selected-venue-2 {
+		visibility: hidden;
+		height: 0;
+	}
 
 }
 
 .search-col {
-    max-height:100%;
-    overflow: auto;
+	max-height:100%;
+	overflow: auto;
 }
 
 .img-div {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 .photo-col {
-    max-height: 100%;
+	max-height: 100%;
 
 }
 
 .btn-group {
-    margin: 2px 0 5px 0;
-}
-
-.input-group {
-    height: 3%px;
-}
-
-label {
+	margin: 2px 0 5px 0;
 }
 
 .search-sub {
-    overflow: auto;
+	overflow: auto;
 }
 
 .list-sub {
-    visibility: visible;
-    max-height: 80%;
-    overflow: auto;
+	visibility: visible;
+	max-height: 80%;
+	overflow: auto;
 }
 
-.list-div  {
-    cursor: pointer;
-}
-
-p#error-msg {
-    color: red;
+.error {
+	color: red;
 }
 
 .list-div {
-    background-color: #faf7f3;
-    overflow: auto;
-}
-
-.clear-search {
-    margin: 0 0 0 2% 0;
+	background-color: #faf7f3;
+	cursor: pointer;
 }
 
 .centered  {
-    text-align: center;
+	text-align: center;
 }
 
 .inline {
-    display: inline-block;
+	display: inline-block;
 }
-
-
-
-
-
-
-
