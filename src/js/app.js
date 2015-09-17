@@ -1,5 +1,5 @@
 // Temp to remove jshint issues
-var ko, console, google;
+// var ko, console, google;
 
 // Loads data from data.js
 var locations = initialData_js;
@@ -71,7 +71,6 @@ var markers = [];
 
 // sort locations by name
 var sortNames = function(locations) {
-	// console.log("workingArray:", self.places());
 	locations.sort(function(a,b) {
 		if (a.name > b.name) {
 			return 1;
@@ -87,7 +86,7 @@ sortNames(locations);
 
 // Sets 'show' array values for visibility control
 // Locations are shown only when an included type is selected.
-// Also generates the  "types" list for the placeTypes array and sorts it by name
+// Also generates the "types" list for the placeTypes array and sorts it by name
 
 var computeShowArray = function(locations, placeTypes) {
 	var testType;
@@ -100,7 +99,7 @@ var computeShowArray = function(locations, placeTypes) {
 		for (var j = 0; j < jLength; j++) {
 			// infoAry[0] contains primary place type
 			testType = locations[i].infoAry[j].type;
-			// Store types in  array
+			// Store types in array
 			show.push(testType);
 			// Store unique types in placeTypes array
 			if (placeTypes.indexOf(testType) === -1) {
@@ -159,10 +158,10 @@ var getFlickrNext = function(flickrIndex) {
 	var photoStr = 'https://farm' + imgFarm + '.staticflickr.com/' + imgServer +
 		'/' + imgId + '_' + imgSecret + '_' + sizeSuffix + '.jpg';
 
-	console.log("photoStr = " + photoStr);
+	console.log('photoStr = ' + photoStr);
 
 	var textStr1 = 'Source: <a href="https://flickr.com">Flickr</a>';
-		textStr1 += '  by: <a href="' + "https://flickr.com/people/" + owner +"/" + '">' + " photographer" + '</a>';
+		textStr1 += ' by: <a href="' + "https://flickr.com/people/" + owner +"/" + '">' + " photographer" + '</a>';
 
 	// Now load or reload the info window with the photo
 	$('#img-text1').html(textStr1);
@@ -264,7 +263,7 @@ var get4sqVenueDetail = function(index, name, id) {
 		'&m=foursquare',
 		function(data) {
 			// console.log("data=", JSON.stringify(data));
-			console.log("data.response.venue.photos:", data.response.venue.photos);
+			console.log('data.response.venue.photos:', data.response.venue.photos);
 
 			// See if there is data for this venue
 			if (data.response.venue.photos.count > 0) {
@@ -324,13 +323,13 @@ var get4sqSearch = function(index) {
 				$('#img-text1' + index).html(textStr1);
 				$('#info-img').attr('src', '#');
 				$('#info-img').attr('alt', 'No venue photos on FourSquare');
-				console.log("The venue was not found on get4sqSearch");
+				console.log('The venue was not found on get4sqSearch');
 			} else {
 				var id = data.response.venues[0].id;
 				var name = data.response.venues[0].name;
 
 				// get venue details and a photo
-				console.log("index, name, id",index, name, id);
+				console.log('index, name, id',index, name, id);
 				get4sqVenueDetail(index, name, id);
 			}
 
@@ -401,8 +400,8 @@ var photoSearch = function(index) {
 		$('#info-img').attr('src', '#');
 		$('#img-counter').html('0 images');
 		$('#img-text1').html('');
-        $('#venue-info').html('');
-        $('#venue-info-text').html('');
+		$('#venue-info').html('');
+		$('#venue-info-text').html('');
 	}
 };
 
@@ -414,7 +413,7 @@ var photoSearch = function(index) {
 // Also change map marker back to un-selected
 
 var setSelectedVenue = function(index) {
-	var textStr = "Selected venue: ";
+	var textStr = 'Selected venue: ';
 	var venueName;
 	var venueUrl;
 	var venueAddr1;
@@ -451,26 +450,26 @@ var setSelectedVenue = function(index) {
 		marker.setIcon(markerIcon);
 		var zInd = MAX_ZINDEX + 1;
 		marker.setZIndex(zInd);
-		console.log("markerNew = ", markerIcon);
+		console.log('markerNew = ', markerIcon);
 
 		// info page data
 		venueUrl = locations[index].url;
 		venueAddr1 = locations[index].addr1;
 		venueAddr2 = locations[index].addr2;
-		console.log("venueUrl", venueUrl);
+		console.log('venueUrl', venueUrl);
 
 		venueInfoText = locations[index].infoAry[0].infoText;
 	} else {
 		// Nothing selected so clear out the old selection
-		venueName = "none";
-		venueUrl = "";
-		venueAddr1 = "";
-		venueAddr2 = "";
-		venueInfoText = "";
-		markerIcon = "";
-		markerLegend = '<img id="marker-ref" class="marker inline" src="' + markerPng.Winery + '" alt="marker icon">' + ' ' + 'Winery  ';
-			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Lodging + '" alt="marker icon">' + ' ' + 'Lodging  ';
-			markerLegend += '<img id="marker-ref" class="marker inline" + src="'  + markerPng.Restaurant + '" alt="marker icon">' + ' ' + 'Restaurant  ';
+		venueName = 'none';
+		venueUrl = '';
+		venueAddr1 = '';
+		venueAddr2 = '';
+		venueInfoText = '';
+		markerIcon = '';
+		markerLegend = '<img id="marker-ref" class="marker inline" src="' + markerPng.Winery + '" alt="marker icon">' + ' ' + 'Winery ';
+			markerLegend += '<img id="marker-ref" class="marker inline" + src="' + markerPng.Lodging + '" alt="marker icon">' + ' ' + 'Lodging ';
+			markerLegend += '<img id="marker-ref" class="marker inline" + src="' + markerPng.Restaurant + '" alt="marker icon">' + ' ' + 'Restaurant ';
 	}
 
 	// Show the selected venue
@@ -488,10 +487,10 @@ var setSelectedVenue = function(index) {
 	// Show the selected venue info on the info page
 	// Venue name will already be at top of page
 	if (index >= 0 && enableMarkerLoad) {
-		var contentStr = "<a href=" + venueUrl + ">" + venueName + "</a>" + "<br>";
-		contentStr += venueAddr1 + "<br>";
-		contentStr += venueAddr2 + "<br>";
-		console.log("contentStr = ", contentStr);
+		var contentStr = '<a href=' + venueUrl + '>' + venueName + '</a>' + '<br>';
+		contentStr += venueAddr1 + '<br>';
+		contentStr += venueAddr2 + '<br>';
+		console.log('contentStr = ', contentStr);
 		$('#venue-info').html(contentStr);
 		$('#venue-info-text').html(venueInfoText);
 	}
@@ -563,7 +562,7 @@ var MyViewModel = function(places) {
 	self.searchText = ko.observable('');
 
 	// photo source select
-	self.photoSource = ko.observable("flickr");
+	self.photoSource = ko.observable('flickr');
 
 	self.places = ko.observableArray(ko.utils.arrayMap(places, function(place) {
 		return { name: place.name,
@@ -639,7 +638,7 @@ var MyViewModel = function(places) {
 
 	self.setPhotoSource = function() {
 		photoSrc = self.photoSource();
-		console.log("photoSrc = ", photoSrc);
+		console.log('photoSrc = ', photoSrc);
 
 		// zero un-selected photo array
 		switch (photoSrc) {
@@ -661,14 +660,14 @@ var MyViewModel = function(places) {
 				case 'foursquare':
 					len = foursquarePhotoArray.length;
 					if (len > 0) {
-						foursquareIndex = foursquareIndex > 0 ?  foursquareIndex - 1 : len - 1;
+						foursquareIndex = foursquareIndex > 0 ? foursquareIndex - 1 : len - 1;
 						get4sqNext(foursquareIndex);
 					}
 					break;
 				case 'flickr':
 					len = flickrPhotoArray.length;
 					if (len > 0) {
-						flickrIndex = flickrIndex > 0 ?  flickrIndex - 1 : len - 1;
+						flickrIndex = flickrIndex > 0 ? flickrIndex - 1 : len - 1;
 						getFlickrNext(flickrIndex);
 					}
 					break;
