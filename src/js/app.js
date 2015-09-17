@@ -88,6 +88,7 @@ sortNames(locations);
 // Sets 'show' array values for visibility control
 // Locations are shown only when an included type is selected.
 // Also generates the  "types" list for the placeTypes array and sorts it by name
+
 var computeShowArray = function(locations, placeTypes) {
 	var testType;
 	var show;
