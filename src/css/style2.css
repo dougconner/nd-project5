@@ -38,13 +38,9 @@ body,
 	overflow: auto;
 }
 
-.list-sub {
-	visibility: visible;
+.list-div {
 	max-height: 80%;
 	overflow: auto;
-}
-
-.list-div {
 	background-color: #faf7f3;
 	cursor: pointer;
 }
@@ -91,7 +87,7 @@ li {
 	max-width: 100%;
 }
 
-/* 3-column displays section */
+/* 3-column displays changes */
 @media (min-width: 992px) {
 	.map-cl {
 		height: 75%;
@@ -100,7 +96,7 @@ li {
 	}
 
 	li {
-	font: 1.0em arial;
+		font: 1.0em arial;
 	}
 
 	.selected-venue-2 {
@@ -108,4 +104,3 @@ li {
 		height: 0;
 	}
 }
-
