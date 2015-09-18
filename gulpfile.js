@@ -18,7 +18,7 @@ var paths =  {
     scripts: ['src/js/data.js', 'src/js/app.js'],
     styles: ['src/css/style2.css'],
     content: ['src/index.html'],
-    markers: ['src/markers/*.png'],
+    markers: ['src/markers/**.png'],
     injectFiles: ['src/js/lib/min/knockout-3.3.0.js', 'src/js/lib/min/jquery-2.1.4.min.js']
 };
 
