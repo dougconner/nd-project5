@@ -17,6 +17,9 @@ var foursquarePhotoArray;
 var flickrIndex = 0;
 var foursquareIndex = 0;
 
+// Foursquare Venue url string
+var foursquareVenueUrl = '';
+
 // Stores selected venue index
 // Change only using setSelectedVenue(index)
 var selectedVenueIndex = -1;
@@ -230,7 +233,7 @@ var getFlickrPhoto = function(index) {
 };
 
 // this will load the current foursquare photo
-var get4sqNext = function(textStr2) {
+var get4sqNext = function() {
 	foursquareIndex = foursquareIndex % foursquarePhotoArray.length;
 	var prefix = foursquarePhotoArray[foursquareIndex].prefix;
 	var photoSize = 'cap300';
@@ -241,7 +244,7 @@ var get4sqNext = function(textStr2) {
 	console.log("photoStr = " + photoStr);
 
 	var textStr1 = 'Source: <a href="https://foursquare.com">Foursquare</a><br>';
-		textStr1 += textStr2;
+		textStr1 += foursquareVenueUrl;
 
 	// load or reload the photo and photo info
 	$('#img-text1').html(textStr1);
@@ -254,7 +257,6 @@ var get4sqNext = function(textStr2) {
 var get4sqVenueDetail = function(index, name, id) {
 	foursquarePhotoArray = {};
 	var venueID = id;
-	var textStr2 = '';
 
 	var jqxhr = $.get('https://api.foursquare.com/v2/venues/' + venueID +
 		'?client_id=' + CLIENT_ID +
@@ -270,8 +272,10 @@ var get4sqVenueDetail = function(index, name, id) {
 				foursquarePhotoArray = data.response.venue.photos.groups[0].items;
 				foursquareIndex = 0;
 				var url = data.response.venue.canonicalUrl;
-				textStr2 = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
-				get4sqNext(textStr2);
+
+				console.log('url = ', url);
+				foursquareVenueUrl = 'Venue on <a href="' + url + '?ref=' + CLIENT_ID + '">' + 'Foursquare' + '</a>';
+				get4sqNext();
 
 			} else {
 				// No photos
@@ -661,7 +665,7 @@ var MyViewModel = function(places) {
 					len = foursquarePhotoArray.length;
 					if (len > 0) {
 						foursquareIndex = foursquareIndex > 0 ? foursquareIndex - 1 : len - 1;
-						get4sqNext(foursquareIndex);
+						get4sqNext();
 					}
 					break;
 				case 'flickr':
@@ -687,7 +691,7 @@ var MyViewModel = function(places) {
 				case 'foursquare':
 					if (foursquarePhotoArray.length > 0) {
 						foursquareIndex += 1;
-						get4sqNext(foursquareIndex);
+						get4sqNext();
 					}
 					break;
 				case 'flickr':

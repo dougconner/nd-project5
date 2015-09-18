@@ -66,12 +66,12 @@
 				<div id="photo-div" class="col-md-4 photo-col" role="navigation">
 					<h4 id="selected-photo-pg" class="selected-venue-2">Selected venue: none</h4>
 					<div class="radio">
-						<span class="input-group">
-							<label>Photo source:</label>
+						<h4>Photo source:</h4>
+							<span class="input-group">
  								<label class="radio-inline"><input type="radio" value="flickr" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Flickr</label>
 								<label class="radio-inline"><input type="radio" value="foursquare" data-bind="checked: photoSource, click: $root.setPhotoSource()" name="photoSelectGroup">Foursquare
-							</label>
-						</span>
+							</span>
+						</label>
 					</div>
 					<div class="btn-group" role="group" aria-label="...">
 						<button id="previous-img" type="button" class="btn btn-primary" data-bind="click:$root.previousPhoto()">
@@ -110,7 +110,9 @@
 
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- removeIf(distribution) -->
 		<script src="js/data.js"></script>
+<!--endRemoveIf(distribution)-->
 		<script src="js/app.js"></script>
 	</body>
 </html>

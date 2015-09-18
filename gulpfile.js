@@ -8,6 +8,10 @@ var inject = require('gulp-inject');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var minifyhtml = require('gulp-minify-html');
+var stripDebug = require('gulp-strip-debug');
+var stripComments = require('gulp-strip-comments');
+var ghPages = require('gulp-gh-pages');
+
 
 // paths to files
 var paths =  {
@@ -17,6 +21,7 @@ var paths =  {
     markers: ['src/markers/*.png'],
     injectFiles: ['src/js/lib/min/knockout-3.3.0.js', 'src/js/lib/min/jquery-2.1.4.min.js']
 };
+
 
 // move js/lib/min files to dist folder. Order may be important
 gulp.task('minFiles', function() {
@@ -40,6 +45,8 @@ gulp.task('styles', function() {
 // concat and minify js files and output them to dist/js/app.js
 gulp.task('scripts', function() {
     return gulp.src(paths.scripts)
+        .pipe(stripDebug())
+        .pipe(stripComments())
         .pipe(uglify())
         .pipe(concat('app.js'))
         .pipe(gulp.dest('./dist/js'));
@@ -73,6 +80,12 @@ gulp.task('index', function() {
     .pipe(gulp.dest('dist'));
 });
 
+// put up dist folder on gh-pages
+gulp.task('deploy', function() {
+  return gulp.src('./dist/**/*')
+    .pipe(ghPages());
+});
+
 // run using "gulp watch". Is not in default list
 gulp.task('watch', function() {
     // watch minfiles
@@ -92,4 +105,4 @@ gulp.task('watch', function() {
 });
 
 // NOTE: You need to run "gulp watch" independently -- see above
-gulp.task('default', [ 'index', 'styles', 'scripts', 'minFiles', 'markers']);
+gulp.task('default', [ 'index', 'styles', 'scripts', 'minFiles', 'markers', 'deploy']);
